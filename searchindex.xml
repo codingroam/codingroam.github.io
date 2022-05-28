@@ -1,4 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置</title><url>/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url><categories><category>Linux</category><category>tool</category></categories><tags><tag>Linux</tag><tag>mysql</tag><tag>rpm</tag><tag>yum</tag><tag>CentOS 7</tag></tags><content type="html"> 本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Linux文件详细属性学习</title><url>/post/linux%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E5%B1%9E%E6%80%A7%E5%AD%A6%E4%B9%A0/</url><categories><category>Linux</category><category>Linux Basis</category></categories><tags><tag>Linux</tag><tag>文件属性</tag><tag>ls命令</tag></tags><content type="html"> 详细介绍如何查看并分辨Linux文件的详细属性，包括文件的类型，权限信息，所有者，用户等
+Linux的基本思想有两点：第一，一切都是文件；第二，每个文件都有确定的用途。其中第一条详细来讲就是系统中的所有都归结为一个文件，包括命令、硬件和软件设备、操作系统、进程等等对于操作系统内核而言，都被视为拥有各自特性或类型的文件
+ls -l 命令是以长格式的形式查看当前目录下所有可见文件的详细属性
+文件的详细属性如下：
+如果是一个符号链接，那么会有一个 “->" 箭头符号，后面根一个它指向的文件名;
+灰白色表示普通文件；
+亮绿色表示可执行文件；
+亮红色表示压缩文件；
+灰蓝色表示目录；
+亮蓝色表示链接文件；
+亮黄色表示设备文件；</content></entry><entry><title>Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置</title><url>/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url><categories><category>Linux</category><category>tool</category></categories><tags><tag>Linux</tag><tag>mysql</tag><tag>rpm</tag><tag>yum</tag><tag>CentOS 7</tag></tags><content type="html"> 本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法
 Linux安装软件的四种方式介绍 四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装
 四种方式比较 rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖
 带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译
@@ -111,28 +121,7 @@ $$ \frac{n!}{k!(n-k)!} = {^n}C_k {n \choose k} $$
 矩阵 $$ \begin{pmatrix} a_{11} &amp; a_{12} &amp; a_{13}\ a_{21} &amp; a_{22} &amp; a_{23}\ a_{31} &amp; a_{32} &amp; a_{33} \end{pmatrix} \begin{bmatrix} 0 &amp; \cdots &amp; 0 \ \vdots &amp; \ddots &amp; \vdots \ 0 &amp; \cdots &amp; 0 \end{bmatrix} $$
 标点符号 $$ f(x) = \sqrt{1+x} \quad (x \ge -1) f(x) \sim x^2 \quad (x\to\infty) $$
 现在用标点符号:
-$$ f(x) = \sqrt{1+x}, \quad x \ge -1 f(x) \sim x^2, \quad x\to\infty $$</content></entry><entry><title>支持Emoji表情符号</title><url>/post/emoji-support/</url><categories/><tags><tag>emoji</tag></tags><content type="html"> Emoji 表情符号可以通过多种方式在 Hugo 项目中启用。
-使用 Emoji 表情符号可以在模板中可以直接调用 emojify
-函数或是通过 内联短代码
-来实现。
-如果要全局启用 Emoji 表情符号，请在网站配置
-文件中将 enableEmoji 参数值设置为 true，然后可以直接在内容文件中输入表情符号简写代码，参考如下：
-猴子表情
-🙈 :see_no_evil:
-🙉 :hear_no_evil:
-🙊 :speak_no_evil:
-数字符号
-1️⃣ :one:
-2️⃣ :two:
-3️⃣ :three:
-建筑物
-🏡 :house_with_garden:
-🏣 :post_office:
-🏥 :hospital:
-更多的 Emoji 表情符号代码可参考Emoji 配对目录
-。
-注意: 以上步骤在 Hugo 中启用 Unicode 标准表情符号和序列，但是这些符号的呈现取决于浏览器和平台，要设置表情符号的样式，您可以使用第三方表情符号字体或字体。例如：
-.emoji { font-family: Apple Color Emoji,Segoe UI Emoji,NotoColorEmoji,Segoe UI Symbol,Android Emoji,EmojiSymbols; }</content></entry><entry><title>关于我</title><url>/about.html</url><categories/><tags/><content type="html"> Hugo是用Go编写的一个开放源代码静态站点生成器，可在Apache许可证2.0
+$$ f(x) = \sqrt{1+x}, \quad x \ge -1 f(x) \sim x^2, \quad x\to\infty $$</content></entry><entry><title>关于我</title><url>/about.html</url><categories/><tags/><content type="html"> Hugo是用Go编写的一个开放源代码静态站点生成器，可在Apache许可证2.0
 下使用。 Hugo支持TOML, YAML和JSON数据文件类型，Markdown和HTML内容文件，并使用短代码添加丰富的内容。其他值得注意的功能包括分类法、多语言模式、图像处理、自定义输出格式、HTML/CSS/JS缩小和对Sass SCSS工作流的支持。
 Hugo使用了多种开源项目，包括:
 https://github.com/yuin/goldmark

@@ -14,7 +14,7 @@
 &nbsp;</span></span>
 <span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
 <span class=post-meta-item-text>字数：</span>
-<span class=leancloud-world-count>2709 字</span></span>
+<span class=leancloud-world-count>2771 字</span></span>
 <span class=post-readtime><i class="fa fa-eye fa-fw"></i>
 <span class=post-meta-item-text>阅读：</span>
 <span class=leancloud-view-count>6分钟</span></span>
@@ -52,7 +52,7 @@
 </span></span><span style=display:flex><span>    A temporary password is generated for root@localhost: CSLQ:F=Um5i1
 </span></span><span style=display:flex><span>3、[root@localhost ~]# mysql -uroot -p --&gt;登录root用户
 </span></span><span style=display:flex><span>4、[root@localhost ~]# CSLQ:F=Um5i1 --&gt;输入密码
-</span></span><span style=display:flex><span>5、登录进mysql之后设置密码规则(不设置无法修改成简单密码)
+</span></span><span style=display:flex><span>5、登录进mysql之后设置密码规则(不设置有可能无法修改成简单密码)
 </span></span><span style=display:flex><span>  set global validate_password_policy=0;
 </span></span><span style=display:flex><span>  set global validate_password_length=1;
 </span></span><span style=display:flex><span>6、ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;root&#39;; --&gt;修改密码为root
@@ -114,10 +114,11 @@
 </span></span><span style=display:flex><span>9、[root@localhost ~]#./mysqld --defaults-file=/etc/my.cnf --user=mysql --basedir=/usr/local/mysql/ --datadir=/data/mysql/  --initialize --&gt;初始化
 </span></span><span style=display:flex><span>10、[root@localhost ~]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql --&gt;将mysql.server放置到/etc/init.d/mysql中
 </span></span><span style=display:flex><span>11、[root@localhost ~]# service mysql start --&gt;启动服务
-</span></span><span style=display:flex><span>12、[root@localhost ~]# cat /data/mysql/mysql.err --&gt;日志最后一行有随机生成的初始密码,可登录mysql
+</span></span><span style=display:flex><span>12、[root@localhost ~]# cat /usr/local/mysql/logs/mysqld.log --&gt;日志最后一行有随机生成的初始密码,可登录mysql
 </span></span><span style=display:flex><span>13、[root@localhost ~]# ln -s  /usr/local/mysql/bin/mysql    /usr/bin --&gt;创建软连接到/usr/bin可以全局使用mysql命令(方便登录mysql)
 </span></span><span style=display:flex><span>14、[root@localhost ~]# mysql -uroot -p --&gt;登录mysql
 </span></span><span style=display:flex><span>15、[root@localhost ~]# 输入12步得到的密码，登录mysql
+</span></span><span style=display:flex><span>16、若登录出现Can&#39;t connect to local MySQL server through socket &#39;/tmp/mysql.sock&#39; (2)，需要将mysql.sock软连接到tmp目录即可 [root@localhost ~]# ln -s /usr/local/mysql/data/mysql.sock /tmp
 </span></span></code></pre></div><p>②source源码安装</p><p><img src=/images/Snipaste_2022-05-27_18-22-03.png alt=img></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>(1)创建安装目录
 </span></span><span style=display:flex><span> [root@localhost ~]# mkdir /usr/local/mysql/{data,logs,tmp,run} -p
 </span></span><span style=display:flex><span>(2）首先安装源码编译所需要的包

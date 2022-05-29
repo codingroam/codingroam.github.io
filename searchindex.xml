@@ -8,135 +8,7 @@ ls -l 命令是以长格式的形式查看当前目录下所有可见文件的�
 亮红色表示压缩文件；
 灰蓝色表示目录；
 亮蓝色表示链接文件；
-亮黄色表示设备文件；</content></entry><entry><title>Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置</title><url>/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url><categories><category>Linux</category><category>tool</category></categories><tags><tag>Linux</tag><tag>mysql</tag><tag>rpm</tag><tag>yum</tag><tag>CentOS 7</tag></tags><content type="html"> 本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法
-Linux安装软件的四种方式介绍 四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装
-四种方式比较 rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖
-带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译
-四种方式操作说明 rpm与yum命令对比（yum简单，rpm复杂） RPM 全名 RedHat Package Managerment，是由Red Hat公司提出，被众多Linux发行版本所采用，是一种数据库记录的方式来将所需要的软件安装到到Linux系统的一套软件管理机制
-rpm在安装时有严格的顺序限制，包与包有依赖关系，且安装过程中可能依赖别的包需要手动安装，而yum安装某个功能（例如mysql的server端）会自动下载安装依赖
-安装软件：rpm -ivh [软件包名称] 卸载软件：rpm -e [软件包名称] 更新软件：rpm -Uvh [软件包名称]
-yum check-update：列出所有可更新的软件清单命令;
-yum update：更新所有软件或指定软件命令;
-yum install ：仅安装指定的软件命令；
-yum list：列出所有可安装的软件清单命令；
-yum remove ：删除软件包命令；
-yum search ：查找软件包命令：
-以安装mysql为例，对比yum和rpm的安装过程
-①查看是否安装了mysql/mariadb的服务
-[root@localhost ~]# rpm -qa |grep -i mysql MySQL-client-5.6.23-1.sles11.x86_64 MySQL-server-5.6.23-1.sles11.x86_64 MySQL-shared-5.6.23-1.sles11.x86_64 MySQL-devel-5.6.23-1.sles11.x86_64 ... [root@localhost ~]# root@# rpm -qa |grep -i mariadb ... ②如果安装需要卸载所有服务
-[root@localhost ~]# rpm -e --nodeps MySQL-client-5.6.23-1.sles11.x86_64 [root@localhost ~]# rpm -e --nodeps MySQL-server-5.6.23-1.sles11.x86_64 ... ③使用命令或者去mysql官网下载rpm包
-yum安装mysql需要先下载一个基础包安装 [root@localhost ~]# wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm rpm安装需要下载bundle包（rpm文件打包合集）
-rpm Bundle表示rpm的打包合集，包含基础包，lib包，client,server 等包如下图
-④安装：
-yum方式
-先安装基础包： [root@localhost ~]# yum install y mysql57-community-release-el7-10.noarch.rpm [root@localhost ~]# yum install mysql-community-server --nogpgcheck --安装完毕 rpm
-rpm需要依次安装bundle包中的rpm包，包括基础包，库，client和server等 安装mysql-server服务，只需要安装如下4个软件包即可，使⽤rpm -ivh进⾏安装（按顺序安装，后⾯的 服务依赖前⾯的服务 [root@localhost ~]# rpm -ivh mysql-community-common-5.7.23-1.el7.x86_64.rpm [root@localhost ~]# rpm -ivh mysql-community-libs-5.7.23-1.el7.x86_64.rpm [root@localhost ~]# rpm -ivh mysql-community-client-5.7.23-1.el7.x86_64.rpm [root@localhost ~]# rpm -ivh mysql-community-server-5.7.23-1.el7.x86_64.rpm 安装时如果出现缺少依赖，如少libaio、net-tools还需要yum install [名称]来安装依赖 ⑤启动mysql，设置密码
-1、[root@localhost ~]# systemctl start mysqld.service -->启动mysql 2、[root@localhost ~]# grep "password" /var/log/mysqld.log -->查看密码 CSLQ:F=Um5i1 A temporary password is generated for root@localhost: CSLQ:F=Um5i1 3、[root@localhost ~]# mysql -uroot -p -->登录root用户 4、[root@localhost ~]# CSLQ:F=Um5i1 -->输入密码 5、登录进mysql之后设置密码规则(不设置有可能无法修改成简单密码) set global validate_password_policy=0; set global validate_password_length=1; 6、ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; -->修改密码为root ⑥查找并修改mysql配置文件
-1、[root@localhost ~]# which mysql -->查找mysql命令在什么位置 usr/bin/mysql 2.[root@localhost ~]# /usr/bin/mysql --verbose --help | grep -A 1 'Default options' Default options are read from the following files in the given order: /etc/mysql/my.cnf /etc/my.cnf ~/.my.cnf 返回信息表示首先读取的是/etc/mysql/my.cnf文件，如果前一个文件不存在则继续读/etc/my.cnf文件，如若还不存在便会去读~/.my.cnf文件,这三处即是mysql配置文件存放处，找到修改即可 默认配置文件如下： # For advice on how to change settings please see # http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html [mysqld] # # Remove leading # and set to the amount of RAM for the most important data # cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%. # innodb_buffer_pool_size = 128M # # Remove leading # to turn on a very important data integrity option: logging # changes to the binary log between backups. # log_bin # # Remove leading # to set options mainly useful for reporting servers. # The server defaults are faster for transactions and fast SELECTs. # Adjust sizes as needed, experiment to find the optimal values. # join_buffer_size = 128M # sort_buffer_size = 2M # read_rnd_buffer_size = 2M datadir=/var/lib/mysql socket=/var/lib/mysql/mysql.sock # Disabling symbolic-links is recommended to prevent assorted security risks symbolic-links=0 log-error=/var/log/mysqld.log pid-file=/var/run/mysqld/mysqld.pid 已编译tar包(带bin目录的tar)和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译
-①带bin的tar包安装
-1、[root@localhost ~]# tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar 2、[root@localhost ~]# cp -r mysql-5.7.26-linux-glibc2.12-x86_64 /usr/local/mysql -->拷贝文件夹到/usr/local目录下并重命名为mysql 3、[root@localhost ~]# mkdir /usr/local/mysql/data /usr/local/mysql/logs -->创建data和logs文件夹 4、[root@localhost ~]# groupadd mysql -->添加mysql用户组 5、[root@localhost ~]# useradd -r -g mysql mysql -->向mysql用户组添加mysql用户，-r &lt;参数表示mysql用户是系统用户，不可用于登录系统，-g 参数表示把mysql用户添加到mysql用户组中 6、chown -R mysql:mysql /usr/local/mysql/ -->将mysql目录权限分配给mysql用户组下的mysql用户 已编译tar包安装需要新建mysql用户和用户组，并将mysql目录权限分配给用户，若不进行此操作，在mysql服务启动时会报Starting MySQL. ERROR! The server quit without updating PID file错误 7、[root@localhost ~]# vim /etc/my.cnf -->在/etc下新增配置文件 [mysqld] port = 3306 user = mysql basedir = /usr/local/mysql datadir = /usr/local/mysql/data socket = /usr/local/mysql/data/mysql.sock bind-address = 0.0.0.0 pid-file = /usr/local/mysql/data/mysqld.pid character-set-server = utf8 collation-server = utf8_general_ci max_connections = 200 log-error = /usr/local/mysql/logs/mysqld.log 8、[root@localhost ~]# cd /usr/local/mysql/bin/ -->进入mysql的bin目录 9、[root@localhost ~]#./mysqld --defaults-file=/etc/my.cnf --user=mysql --basedir=/usr/local/mysql/ --datadir=/data/mysql/ --initialize -->初始化 10、[root@localhost ~]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql -->将mysql.server放置到/etc/init.d/mysql中 11、[root@localhost ~]# service mysql start -->启动服务 12、[root@localhost ~]# cat /usr/local/mysql/logs/mysqld.log -->日志最后一行有随机生成的初始密码,可登录mysql 13、[root@localhost ~]# ln -s /usr/local/mysql/bin/mysql /usr/bin -->创建软连接到/usr/bin可以全局使用mysql命令(方便登录mysql) 14、[root@localhost ~]# mysql -uroot -p -->登录mysql 15、[root@localhost ~]# 输入12步得到的密码，登录mysql 16、若登录出现Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)，需要将mysql.sock软连接到tmp目录即可 [root@localhost ~]# ln -s /usr/local/mysql/data/mysql.sock /tmp ②source源码安装
-(1)创建安装目录 [root@localhost ~]# mkdir /usr/local/mysql/{data,logs,tmp,run} -p (2）首先安装源码编译所需要的包 [root@localhost ~]# yum -y install make gcc-c++ cmake bison-devel ncurses-devel (3)解压 [root@localhost ~]# tar -zxvf mysql-5.7.27.tar.gz [root@localhost ~]# tar -zxvf mysql-boost-5.7.27.tar.gz #（不需要安装，在安装mysql时自动安装，） 两个文件解压以后都会在同一个目录上 mysql-5.7.27 (4)编译安装（编译参数按实际情况制定） cd mysql-5.7.27 cmake . \ -DCMAKE_INSTALL_PREFIX=/usr/local/mysql/ \ -DMYSQL_DATADIR=/usr/local/mysql/data \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/opt/software/mysql-5.7.27/boost \ -DSYSCONFDIR=/etc \ -DWITH_INNOBASE_STORAGE_ENGINE=1 \ -DWITH_PARTITION_STORAGE_ENGINE=1 \ -DWITH_FEDERATED_STORAGE_ENGINE=1 \ -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \ -DWITH_MYISAM_STORAGE_ENGINE=1 \ -DENABLED_LOCAL_INFILE=1 \ -DMYSQL_UNIX_ADDR=/usr/local/mysql/run/mysql.sock \ -DENABLE_DTRACE=0 \ -DDEFAULT_CHARSET=utf8 \ -DDEFAULT_COLLATION=utf8_general_ci \ -DWITH_EMBEDDED_SERVER=1 make &amp; make install (5)/etc/my.cnf配置mysql (6) ./mysqld --defaults-file=/etc/my.cnf --initialize #初始化 (7) cp support-files/mysql.server /etc/init.d/mysql #启动项设置 (8) service mysqld start (9)登录不在赘述 ​</content></entry><entry><title>Markdown语法手册</title><url>/post/markdown-syntax/</url><categories><category>themes</category><category>syntax</category></categories><tags><tag>markdown</tag><tag>css</tag><tag>html</tag></tags><content type="html"> 本文提供了一个可以在 Hugo 内容文件中使用的基本Markdown语法示例，还展示了基本 HTML 元素在 Hugo 主题中是否使用 CSS 装饰。
-标题 下面的 HTML 代码&lt;h1>—&lt;h6> 元素表示六个级别的节标题。 &lt;h1>是最高的节级别，&lt;h6>是最低的节级别。
-H1 H2 H3 H4 H5 H6 段落 生活是什么？生活是柴米油盐的平淡；是行色匆匆早出晚归的奔波；生活是错的时间遇到对的人的遗憾；是爱的付出与回报；生活是看不同的风景，遇到不同的人；是行至水穷尽，坐看云起时的峰回路转；生活是灵魂经历伤痛后的微笑怒放；是挫折坎坷被晾晒后的坚强；生活是酸甜苦辣被岁月沉淀后的馨香；是经历风霜雪雨洗礼后的懂得；生活是走遍千山万水后，回眸一笑的洒脱。
-有些事，猝不及防，不管你在不在乎；有些人，并非所想，不管你明不明白；有些路，必须得走，不管你愿不愿意。不怕事，不惹事，不避事，做好自己，用真心面对一切；少埋怨，少指责，少发火，学会沉静，用微笑考量一切；多体察，多包容，多思索，尽心尽力，虽缺憾但无悔。像蒲公英一样美丽，虽轻盈，但并不卑微，它有自己的生命，也有自己的世界！
-引用 blockquote 元素表示从另一个来源引用的内容，可选的引用必须在 footer 或 cite元素内，也可选的内嵌更改，如注释和缩写。
-引用没有归属 读懂自我，带着简单的心情，看复杂的人生，走坎坷的路！
-注意： 可以在块引用中使用 Markdown 语法。
-带归属的引用 不要通过分享记忆来交流，通过交流来分享记忆。
-— 罗布·派克1
-表格 表不是Markdown核心规范的一部分，但是Hugo支持开箱即用。
-Name Age Bob 27 Alice 23 表格内使用Markdown语法 Italics Bold Code italics bold code 图像 ![图像描述](图像地址) 示例 常规用法 SVG图像 Google Chrome
-Firefox Browser
-小图标
-点击图像可以打开图像浏览器，快试试吧。
-代码块 带有引号的代码块 &lt;!doctype html> &lt;html lang="en"> &lt;head> &lt;meta charset="utf-8"> &lt;title>Example HTML5 Document&lt;/title> &lt;/head> &lt;body> &lt;p>Test&lt;/p> &lt;/body> &lt;/html> 用四个空格缩进的代码块 &lt;!doctype html>
-&lt;html lang="en">
-&lt;head>
-&lt;meta charset="utf-8">
-&lt;title>Example HTML5 Document&lt;/title>
-&lt;/head>
-&lt;body>
-&lt;p>Test&lt;/p>
-&lt;/body>
-&lt;/html>
-代码块引用Hugo的内部高亮短代码 &lt;!doctype html> &lt;html lang="en"> &lt;head> &lt;meta charset="utf-8"> &lt;title>Example HTML5 Document&lt;/title> &lt;/head> &lt;body> &lt;p>Test&lt;/p> &lt;/body> &lt;/html> 列表类型 有序列表 First item Second item Third item 无序列表 List item Another item And another item 嵌套列表 Fruit Apple Orange Banana Dairy Milk Cheese 其他元素 — abbr, sub, sup, kbd, mark GIF 是位图图像格式。
-H2O
-Xn + Yn = Zn
-按 CTRL+ALT+Delete 组合键结束会话。
-大多数蝾螈在夜间活动，捕食昆虫、蠕虫和其他小动物。
-以上引文摘自Rob Pike在2015年11月18日 Gopherfest 上的演讲
-。&#160;&#8617;&#xfe0e;</content></entry><entry><title>富文本内容测试</title><url>/post/rich-content/</url><categories/><tags><tag>shortcodes</tag><tag>privacy</tag></tags><content type="html"> Hugo 上有几个内置短码
-，用于丰富内容，以及隐私配置
-还有一组简单的短代码，支持各种社交媒体嵌入的静态和非 JS 版本。
-YouTube 增强隐私短码 {{/&lt; youtube ZJthWmvUzzc >/}}
-Twitter 短码 {{/&lt; twitter_simple 1085870671291310081 >/}}
-Vimeo 短码 {{/&lt; vimeo_simple 48912912 >/}}
-哔哩哔哩短码</content></entry><entry><title>图像占位符显示</title><url>/post/placeholder-text/</url><categories/><tags><tag>markdown</tag><tag>text</tag></tags><content type="html"> 范德格拉夫原理（Van de Graaf Canon）重构了曾经用于书籍设计中将页面划分为舒适比例的方法。这一原理也被称为“秘密原理”，用于许多中世纪的手稿和古板书中。在范德格拉夫原理中，文本区域和页面的长款具有相同的比例，并且文本区域的高度等于页面宽度，通过划分页面得到九分之一的订口边距和九分之二的切口边距，以及与页面长宽相同的比例的文本区域。
-Vagus 示例
-The Van de Graaf Canon
-总结 当然设计中的黄金比例是为人所熟知的，黄金分割的公式为a:b=b:(a+b)。这是指较小的两个矩形与较大的两个矩形以相同的组合方式相关联。黄金分割比例为1:1.618。</content></entry><entry><title>数据公式设置显示</title><url>/post/math-typesetting/</url><categories/><tags/><content type="html"> Hugo 项目中的数学表示法可以通过使用第三方 JavaScript 库来实现。
-在这个例子中，我们将使用 MathJax
-创建一个文件 /content/en[zh-CN]/math.md
-可以全局启用MathJax，请在项目配置中将参数math设置为true
-或是在每页基础上启用MathJax，在内容文件中包括参数math: true
-注意： 使用支持的TeX功能
-的联机参考资料
-例子 重复的分数 $$ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} \equiv 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\cdots} } } } $$
-总和记号 $$ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right) $$
-几何级数之和 我把接下来的两个例子分成了几行，这样它在手机上表现得更好。这就是为什么它们包含 \displaystyle。
-$$ \displaystyle\sum_{i=1}^{k+1}i $$
-$$ \displaystyle= \left(\sum_{i=1}^{k}i\right) +(k+1) $$
-$$ \displaystyle= \frac{k(k+1)}{2}+k+1 $$
-$$ \displaystyle= \frac{k(k+1)+2(k+1)}{2} $$
-$$ \displaystyle= \frac{(k+1)(k+2)}{2} $$
-$$ \displaystyle= \frac{(k+1)((k+1)+1)}{2} $$
-乘记号 $$ \displaystyle 1 + \frac{q^2}{(1-q)}+\frac{q^6}{(1-q)(1-q^2)}+\cdots = \displaystyle \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})}, \displaystyle\text{ for }\lvert q\rvert &lt; 1. $$
-随文数式 这是一些线性数学: $$ k_{n+1} = n^2 + k_n^2 - k_{n-1} $$ ， 然后是更多的文本。
-希腊字母 $$ \Gamma\ \Delta\ \Theta\ \Lambda\ \Xi\ \Pi\ \Sigma\ \Upsilon\ \Phi\ \Psi\ \Omega \alpha\ \beta\ \gamma\ \delta\ \epsilon\ \zeta\ \eta\ \theta\ \iota\ \kappa\ \lambda\ \mu\ \nu\ \xi \ \omicron\ \pi\ \rho\ \sigma\ \tau\ \upsilon\ \phi\ \chi\ \psi\ \omega\ \varepsilon\ \vartheta\ \varpi\ \varrho\ \varsigma\ \varphi $$
-箭头 $$ \gets\ \to\ \leftarrow\ \rightarrow\ \uparrow\ \Uparrow\ \downarrow\ \Downarrow\ \updownarrow\ \Updownarrow $$
-$$ \Leftarrow\ \Rightarrow\ \leftrightarrow\ \Leftrightarrow\ \mapsto\ \hookleftarrow \leftharpoonup\ \leftharpoondown\ \rightleftharpoons\ \longleftarrow\ \Longleftarrow\ \longrightarrow $$
-$$ \Longrightarrow\ \longleftrightarrow\ \Longleftrightarrow\ \longmapsto\ \hookrightarrow\ \rightharpoonup $$
-$$ \rightharpoondown\ \leadsto\ \nearrow\ \searrow\ \swarrow\ \nwarrow $$
-符号 $$ \surd\ \barwedge\ \veebar\ \odot\ \oplus\ \otimes\ \oslash\ \circledcirc\ \boxdot\ \bigtriangleup $$
-$$ \bigtriangledown\ \dagger\ \diamond\ \star\ \triangleleft\ \triangleright\ \angle\ \infty\ \prime\ \triangle $$
-微积分学 $$ \int u \frac{dv}{dx},dx=uv-\int \frac{du}{dx}v,dx $$
-$$ f(x) = \int_{-\infty}^\infty \hat f(\xi),e^{2 \pi i \xi x} $$
-$$ \oint \vec{F} \cdot d\vec{s}=0 $$
-洛伦茨方程 $$ \begin{aligned} \dot{x} &amp; = \sigma(y-x) \ \dot{y} &amp; = \rho x - y - xz \ \dot{z} &amp; = -\beta z + xy \end{aligned} $$
-交叉乘积 这在KaTeX中是可行的，但在这种环境中馏分的分离不是很好。
-$$ \mathbf{V}_1 \times \mathbf{V}_2 = \begin{vmatrix} \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \ \frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \ \frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \end{vmatrix} $$
-这里有一个解决方案:使用“mfrac”类(在MathJax情况下没有区别)的额外类使分数更小:
-$$ \mathbf{V}_1 \times \mathbf{V}_2 = \begin{vmatrix} \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \ \frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \ \frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \end{vmatrix} $$
-强调 $$ \hat{x}\ \vec{x}\ \ddot{x} $$
-有弹性的括号 $$ \left(\frac{x^2}{y^3}\right) $$
-评估范围 $$ \left.\frac{x^3}{3}\right|_0^1 $$
-诊断标准 $$ f(n) = \begin{cases} \frac{n}{2}, &amp; \text{if } n\text{ is even} \ 3n+1, &amp; \text{if } n\text{ is odd} \end{cases} $$
-麦克斯韦方程组 $$ \begin{aligned} \nabla \times \vec{\mathbf{B}} -, \frac1c, \frac{\partial\vec{\mathbf{E}}}{\partial t} &amp; = \frac{4\pi}{c}\vec{\mathbf{j}} \ \nabla \cdot \vec{\mathbf{E}} &amp; = 4 \pi \rho \ \nabla \times \vec{\mathbf{E}}, +, \frac1c, \frac{\partial\vec{\mathbf{B}}}{\partial t} &amp; = \vec{\mathbf{0}} \ \nabla \cdot \vec{\mathbf{B}} &amp; = 0 \end{aligned} $$
-这些方程式很狭窄。我们可以使用(例如)添加垂直间距 [1em] 在每个换行符(\)之后。正如你在这里看到的：
-$$ \begin{aligned} \nabla \times \vec{\mathbf{B}} -, \frac1c, \frac{\partial\vec{\mathbf{E}}}{\partial t} &amp; = \frac{4\pi}{c}\vec{\mathbf{j}} \[1em] \nabla \cdot \vec{\mathbf{E}} &amp; = 4 \pi \rho \[0.5em] \nabla \times \vec{\mathbf{E}}, +, \frac1c, \frac{\partial\vec{\mathbf{B}}}{\partial t} &amp; = \vec{\mathbf{0}} \[1em] \nabla \cdot \vec{\mathbf{B}} &amp; = 0 \end{aligned} $$
-统计学 固定词组：
-$$ \frac{n!}{k!(n-k)!} = {^n}C_k {n \choose k} $$
-分数在分数 $$ \frac{\frac{1}{x}+\frac{1}{y}}{y-z} $$
-ｎ次方根 $$ \sqrt[n]{1+x+x^2+x^3+\ldots} $$
-矩阵 $$ \begin{pmatrix} a_{11} &amp; a_{12} &amp; a_{13}\ a_{21} &amp; a_{22} &amp; a_{23}\ a_{31} &amp; a_{32} &amp; a_{33} \end{pmatrix} \begin{bmatrix} 0 &amp; \cdots &amp; 0 \ \vdots &amp; \ddots &amp; \vdots \ 0 &amp; \cdots &amp; 0 \end{bmatrix} $$
-标点符号 $$ f(x) = \sqrt{1+x} \quad (x \ge -1) f(x) \sim x^2 \quad (x\to\infty) $$
-现在用标点符号:
-$$ f(x) = \sqrt{1+x}, \quad x \ge -1 f(x) \sim x^2, \quad x\to\infty $$</content></entry><entry><title>关于我</title><url>/about.html</url><categories/><tags/><content type="html"> Hugo是用Go编写的一个开放源代码静态站点生成器，可在Apache许可证2.0
-下使用。 Hugo支持TOML, YAML和JSON数据文件类型，Markdown和HTML内容文件，并使用短代码添加丰富的内容。其他值得注意的功能包括分类法、多语言模式、图像处理、自定义输出格式、HTML/CSS/JS缩小和对Sass SCSS工作流的支持。
-Hugo使用了多种开源项目，包括:
-https://github.com/yuin/goldmark
-https://github.com/alecthomas/chroma
-https://github.com/muesli/smartcrop
-https://github.com/spf13/cobra
-https://github.com/spf13/viper
-Hugo是博客、企业网站、创意作品集、在线杂志、单页应用程序甚至是数千页的网站的理想选择。
-Hugo适合那些想要手工编写自己的网站代码，而不用担心设置复杂的运行时、依赖关系和数据库的人。
-使用Hugo建立的网站非常快速、安全，可以部署在任何地方，包括AWS、GitHub Pages、Heroku、Netlify和任何其他托管提供商。
-更多信息请访问GitHub
-.</content></entry><entry><title/><url>/post/vim%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8F%E5%8F%8A%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/</url><categories/><tags/><content type="html"> author = &ldquo;wang&rdquo; title = &ldquo;Vim的四种模式及操作命令大全&rdquo; date = &ldquo;2022-05-29&rdquo; description = &ldquo;Vim four modes and operation command complete&rdquo; tags = [ &ldquo;Linux&rdquo;, &ldquo;Vim&rdquo;, &ldquo;Command&rdquo;,
-] categories = [ &ldquo;Linux&rdquo;, &ldquo;Linux Command&rdquo;, ] series = [&ldquo;Linux Series&rdquo;] aliases = [&ldquo;migrate-from-jekyl&rdquo;]
-+++
-介绍Vim的四种模式及命令操作大全
+亮黄色表示设备文件；</content></entry><entry><title>Vim的四种模式及操作命令大全</title><url>/post/vim%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8F%E5%8F%8A%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/</url><categories><category>Linux</category><category>Linux Command</category></categories><tags><tag>Linux</tag><tag>Vim</tag><tag>Command</tag></tags><content type="html"> 介绍Vim的四种模式及命令操作大全
 一、四种模式 1、正常模式（normal） 正常模式是使用vim打开文件时的默认模式。 无论在哪种模式下，按下Esc键就会进入正常模式。 在这个模式下： 可以移动光标 选中行，复制（ctrl+C） 可以增、删 x删除光标后的一个字符，nx（n是数字）删除光标后的n个字符，X删除光标前的一个字符， dd剪切光标所在的那一行，ndd剪切光标所在行后的n行 p光标所在行开始，向后粘贴已经复制的内容，P光标所在行开始，向前粘贴已经复制的内容 yy复制光标所在的行，nyy复制光标所在行后的n行 u还原上一次的操作 2、命令模式（command） 在正常模式下输入:或/进入命令行模式 在该模式下可以进行保存，搜索，替换，退出，显示行号等。 /word 光标之后查找字符串word，按n向后搜索，按N向前搜索 ?word光标之前查找字符串word，按n向前搜索，按N向前搜索 :n1,n2/word1/word2/g 将n1到n2行之间的word1替换为word2，不加g则只替换每行的第一个word1，加g则搜到的word1全部替换为word2； :1,$s/word1/word2/g将文章中的word1替换为word2，不加g则只替换每行的第一个word1 :w保存文本 ，:w!强制保存 :q退出vim ；:q!强制退出 :wq 保存并退出 :set nu 显示行号，:set nonu不显示行号 3、插入模式（insert） 在正常模式下按下i键，进入插入模式。在插入模式下按Esc键切换到普通模式。 插入模式里可以进行文字的输入 i 在光标所在字符前开始输入文字并进入插入模式。 I 在行首开始输入文字并进入插入模式。此行首指第一个非空白字符处。如果行首有空格，则在空格之后输入文字并进入插入模式 a 在光标所在字符后开始输入文字并进入插入模式 A 在行尾开始输入文字并进入插入模式。这个好用，您不必管光标在此行的什麽地方，只要按 A 就会在行尾等着您输入文字。 o 在光标所在行的下面单独开一新行，来输入文字并进入插入模式 O 在光标所在行的上面单独开一新行来输入文字并进入插入模式 s 删除光标所在的字符并进入插入模式 S 删除光标所在行并进入插入模式 4、可视模式（visual） 在正常模式下按v（小写）进入字符文本，按V（大写）进入行文本，然后使用上下左右键操作选中区域，对选中的部分使用 d进行删除 y进行复制 p进行粘贴 r进行文本替换 gu转换为小写，gU转换为大写，g~大小写互换 二、操作命令大全 [常用] 剪切和复制、粘贴
 [n]x: 剪切光标右边n个字符，相当于d[n]l。 [n]X: 剪切光标左边n个字符，相当于d[n]h。 y: 复制在可视模式下选中的文本。 yy or Y: 复制整行文本。 y[n]w: 复制一(n)个词。 y[n]l: 复制光标右边1(n)个字符。 y[n]h: 复制光标左边1(n)个字符。 y$: 从光标当前位置复制到行尾。 y0: 从光标当前位置复制到行首。 :m,ny 复制m行到n行的内容。 y1G或ygg: 复制光标以上的所有行。 yG: 复制光标以下的所有行。 yaw和yas：复制一个词和复制一个句子，即使光标不在词首和句首也没关系。 d: 删除（剪切）在可视模式下选中的文本。 d$ or D: 删除（剪切）当前位置到行尾的内容。 d[n]w: 删除（剪切）1(n)个单词 d[n]l: 删除（剪切）光标右边1(n)个字符。 d[n]h: 删除（剪切）光标左边1(n)个字符。 d0: 删除（剪切）当前位置到行首的内容 [n] dd: 删除（剪切）1(n)行。 :m,nd 剪切m行到n行的内容。 d1G或dgg: 剪切光标以上的所有行。 dG: 剪切光标以下的所有行。 daw和das：剪切一个词和剪切一个句子，即使光标不在词首和句首也没关系。 d/f：这是一个比较高级的组合命令，它将删除当前位置 到下一个f之间的内容。 p: 在光标之后粘贴。 P: 在光标之前粘贴。 [常用]基本插入
 i: 在光标前插入；一个小技巧：按8，再按i，进入插入模式，输入=， 按esc进入命令模式，就会出现8个=。 这在插入分割线时非常有用，如30i+就插入了36个+组成的分割线。 I: 在当前行第一个非空字符前插入； gI: 在当前行第一列插入； a: 在光标后插入； A: 在当前行最后插入； o: 在下面新建一行插入； O: 在上面新建一行插入； :r filename在当前位置插入另一个文件的内容。 :[n]r filename在第n行插入另一个文件的内容。 :r !date 在光标处插入当前日期与时间。同理，:r !command可以将其它shell命令的输出插入当前文档。 [常用] 基本移动
@@ -289,4 +161,129 @@ Ctrl+o 来回到之前修改的地方
 类似的：
 Ctrl+i 会回退上面的跳动。
 把当前文件转化为网页 这会生成一个 HTML 文件来显示文本，并在分开的窗口显示源代码：
-:%TOhtml</content></entry></search>
+:%TOhtml</content></entry><entry><title>Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置</title><url>/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/</url><categories><category>Linux</category><category>tool</category></categories><tags><tag>Linux</tag><tag>mysql</tag><tag>rpm</tag><tag>yum</tag><tag>CentOS 7</tag></tags><content type="html"> 本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法
+Linux安装软件的四种方式介绍 四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装
+四种方式比较 rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖
+带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译
+四种方式操作说明 rpm与yum命令对比（yum简单，rpm复杂） RPM 全名 RedHat Package Managerment，是由Red Hat公司提出，被众多Linux发行版本所采用，是一种数据库记录的方式来将所需要的软件安装到到Linux系统的一套软件管理机制
+rpm在安装时有严格的顺序限制，包与包有依赖关系，且安装过程中可能依赖别的包需要手动安装，而yum安装某个功能（例如mysql的server端）会自动下载安装依赖
+安装软件：rpm -ivh [软件包名称] 卸载软件：rpm -e [软件包名称] 更新软件：rpm -Uvh [软件包名称]
+yum check-update：列出所有可更新的软件清单命令;
+yum update：更新所有软件或指定软件命令;
+yum install ：仅安装指定的软件命令；
+yum list：列出所有可安装的软件清单命令；
+yum remove ：删除软件包命令；
+yum search ：查找软件包命令：
+以安装mysql为例，对比yum和rpm的安装过程
+①查看是否安装了mysql/mariadb的服务
+[root@localhost ~]# rpm -qa |grep -i mysql MySQL-client-5.6.23-1.sles11.x86_64 MySQL-server-5.6.23-1.sles11.x86_64 MySQL-shared-5.6.23-1.sles11.x86_64 MySQL-devel-5.6.23-1.sles11.x86_64 ... [root@localhost ~]# root@# rpm -qa |grep -i mariadb ... ②如果安装需要卸载所有服务
+[root@localhost ~]# rpm -e --nodeps MySQL-client-5.6.23-1.sles11.x86_64 [root@localhost ~]# rpm -e --nodeps MySQL-server-5.6.23-1.sles11.x86_64 ... ③使用命令或者去mysql官网下载rpm包
+yum安装mysql需要先下载一个基础包安装 [root@localhost ~]# wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm rpm安装需要下载bundle包（rpm文件打包合集）
+rpm Bundle表示rpm的打包合集，包含基础包，lib包，client,server 等包如下图
+④安装：
+yum方式
+先安装基础包： [root@localhost ~]# yum install y mysql57-community-release-el7-10.noarch.rpm [root@localhost ~]# yum install mysql-community-server --nogpgcheck --安装完毕 rpm
+rpm需要依次安装bundle包中的rpm包，包括基础包，库，client和server等 安装mysql-server服务，只需要安装如下4个软件包即可，使⽤rpm -ivh进⾏安装（按顺序安装，后⾯的 服务依赖前⾯的服务 [root@localhost ~]# rpm -ivh mysql-community-common-5.7.23-1.el7.x86_64.rpm [root@localhost ~]# rpm -ivh mysql-community-libs-5.7.23-1.el7.x86_64.rpm [root@localhost ~]# rpm -ivh mysql-community-client-5.7.23-1.el7.x86_64.rpm [root@localhost ~]# rpm -ivh mysql-community-server-5.7.23-1.el7.x86_64.rpm 安装时如果出现缺少依赖，如少libaio、net-tools还需要yum install [名称]来安装依赖 ⑤启动mysql，设置密码
+1、[root@localhost ~]# systemctl start mysqld.service -->启动mysql 2、[root@localhost ~]# grep "password" /var/log/mysqld.log -->查看密码 CSLQ:F=Um5i1 A temporary password is generated for root@localhost: CSLQ:F=Um5i1 3、[root@localhost ~]# mysql -uroot -p -->登录root用户 4、[root@localhost ~]# CSLQ:F=Um5i1 -->输入密码 5、登录进mysql之后设置密码规则(不设置有可能无法修改成简单密码) set global validate_password_policy=0; set global validate_password_length=1; 6、ALTER USER 'root'@'localhost' IDENTIFIED BY 'root'; -->修改密码为root ⑥查找并修改mysql配置文件
+1、[root@localhost ~]# which mysql -->查找mysql命令在什么位置 usr/bin/mysql 2.[root@localhost ~]# /usr/bin/mysql --verbose --help | grep -A 1 'Default options' Default options are read from the following files in the given order: /etc/mysql/my.cnf /etc/my.cnf ~/.my.cnf 返回信息表示首先读取的是/etc/mysql/my.cnf文件，如果前一个文件不存在则继续读/etc/my.cnf文件，如若还不存在便会去读~/.my.cnf文件,这三处即是mysql配置文件存放处，找到修改即可 默认配置文件如下： # For advice on how to change settings please see # http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html [mysqld] # # Remove leading # and set to the amount of RAM for the most important data # cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%. # innodb_buffer_pool_size = 128M # # Remove leading # to turn on a very important data integrity option: logging # changes to the binary log between backups. # log_bin # # Remove leading # to set options mainly useful for reporting servers. # The server defaults are faster for transactions and fast SELECTs. # Adjust sizes as needed, experiment to find the optimal values. # join_buffer_size = 128M # sort_buffer_size = 2M # read_rnd_buffer_size = 2M datadir=/var/lib/mysql socket=/var/lib/mysql/mysql.sock # Disabling symbolic-links is recommended to prevent assorted security risks symbolic-links=0 log-error=/var/log/mysqld.log pid-file=/var/run/mysqld/mysqld.pid 已编译tar包(带bin目录的tar)和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译
+①带bin的tar包安装
+1、[root@localhost ~]# tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar 2、[root@localhost ~]# cp -r mysql-5.7.26-linux-glibc2.12-x86_64 /usr/local/mysql -->拷贝文件夹到/usr/local目录下并重命名为mysql 3、[root@localhost ~]# mkdir /usr/local/mysql/data /usr/local/mysql/logs -->创建data和logs文件夹 4、[root@localhost ~]# groupadd mysql -->添加mysql用户组 5、[root@localhost ~]# useradd -r -g mysql mysql -->向mysql用户组添加mysql用户，-r &lt;参数表示mysql用户是系统用户，不可用于登录系统，-g 参数表示把mysql用户添加到mysql用户组中 6、chown -R mysql:mysql /usr/local/mysql/ -->将mysql目录权限分配给mysql用户组下的mysql用户 已编译tar包安装需要新建mysql用户和用户组，并将mysql目录权限分配给用户，若不进行此操作，在mysql服务启动时会报Starting MySQL. ERROR! The server quit without updating PID file错误 7、[root@localhost ~]# vim /etc/my.cnf -->在/etc下新增配置文件 [mysqld] port = 3306 user = mysql basedir = /usr/local/mysql datadir = /usr/local/mysql/data socket = /usr/local/mysql/data/mysql.sock bind-address = 0.0.0.0 pid-file = /usr/local/mysql/data/mysqld.pid character-set-server = utf8 collation-server = utf8_general_ci max_connections = 200 log-error = /usr/local/mysql/logs/mysqld.log 8、[root@localhost ~]# cd /usr/local/mysql/bin/ -->进入mysql的bin目录 9、[root@localhost ~]#./mysqld --defaults-file=/etc/my.cnf --user=mysql --basedir=/usr/local/mysql/ --datadir=/data/mysql/ --initialize -->初始化 10、[root@localhost ~]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql -->将mysql.server放置到/etc/init.d/mysql中 11、[root@localhost ~]# service mysql start -->启动服务 12、[root@localhost ~]# cat /usr/local/mysql/logs/mysqld.log -->日志最后一行有随机生成的初始密码,可登录mysql 13、[root@localhost ~]# ln -s /usr/local/mysql/bin/mysql /usr/bin -->创建软连接到/usr/bin可以全局使用mysql命令(方便登录mysql) 14、[root@localhost ~]# mysql -uroot -p -->登录mysql 15、[root@localhost ~]# 输入12步得到的密码，登录mysql 16、若登录出现Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)，需要将mysql.sock软连接到tmp目录即可 [root@localhost ~]# ln -s /usr/local/mysql/data/mysql.sock /tmp ②source源码安装
+(1)创建安装目录 [root@localhost ~]# mkdir /usr/local/mysql/{data,logs,tmp,run} -p (2）首先安装源码编译所需要的包 [root@localhost ~]# yum -y install make gcc-c++ cmake bison-devel ncurses-devel (3)解压 [root@localhost ~]# tar -zxvf mysql-5.7.27.tar.gz [root@localhost ~]# tar -zxvf mysql-boost-5.7.27.tar.gz #（不需要安装，在安装mysql时自动安装，） 两个文件解压以后都会在同一个目录上 mysql-5.7.27 (4)编译安装（编译参数按实际情况制定） cd mysql-5.7.27 cmake . \ -DCMAKE_INSTALL_PREFIX=/usr/local/mysql/ \ -DMYSQL_DATADIR=/usr/local/mysql/data \ -DDOWNLOAD_BOOST=1 \ -DWITH_BOOST=/opt/software/mysql-5.7.27/boost \ -DSYSCONFDIR=/etc \ -DWITH_INNOBASE_STORAGE_ENGINE=1 \ -DWITH_PARTITION_STORAGE_ENGINE=1 \ -DWITH_FEDERATED_STORAGE_ENGINE=1 \ -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \ -DWITH_MYISAM_STORAGE_ENGINE=1 \ -DENABLED_LOCAL_INFILE=1 \ -DMYSQL_UNIX_ADDR=/usr/local/mysql/run/mysql.sock \ -DENABLE_DTRACE=0 \ -DDEFAULT_CHARSET=utf8 \ -DDEFAULT_COLLATION=utf8_general_ci \ -DWITH_EMBEDDED_SERVER=1 make &amp; make install (5)/etc/my.cnf配置mysql (6) ./mysqld --defaults-file=/etc/my.cnf --initialize #初始化 (7) cp support-files/mysql.server /etc/init.d/mysql #启动项设置 (8) service mysqld start (9)登录不在赘述 ​</content></entry><entry><title>Markdown语法手册</title><url>/post/markdown-syntax/</url><categories><category>themes</category><category>syntax</category></categories><tags><tag>markdown</tag><tag>css</tag><tag>html</tag></tags><content type="html"> 本文提供了一个可以在 Hugo 内容文件中使用的基本Markdown语法示例，还展示了基本 HTML 元素在 Hugo 主题中是否使用 CSS 装饰。
+标题 下面的 HTML 代码&lt;h1>—&lt;h6> 元素表示六个级别的节标题。 &lt;h1>是最高的节级别，&lt;h6>是最低的节级别。
+H1 H2 H3 H4 H5 H6 段落 生活是什么？生活是柴米油盐的平淡；是行色匆匆早出晚归的奔波；生活是错的时间遇到对的人的遗憾；是爱的付出与回报；生活是看不同的风景，遇到不同的人；是行至水穷尽，坐看云起时的峰回路转；生活是灵魂经历伤痛后的微笑怒放；是挫折坎坷被晾晒后的坚强；生活是酸甜苦辣被岁月沉淀后的馨香；是经历风霜雪雨洗礼后的懂得；生活是走遍千山万水后，回眸一笑的洒脱。
+有些事，猝不及防，不管你在不在乎；有些人，并非所想，不管你明不明白；有些路，必须得走，不管你愿不愿意。不怕事，不惹事，不避事，做好自己，用真心面对一切；少埋怨，少指责，少发火，学会沉静，用微笑考量一切；多体察，多包容，多思索，尽心尽力，虽缺憾但无悔。像蒲公英一样美丽，虽轻盈，但并不卑微，它有自己的生命，也有自己的世界！
+引用 blockquote 元素表示从另一个来源引用的内容，可选的引用必须在 footer 或 cite元素内，也可选的内嵌更改，如注释和缩写。
+引用没有归属 读懂自我，带着简单的心情，看复杂的人生，走坎坷的路！
+注意： 可以在块引用中使用 Markdown 语法。
+带归属的引用 不要通过分享记忆来交流，通过交流来分享记忆。
+— 罗布·派克1
+表格 表不是Markdown核心规范的一部分，但是Hugo支持开箱即用。
+Name Age Bob 27 Alice 23 表格内使用Markdown语法 Italics Bold Code italics bold code 图像 ![图像描述](图像地址) 示例 常规用法 SVG图像 Google Chrome
+Firefox Browser
+小图标
+点击图像可以打开图像浏览器，快试试吧。
+代码块 带有引号的代码块 &lt;!doctype html> &lt;html lang="en"> &lt;head> &lt;meta charset="utf-8"> &lt;title>Example HTML5 Document&lt;/title> &lt;/head> &lt;body> &lt;p>Test&lt;/p> &lt;/body> &lt;/html> 用四个空格缩进的代码块 &lt;!doctype html>
+&lt;html lang="en">
+&lt;head>
+&lt;meta charset="utf-8">
+&lt;title>Example HTML5 Document&lt;/title>
+&lt;/head>
+&lt;body>
+&lt;p>Test&lt;/p>
+&lt;/body>
+&lt;/html>
+代码块引用Hugo的内部高亮短代码 &lt;!doctype html> &lt;html lang="en"> &lt;head> &lt;meta charset="utf-8"> &lt;title>Example HTML5 Document&lt;/title> &lt;/head> &lt;body> &lt;p>Test&lt;/p> &lt;/body> &lt;/html> 列表类型 有序列表 First item Second item Third item 无序列表 List item Another item And another item 嵌套列表 Fruit Apple Orange Banana Dairy Milk Cheese 其他元素 — abbr, sub, sup, kbd, mark GIF 是位图图像格式。
+H2O
+Xn + Yn = Zn
+按 CTRL+ALT+Delete 组合键结束会话。
+大多数蝾螈在夜间活动，捕食昆虫、蠕虫和其他小动物。
+以上引文摘自Rob Pike在2015年11月18日 Gopherfest 上的演讲
+。&#160;&#8617;&#xfe0e;</content></entry><entry><title>富文本内容测试</title><url>/post/rich-content/</url><categories/><tags><tag>shortcodes</tag><tag>privacy</tag></tags><content type="html"> Hugo 上有几个内置短码
+，用于丰富内容，以及隐私配置
+还有一组简单的短代码，支持各种社交媒体嵌入的静态和非 JS 版本。
+YouTube 增强隐私短码 {{/&lt; youtube ZJthWmvUzzc >/}}
+Twitter 短码 {{/&lt; twitter_simple 1085870671291310081 >/}}
+Vimeo 短码 {{/&lt; vimeo_simple 48912912 >/}}
+哔哩哔哩短码</content></entry><entry><title>图像占位符显示</title><url>/post/placeholder-text/</url><categories/><tags><tag>markdown</tag><tag>text</tag></tags><content type="html"> 范德格拉夫原理（Van de Graaf Canon）重构了曾经用于书籍设计中将页面划分为舒适比例的方法。这一原理也被称为“秘密原理”，用于许多中世纪的手稿和古板书中。在范德格拉夫原理中，文本区域和页面的长款具有相同的比例，并且文本区域的高度等于页面宽度，通过划分页面得到九分之一的订口边距和九分之二的切口边距，以及与页面长宽相同的比例的文本区域。
+Vagus 示例
+The Van de Graaf Canon
+总结 当然设计中的黄金比例是为人所熟知的，黄金分割的公式为a:b=b:(a+b)。这是指较小的两个矩形与较大的两个矩形以相同的组合方式相关联。黄金分割比例为1:1.618。</content></entry><entry><title>数据公式设置显示</title><url>/post/math-typesetting/</url><categories/><tags/><content type="html"> Hugo 项目中的数学表示法可以通过使用第三方 JavaScript 库来实现。
+在这个例子中，我们将使用 MathJax
+创建一个文件 /content/en[zh-CN]/math.md
+可以全局启用MathJax，请在项目配置中将参数math设置为true
+或是在每页基础上启用MathJax，在内容文件中包括参数math: true
+注意： 使用支持的TeX功能
+的联机参考资料
+例子 重复的分数 $$ \frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} \equiv 1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}} {1+\frac{e^{-8\pi}} {1+\cdots} } } } $$
+总和记号 $$ \left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right) $$
+几何级数之和 我把接下来的两个例子分成了几行，这样它在手机上表现得更好。这就是为什么它们包含 \displaystyle。
+$$ \displaystyle\sum_{i=1}^{k+1}i $$
+$$ \displaystyle= \left(\sum_{i=1}^{k}i\right) +(k+1) $$
+$$ \displaystyle= \frac{k(k+1)}{2}+k+1 $$
+$$ \displaystyle= \frac{k(k+1)+2(k+1)}{2} $$
+$$ \displaystyle= \frac{(k+1)(k+2)}{2} $$
+$$ \displaystyle= \frac{(k+1)((k+1)+1)}{2} $$
+乘记号 $$ \displaystyle 1 + \frac{q^2}{(1-q)}+\frac{q^6}{(1-q)(1-q^2)}+\cdots = \displaystyle \prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})}, \displaystyle\text{ for }\lvert q\rvert &lt; 1. $$
+随文数式 这是一些线性数学: $$ k_{n+1} = n^2 + k_n^2 - k_{n-1} $$ ， 然后是更多的文本。
+希腊字母 $$ \Gamma\ \Delta\ \Theta\ \Lambda\ \Xi\ \Pi\ \Sigma\ \Upsilon\ \Phi\ \Psi\ \Omega \alpha\ \beta\ \gamma\ \delta\ \epsilon\ \zeta\ \eta\ \theta\ \iota\ \kappa\ \lambda\ \mu\ \nu\ \xi \ \omicron\ \pi\ \rho\ \sigma\ \tau\ \upsilon\ \phi\ \chi\ \psi\ \omega\ \varepsilon\ \vartheta\ \varpi\ \varrho\ \varsigma\ \varphi $$
+箭头 $$ \gets\ \to\ \leftarrow\ \rightarrow\ \uparrow\ \Uparrow\ \downarrow\ \Downarrow\ \updownarrow\ \Updownarrow $$
+$$ \Leftarrow\ \Rightarrow\ \leftrightarrow\ \Leftrightarrow\ \mapsto\ \hookleftarrow \leftharpoonup\ \leftharpoondown\ \rightleftharpoons\ \longleftarrow\ \Longleftarrow\ \longrightarrow $$
+$$ \Longrightarrow\ \longleftrightarrow\ \Longleftrightarrow\ \longmapsto\ \hookrightarrow\ \rightharpoonup $$
+$$ \rightharpoondown\ \leadsto\ \nearrow\ \searrow\ \swarrow\ \nwarrow $$
+符号 $$ \surd\ \barwedge\ \veebar\ \odot\ \oplus\ \otimes\ \oslash\ \circledcirc\ \boxdot\ \bigtriangleup $$
+$$ \bigtriangledown\ \dagger\ \diamond\ \star\ \triangleleft\ \triangleright\ \angle\ \infty\ \prime\ \triangle $$
+微积分学 $$ \int u \frac{dv}{dx},dx=uv-\int \frac{du}{dx}v,dx $$
+$$ f(x) = \int_{-\infty}^\infty \hat f(\xi),e^{2 \pi i \xi x} $$
+$$ \oint \vec{F} \cdot d\vec{s}=0 $$
+洛伦茨方程 $$ \begin{aligned} \dot{x} &amp; = \sigma(y-x) \ \dot{y} &amp; = \rho x - y - xz \ \dot{z} &amp; = -\beta z + xy \end{aligned} $$
+交叉乘积 这在KaTeX中是可行的，但在这种环境中馏分的分离不是很好。
+$$ \mathbf{V}_1 \times \mathbf{V}_2 = \begin{vmatrix} \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \ \frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \ \frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \end{vmatrix} $$
+这里有一个解决方案:使用“mfrac”类(在MathJax情况下没有区别)的额外类使分数更小:
+$$ \mathbf{V}_1 \times \mathbf{V}_2 = \begin{vmatrix} \mathbf{i} &amp; \mathbf{j} &amp; \mathbf{k} \ \frac{\partial X}{\partial u} &amp; \frac{\partial Y}{\partial u} &amp; 0 \ \frac{\partial X}{\partial v} &amp; \frac{\partial Y}{\partial v} &amp; 0 \end{vmatrix} $$
+强调 $$ \hat{x}\ \vec{x}\ \ddot{x} $$
+有弹性的括号 $$ \left(\frac{x^2}{y^3}\right) $$
+评估范围 $$ \left.\frac{x^3}{3}\right|_0^1 $$
+诊断标准 $$ f(n) = \begin{cases} \frac{n}{2}, &amp; \text{if } n\text{ is even} \ 3n+1, &amp; \text{if } n\text{ is odd} \end{cases} $$
+麦克斯韦方程组 $$ \begin{aligned} \nabla \times \vec{\mathbf{B}} -, \frac1c, \frac{\partial\vec{\mathbf{E}}}{\partial t} &amp; = \frac{4\pi}{c}\vec{\mathbf{j}} \ \nabla \cdot \vec{\mathbf{E}} &amp; = 4 \pi \rho \ \nabla \times \vec{\mathbf{E}}, +, \frac1c, \frac{\partial\vec{\mathbf{B}}}{\partial t} &amp; = \vec{\mathbf{0}} \ \nabla \cdot \vec{\mathbf{B}} &amp; = 0 \end{aligned} $$
+这些方程式很狭窄。我们可以使用(例如)添加垂直间距 [1em] 在每个换行符(\)之后。正如你在这里看到的：
+$$ \begin{aligned} \nabla \times \vec{\mathbf{B}} -, \frac1c, \frac{\partial\vec{\mathbf{E}}}{\partial t} &amp; = \frac{4\pi}{c}\vec{\mathbf{j}} \[1em] \nabla \cdot \vec{\mathbf{E}} &amp; = 4 \pi \rho \[0.5em] \nabla \times \vec{\mathbf{E}}, +, \frac1c, \frac{\partial\vec{\mathbf{B}}}{\partial t} &amp; = \vec{\mathbf{0}} \[1em] \nabla \cdot \vec{\mathbf{B}} &amp; = 0 \end{aligned} $$
+统计学 固定词组：
+$$ \frac{n!}{k!(n-k)!} = {^n}C_k {n \choose k} $$
+分数在分数 $$ \frac{\frac{1}{x}+\frac{1}{y}}{y-z} $$
+ｎ次方根 $$ \sqrt[n]{1+x+x^2+x^3+\ldots} $$
+矩阵 $$ \begin{pmatrix} a_{11} &amp; a_{12} &amp; a_{13}\ a_{21} &amp; a_{22} &amp; a_{23}\ a_{31} &amp; a_{32} &amp; a_{33} \end{pmatrix} \begin{bmatrix} 0 &amp; \cdots &amp; 0 \ \vdots &amp; \ddots &amp; \vdots \ 0 &amp; \cdots &amp; 0 \end{bmatrix} $$
+标点符号 $$ f(x) = \sqrt{1+x} \quad (x \ge -1) f(x) \sim x^2 \quad (x\to\infty) $$
+现在用标点符号:
+$$ f(x) = \sqrt{1+x}, \quad x \ge -1 f(x) \sim x^2, \quad x\to\infty $$</content></entry><entry><title>关于我</title><url>/about.html</url><categories/><tags/><content type="html"> Hugo是用Go编写的一个开放源代码静态站点生成器，可在Apache许可证2.0
+下使用。 Hugo支持TOML, YAML和JSON数据文件类型，Markdown和HTML内容文件，并使用短代码添加丰富的内容。其他值得注意的功能包括分类法、多语言模式、图像处理、自定义输出格式、HTML/CSS/JS缩小和对Sass SCSS工作流的支持。
+Hugo使用了多种开源项目，包括:
+https://github.com/yuin/goldmark
+https://github.com/alecthomas/chroma
+https://github.com/muesli/smartcrop
+https://github.com/spf13/cobra
+https://github.com/spf13/viper
+Hugo是博客、企业网站、创意作品集、在线杂志、单页应用程序甚至是数千页的网站的理想选择。
+Hugo适合那些想要手工编写自己的网站代码，而不用担心设置复杂的运行时、依赖关系和数据库的人。
+使用Hugo建立的网站非常快速、安全，可以部署在任何地方，包括AWS、GitHub Pages、Heroku、Netlify和任何其他托管提供商。
+更多信息请访问GitHub
+.</content></entry></search>

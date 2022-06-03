@@ -371,7 +371,7 @@ Xn + Yn = Zn
 按 CTRL+ALT+Delete 组合键结束会话。
 大多数蝾螈在夜间活动，捕食昆虫、蠕虫和其他小动物。
 以上引文摘自Rob Pike在2015年11月18日 Gopherfest 上的演讲
-。&#160;&#8617;&#xfe0e;</content></entry><entry><title>富文本内容测试</title><url>/post/rich-content/</url><categories/><tags><tag>shortcodes</tag><tag>privacy</tag></tags><content type="html"> Hugo 上有几个内置短码
+。&#160;&#8617;&#xfe0e;</content></entry><entry><title>富文本内容测试pp</title><url>/post/rich-content/</url><categories/><tags><tag>shortcodes</tag><tag>privacy</tag></tags><content type="html"> Hugo 上有几个内置短码
 ，用于丰富内容，以及隐私配置
 还有一组简单的短代码，支持各种社交媒体嵌入的静态和非 JS 版本。
 YouTube 增强隐私短码 {{/&lt; youtube ZJthWmvUzzc >/}}

@@ -36,7 +36,22 @@ MySQL 规定 NULL值列表 必须用整数个字节的位表示，如果使用�
 记录头信息
 除了 变长字段长度列表 、 NULL值列表 之外，还有一个用于描述记录的 记录头信息 ，它是由固定的 5 个字节组成。 5 个字节也就是 40 个二进制位，不同的位代表不同的意思
 存储行
-/*MySQL 对一条记录占用的最大存储空间是有限制的，除了 BLOB 或者 TEXT 类型的列之 外，其他所有的列（不包括隐藏列和记录头信息）占用的字节长度加起来不能超过 65535 个字节 存储一个 VARCHAR(M) 类型的列，其实需要占用3部分存储空间： ①真实数据 ②真实数据占用字节的长度 ③NULL 值标识，如果该列有 NOT NULL 属性则可以没有这部分存储空间 如果该 VARCHAR 类型的列没有 NOT NULL 属性，那最多只能存储 65532 个字节的数据，因为真实数据的长度可能 占用2个字节， NULL 值标识需要占用1个字节： */ CREATE TABLE varchar_size_demo( c1 VARCHAR(65532) )CHARSET=ASCII ROW_FORMAT=COMPACT; /*编码如果是gbk,最多只能32766 （也就是：65532/2），因为gbk一个字符占两个字节 utf8 字符集表示一个字符最多需要 3 个字节，那在该字符集下， M 的最大取值就是 21844 ，就是说最多能存 储 21844 （也就是：65532/3）个字符*/ /*这些都是表中只有一个字段的情况下，如果是多个字段，则所有字段（（不包括隐藏 列和记录头信息））加起来不能超过65535*/ CREATE TABLE varchar_size_demo( c VARCHAR(32766) ) CHARSET=gbk ROW_FORMAT=COMPACT;</content></entry><entry><title>VMware虚拟机CentOS 7.5设置静态ip</title><url>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</url><categories><category>Linux</category><category>Linux Basis</category></categories><tags><tag>Linux</tag><tag>ip</tag></tags><content type="html"> CentOS 7.5设置静态ip,配置网关，DNS等
+/*MySQL 对一条记录占用的最大存储空间是有限制的，除了 BLOB 或者 TEXT 类型的列之 外，其他所有的列（不包括隐藏列和记录头信息）占用的字节长度加起来不能超过 65535 个字节 存储一个 VARCHAR(M) 类型的列，其实需要占用3部分存储空间： ①真实数据 ②真实数据占用字节的长度 ③NULL 值标识，如果该列有 NOT NULL 属性则可以没有这部分存储空间 如果该 VARCHAR 类型的列没有 NOT NULL 属性，那最多只能存储 65532 个字节的数据，因为真实数据的长度可能 占用2个字节， NULL 值标识需要占用1个字节： */ CREATE TABLE varchar_size_demo( c1 VARCHAR(65532) )CHARSET=ASCII ROW_FORMAT=COMPACT; /*编码如果是gbk,最多只能32766 （也就是：65532/2），因为gbk一个字符占两个字节 utf8 字符集表示一个字符最多需要 3 个字节，那在该字符集下， M 的最大取值就是 21844 ，就是说最多能存 储 21844 （也就是：65532/3）个字符*/ /*这些都是表中只有一个字段的情况下，如果是多个字段，则所有字段（（不包括隐藏 列和记录头信息））加起来不能超过65535*/ CREATE TABLE varchar_size_demo( c VARCHAR(32766) ) CHARSET=gbk ROW_FORMAT=COMPACT; 3 访问方法 const: 通过主键或者唯一二级索引列与常数的等值比较来定位一条记录,如果主键或者唯一二级索引是由多个列构成的话，索引中的每一个列都需要与常数进行等值比较
+ref：通过某个普通的二级索引列与常数进行等值比较（普通二级索引与唯一二级索引对应，普通二级索引等值比较可能查出多个列）
+二级索引列值为 NULL 的情况
+不论是普通的二级索引，还是唯一二级索引，它们的索引列对包含 NULL 值的数量并不限制，所以我们采用key IS NULL 这种形式的搜索条件最多只能使用 ref 的访问方法，而不是 const 的访问方法。
+对于某个包含多个索引列的二级索引来说，只要是最左边的连续索引列是与常数的等值比较就可能采用 ref的访问方法，比方说下边这几个查询：
+SELECT * FROM single_table WHERE key_part1 = &lsquo;god like&rsquo;;
+SELECT * FROM single_table WHERE key_part1 = &lsquo;god like&rsquo; AND key_part2 = &rsquo;legendary&rsquo;;
+SELECT * FROM single_table WHERE key_part1 = &lsquo;god like&rsquo; AND key_part2 = &rsquo;legendary&rsquo;
+AND key_part3 = &lsquo;penta kill&rsquo;。但是如果最左边的连续索引列并不全部是等值比较的话，它的访问方法就不能称为 ref 了，比方说这样： SELECT * FROM single_table WHERE key_part1 = &lsquo;god like&rsquo; AND key_part2 > &rsquo;legendary&rsquo;;
+ref_or_null：有时候我们不仅想找出某个二级索引列的值等于某个常数的记录，还想把该列的值为 NULL 的记录也找出来，就像下边这个查询：
+SELECT * FROM single_demo WHERE key1 = &lsquo;abc&rsquo; OR key1 IS NULL;
+range：利用索引进行范围匹配
+index：遍历二级索引记录的执行方式
+SELECT key_part1, key_part2, key_part3 FROM single_table WHERE key_part2 = &lsquo;abc&rsquo;;
+key_part1, key_part2, key_part3三个要查询的字段是联合索引，查询条件key_part2 不是最左索引，此时需要直接通过遍历 idx_key_part 索引的叶子节点的记录来比较 key_part2 = &lsquo;abc&rsquo; 这个条件是否成立，把匹配成功的二级索引记录的 key_part1 , key_part2 , key_part3 列的值直接加到结果集中就行了，不需要回表
+all：全表扫描</content></entry><entry><title>VMware虚拟机CentOS 7.5设置静态ip</title><url>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</url><categories><category>Linux</category><category>Linux Basis</category></categories><tags><tag>Linux</tag><tag>ip</tag></tags><content type="html"> CentOS 7.5设置静态ip,配置网关，DNS等
 打开vmware虚拟机界面的编辑->虚拟网络编辑器如下图： 打开网配置文件
 #vim /etc/sysconfig/network-scripts/if-cfg-ens33
 DEFROUTE="yes" IPV4_FAILURE_FATAL="no" IPV6INIT="yes" IPV6_AUTOCONF="yes" IPV6_DEFROUTE="yes" IPV6_FAILURE_FATAL="no" IPV6_ADDR_GEN_MODE="stable-privacy" NAME="ens33" UUID="48aeeb81-96b5-4d08-880a-53e3f527469c" DEVICE="ens33" ONBOOT="yes" BOOTPROTO=static #静态ip获取方式 IPADDR="192.168.52.104" #静态ip地址 NETMASK="255.255.255.0" #子网掩码 GATEWAY="192.168.52.2" #网关 DNS1="114.114.114.114" #国内移动联通电信网络DNS</content></entry><entry><title>Linux常用设置、命令杂记</title><url>/post/linux%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%9D%82%E8%AE%B0/</url><categories><category>Linux</category><category>Linux Command</category></categories><tags><tag>Linux</tag><tag>Command</tag></tags><content type="html"> 记录Linux常用的便捷设置和常用命令

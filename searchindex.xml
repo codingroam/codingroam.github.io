@@ -70,7 +70,42 @@ range：利用索引进行范围匹配
 index：遍历二级索引记录的执行方式
 SELECT key_part1, key_part2, key_part3 FROM single_table WHERE key_part2 = &lsquo;abc&rsquo;;
 key_part1, key_part2, key_part3三个要查询的字段是联合索引，查询条件key_part2 不是最左索引，此时需要直接通过遍历 idx_key_part 索引的叶子节点的记录来比较 key_part2 = &lsquo;abc&rsquo; 这个条件是否成立，把匹配成功的二级索引记录的 key_part1 , key_part2 , key_part3 列的值直接加到结果集中就行了，不需要回表
-all：全表扫描</content></entry><entry><title>VMware虚拟机CentOS 7.5设置静态ip</title><url>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</url><categories><category>Linux</category><category>Linux Basis</category></categories><tags><tag>Linux</tag><tag>ip</tag></tags><content type="html"> CentOS 7.5设置静态ip,配置网关，DNS等
+all：全表扫描
+eq_ref：在连接查询时，如果被驱动表是通过主键或者唯一二级索引列等值匹配的方式进行访问的（如果该主键或者唯一二级索引是联合索引的话，所有的索引列都必须进行等值比较），则对该被驱动表的访问方法就是
+eq_ref
+index_merge：一般情况下对于某个表的查询只能使用到一个索引，在某些场景下可以使用 Intersection 、 Union 、 Sort-Union 这三种索引合并的方式来执行查询，如
+mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = &lsquo;a&rsquo; OR key3 = &lsquo;a&rsquo;;
++&mdash;-+&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;
+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-
+&mdash;&ndash;+
+| id | select_type | table | partitions | type | possible_keys | key
+| key_len | ref | rows | filtered | Extra |
++&mdash;-+&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;
+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-
+&mdash;&ndash;+
+| 1 | SIMPLE | s1 | NULL | index_merge | idx_key1,idx_key3 | idx_key
+1,idx_key3 | 303,303 | NULL | 14 | 100.00 | Using union(idx_key1,idx_key3); Using
+where |
++&mdash;-+&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;
+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;-
+&mdash;&ndash;+
+1 row in set, 1 warning (0.01 sec)
+unique_subquery：类似于两表连接中被驱动表的 eq_ref 访问方法， unique_subquery 是针对在一些包含 IN 子查询的查询语句中，如果查询优化器决定将 IN 子查询转换为 EXISTS 子查询，而且子查询可以使用到主键进行等值匹配的话，那么该子查询执行计划的 type 列的值就是 unique_subquery ，比如下边的这个查询语句：
+mysql> EXPLAIN SELECT * FROM s1 WHERE key2 IN (SELECT id FROM s2 where s1.key1 = s2.
+key1) OR key3 = &lsquo;a&rsquo;;
++&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
++&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;-+
+| id | select_type | table | partitions | type | possible_keys
+| key | key_len | ref | rows | filtered | Extra |
++&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
++&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;-+
+| 1 | PRIMARY | s1 | NULL | ALL | idx_key3
+| NULL | NULL | NULL | 9688 | 100.00 | Using where |
+| 2 | DEPENDENT SUBQUERY | s2 | NULL | unique_subquery | PRIMARY,idx_key1
+| PRIMARY | 4 | func | 1 | 10.00 | Using where |
++&mdash;-+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;+&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;
++&mdash;&mdash;&mdash;+&mdash;&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;+&mdash;&mdash;&mdash;-+&mdash;&mdash;&mdash;&mdash;-+
+system：当表中只有一条记录并且该表使用的存储引擎的统计数据是精确的，比如MyISAM、Memory，那么对该表的访问方法就是 system</content></entry><entry><title>VMware虚拟机CentOS 7.5设置静态ip</title><url>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</url><categories><category>Linux</category><category>Linux Basis</category></categories><tags><tag>Linux</tag><tag>ip</tag></tags><content type="html"> CentOS 7.5设置静态ip,配置网关，DNS等
 打开vmware虚拟机界面的编辑->虚拟网络编辑器如下图： 打开网配置文件
 #vim /etc/sysconfig/network-scripts/if-cfg-ens33
 DEFROUTE="yes" IPV4_FAILURE_FATAL="no" IPV6INIT="yes" IPV6_AUTOCONF="yes" IPV6_DEFROUTE="yes" IPV6_FAILURE_FATAL="no" IPV6_ADDR_GEN_MODE="stable-privacy" NAME="ens33" UUID="48aeeb81-96b5-4d08-880a-53e3f527469c" DEVICE="ens33" ONBOOT="yes" BOOTPROTO=static #静态ip获取方式 IPADDR="192.168.52.104" #静态ip地址 NETMASK="255.255.255.0" #子网掩码 GATEWAY="192.168.52.2" #网关 DNS1="114.114.114.114" #国内移动联通电信网络DNS</content></entry><entry><title>Linux常用设置、命令杂记</title><url>/post/linux%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE%E5%91%BD%E4%BB%A4%E6%9D%82%E8%AE%B0/</url><categories><category>Linux</category><category>Linux Command</category></categories><tags><tag>Linux</tag><tag>Command</tag></tags><content type="html"> 记录Linux常用的便捷设置和常用命令

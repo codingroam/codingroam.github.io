@@ -359,7 +359,51 @@ propagation_requierd：如果当前没有事务，就新建一个事务，如果
 导入aop的头文件！
 &lt;!--配置aop织入事务--> &lt;aop:config> &lt;aop:pointcut id="txPointcut" expression="execution(* com.kuang.dao.*.*(..))"/> &lt;aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/> &lt;/aop:config> 进行测试
 删掉刚才插入的数据，再次测试！
-@Test public void test2(){ ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml"); UserMapper mapper = (UserMapper) context.getBean("userDao"); List&lt;User> user = mapper.selectUser(); System.out.println(user); }</content></entry><entry><title>Spring学习记录</title><url>/post/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url><categories><category>Spring</category><category>源码</category></categories><tags><tag>Spring</tag><tag>源码</tag></tags><content type="html"> 根据雷神《spring注解驱动开发》整理记录知识点
+@Test public void test2(){ ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml"); UserMapper mapper = (UserMapper) context.getBean("userDao"); List&lt;User> user = mapper.selectUser(); System.out.println(user); }</content></entry><entry><title>精通Git</title><url>/post/%E7%B2%BE%E9%80%9Agit/</url><categories><category>Git</category></categories><tags><tag>Git</tag></tags><content type="html"> 精通Git
+精通Git 1、配置信息 &ndash;global 选项，那么该命令只需要运行一次，因为之后无论你在该系统上做任何事情， Git 都会使用那些信息。当你想针对特定项目使用不同的用户名称与邮件地址时，可以在那个项目目录下运行没有 &ndash;global 选项的命令来配置
+git config &ndash;global user.name &ldquo;kw&rdquo;
+git config &ndash;global user.email 1121034507@qq.com
+git config &ndash;list
+2、git操作 git init
+*$ git add .c
+$ git add LICENSE
+$ git commit -m &lsquo;initial project version&rsquo;
+git clone https://github.com/libgit2/libgit2
+[别名]
+git status
+$ git status -s
+**M README &lt;!--右边的 M 表示该文件被修改了但是还没放入暂存区-->**
+M lib/simplegit.rb
+MM Rakefile
+A lib/git.rb
+?? LICENSE.txt
+git diff
+要查看尚未暂存的文件更新了哪些部分，不加参数直接输入 git diff：
+要查看已暂存的将要添加到下次提交里的内容，可以用 git diff &ndash;cached/&ndash;staged
+git commit -m &ldquo;message&rdquo;
+git commit -a -m &ldquo;message&rdquo;
+git rm 文件名
+git rm &ndash;cached README
+git rm log/\*.log
+git rm \*~
+git mv file_from file_to
+git log
+git log -p -2
+git log &ndash;stat
+git log &ndash;pretty=format:"%h - %an, %ar : %s" &lt;!&ndash; &ndash;pretty。这个选项可以指定使用不同于默认格式的方式展示提交历史&ndash;>
+ca82a6d - Scott Chacon, 6 years ago : changed the version number
+085bb3b - Scott Chacon, 6 years ago : removed unnecessary test
+a11bef0 - Scott Chacon, 6 years ago : first commit
+用 &ndash;author 选项显示指定作者的提交，用 &ndash;grep 选项搜索提交说明中的关键字。（请注意，如果要得到同时满足这两个选项搜索条件的提交，就必须用 &ndash;all-match 选项。否则，满足任意一个条件的提交都会被匹配出来）。另一个非常有用的筛选选项是 -S，可以列出那些添加或移除了某些字符串的提交。比如说，你想找出添加或移除了某一个特定函数的引用的提交，你可以这样使用： $ git log -Sfunction_name
+| 选项 | 说明 |
+| ----------------- | ---------------------------------- |
+| -(n) | 仅显示最近的 n 条提交 |
+| --since, --after | 仅显示指定时间之后的提交。 |
+| --until, --before | 仅显示指定时间之前的提交 |
+| --author | 仅显示指定作者相关的提交。 |
+| --committer | 仅显示指定提交者相关的提交。 |
+| --grep | 仅显示含指定关键字的提交 |
+| -S | 仅显示添加或移除了某个关键字的提交 |</content></entry><entry><title>Spring学习记录</title><url>/post/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url><categories><category>Spring</category><category>源码</category></categories><tags><tag>Spring</tag><tag>源码</tag></tags><content type="html"> 根据雷神《spring注解驱动开发》整理记录知识点
 Spring学习记录 本文是一篇spring(4.3.12.release版本)源码相关的文章。本文的源码解析就不按照传统的去贴代码的方式去讲解spring源码了，本文的源码解析以流程的方式来讲解spring在每一步都干了什么，所以谓之曰spring源码导读。。。。
 在正式开始spring源码导读之前，读者总得知道spring里的各个标签是干啥的吧，因此文中前一部分罗列了spring常见的注解用法。并搞了点SpringAOP和spring事务源码的解析作为后面正式开始的导读的开胃菜
 介绍完了，让我们开始吧！！！。

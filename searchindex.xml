@@ -364,7 +364,7 @@ propagation_requierd：如果当前没有事务，就新建一个事务，如果
 git config &ndash;global user.name &ldquo;kw&rdquo;
 git config &ndash;global user.email 1121034507@qq.com
 git config &ndash;list &lt;!--命令来列出所有 Git 当时能找到的配置-->
-2、git操作 git init &lt;!--在当前目录初始化git-->
+2、git基础操作 git init &lt;!--在当前目录初始化git-->
 **$ git add *.c ** &lt;!--暂存命令，添加一个或多个文件到暂存区（开始跟踪一个新文件，或者把已跟踪的文件放到暂存区，概括起来就是添加内容到下一次提交中）-->
 $ git add LICENSE
 $ git commit -m &lsquo;initial project version&rsquo; &lt;!--提交命令,将暂存区文件提交到本地仓库-->
@@ -394,7 +394,31 @@ ca82a6d - Scott Chacon, 6 years ago : changed the version number
 a11bef0 - Scott Chacon, 6 years ago : first commit
 用 &ndash;author 选项显示指定作者的提交，用 &ndash;grep 选项搜索提交说明中的关键字。（请注意，如果要得到同时满足这两个选项搜索条件的提交，就必须用 &ndash;all-match 选项。否则，满足任意一个条件的提交都会被匹配出来）。另一个非常有用的筛选选项是 -S，可以列出那些添加或移除了某些字符串的提交。比如说，你想找出添加或移除了某一个特定函数的引用的提交，你可以这样使用： $ git log -Sfunction_name
 ​
-选项 说明 -(n) 仅显示最近的 n 条提交 &ndash;since, &ndash;after 仅显示指定时间之后的提交。 &ndash;until, &ndash;before 仅显示指定时间之前的提交 &ndash;author 仅显示指定作者相关的提交。 &ndash;committer 仅显示指定提交者相关的提交。 &ndash;grep 仅显示含指定关键字的提交 -S 仅显示添加或移除了某个关键字的提交</content></entry><entry><title>Spring学习记录</title><url>/post/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url><categories><category>Spring</category><category>源码</category></categories><tags><tag>Spring</tag><tag>源码</tag></tags><content type="html"> 根据雷神《spring注解驱动开发》整理记录知识点
+选项 说明 -(n) 仅显示最近的 n 条提交 &ndash;since, &ndash;after 仅显示指定时间之后的提交。 &ndash;until, &ndash;before 仅显示指定时间之前的提交 &ndash;author 仅显示指定作者相关的提交。 &ndash;committer 仅显示指定提交者相关的提交。 &ndash;grep 仅显示含指定关键字的提交 -S 仅显示添加或移除了某个关键字的提交 git tag 查看标签
+git tag -a v1.4 -m &lsquo;my version 1.4&rsquo; 增加标签V1.4
+git tag tagname 轻量标签
+$ git log --pretty=oneline 15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment' a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support 0d52aaab4479697da7686c15f77a3d64d9165190 one more thing $ git tag -a v1.2 0d52aaa //对历史提交打标签，如果不加提交校验和会对在最近一次的提交打tag git push origin [tagname] 推送tag到远程仓库（git push不会推送tag）
+git push origin &ndash;tags 推送所有标签
+git checkout -b [branchname] [tagname] 在特定的标签上创建一个新分支
+Switched to a new branch &lsquo;version2&rsquo;
+git config 设置别名
+$ git config --global alias.co checkout $ git config --global alias.br branch $ git config --global alias.ci commit $ git config --global alias.st status 3、Git分支 Git 保存的不是文件的变化或者差异，而是一系列不同时刻的文件快照。Git 的分支，其实本质上仅仅是指向提交对象的可变指针。Git 的默认分支名字是 master。在多次提交操作之后，其实已经有一个指向最后那个提交对象的 master 分支。它会在每次的提交操作中自动向前移动。Git 又是怎么知道当前在哪一个分支上呢？也很简单，它有一个名为 HEAD 的特殊指针
+git branch testing 创建分支testing
+git checkout testing 切换分支
+$ vim test.txt $ git commit -a -m 'made a change' 如图所示，testing 分支向前移动了，但是 master 分支却没有，它仍然指向运行 git checkout 时所指的对象。分支切换会改变你工作目录中的文件在切换分支时，一定要注意你工作目录里的文件会被改变。如果是切换到一个较旧的分支，你的工作目录会恢复到该分支最后一次提交时的样子。如果 Git 不能干净利落地完成这个任务，它将禁止切换分支，要留意工作目录和暂存区里那些还没有被提交的修改，它可能会和你即将检出的分支产生冲突从而阻止 Git 切换到该分支（Git 会自动添加、删除、修改文件以确保此时你的工作目录和这个分支最后一次提交时的样子一模一样）
+git checkout -b iss53 新建并检出分支iss53
+//等于以下两条命令 $ git branch iss53 $ git checkout iss53 git merge 合并分支
+$ git checkout master //检出master分支 $ git merge hotfix //合并testing分支到master 遇到冲突时的分支合并:
+如果在两个不同的分支中，对同一个文件的同一个部分进行了不同的修改，Git 就没法干净的合并它们，这就是合并冲突
+​
+$ git merge iss53 Auto-merging index.html CONFLICT (content): Merge conflict in index.html Automatic merge failed; fix conflicts and then commit the result. //查看具体冲突信息 $ git status On branch master You have unmerged paths. (fix conflicts and run "git commit") Unmerged paths: (use "git add &lt;file>..." to mark resolution) both modified: index.html no changes added to commit (use "git add" and/or "git commit -a") //解决冲突 手动修改冲突文件后，对每个文件使用 git add 命令来将其标记为冲突已解决 $ git add index.html //查看状态，已无冲突 $ git status On branch master All conflicts fixed but you are still merging. (use "git commit" to conclude merge) Changes to be committed: modified: index.html //合并提交 $ git commit 使用git commit提交合并 git branch 分支管理，不加任务参数情况下显示所有分支列表
+$ git branch  iss53 * master //当前检出分支  testing git branch -v 要查看每一个分支的最后一次提交 $ git branch -v  iss53 93b412c fix javascript issue * master 7a98805 Merge branch 'iss53'  testing 782fd34 add scott to the author list in the readmes git branch [&ndash;no-merged/&ndash;merged] 查看已经合并或尚未合并到当前分支的分支
+git branch -d branchname 删除分支 -d无法删除未合并的分支，-D可以强制删除
+远程分支 git ls-remote (remote)或者git remote show (remote)来显示远程分支列表或者详细信息
+Git 的 clone 命令会为你自动将其命名为 origin，拉取它的所有数据，创建一个指向它的 master 分支的指针，并且在本地将命名为 origin/master。Git 也会给你一个与 origin 的 master 分支在指向同一个地方的本地 master 分支，这样你就有工作的基础
+远程仓库名字 “origin” 与分支名字 “master” 一样，在 Git 中并没有任何特别的含义一样。同时 “master” 是当你运行 git init 时默认的起始分支名字，原因仅仅是它的广泛使用，“origin” 是当你运行 git clone 时默认的远程仓库名字。如果你运行 git clone -o booyah，那么你默认的远程分支名字将会是 booyah/master
+​ 如果你在本地的 master 分支做了一些工作，然而在同一时间，其他人推送提交到 git.ourcompany.com 并更新了它的 master 分支，那么你的提交历史将向不同的方向前进。也许，只要你不与 origin 服务器连接，你的 origin/master 指针就不会移动。 ​ git fetch origin 在进行同步工作工作时，从远程仓库抓取本地没有的数据，更新本地数据库并将origin/master向后移动
+​</content></entry><entry><title>Spring学习记录</title><url>/post/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url><categories><category>Spring</category><category>源码</category></categories><tags><tag>Spring</tag><tag>源码</tag></tags><content type="html"> 根据雷神《spring注解驱动开发》整理记录知识点
 Spring学习记录 本文是一篇spring(4.3.12.release版本)源码相关的文章。本文的源码解析就不按照传统的去贴代码的方式去讲解spring源码了，本文的源码解析以流程的方式来讲解spring在每一步都干了什么，所以谓之曰spring源码导读。。。。
 在正式开始spring源码导读之前，读者总得知道spring里的各个标签是干啥的吧，因此文中前一部分罗列了spring常见的注解用法。并搞了点SpringAOP和spring事务源码的解析作为后面正式开始的导读的开胃菜
 介绍完了，让我们开始吧！！！。

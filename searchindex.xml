@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>B树与B+树</title><url>/post/b%E6%A0%91%E4%B8%8Eb+%E6%A0%91/</url><categories><category>Mysql</category></categories><tags><tag>数据结构</tag><tag>Mysql</tag></tags><content type="html"> B树、B+树 mysql存储引擎
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>GitHub提交设置代理</title><url>/post/github%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86/</url><categories><category>problem-solving</category><category>Git</category></categories><tags><tag>Git</tag><tag>problem-solving</tag></tags><content type="html"> GitHub提交443错误可以设置代理（科学上网）解决
+GitHub提交443错误设置代理 https方式提交可以通过设置代理解决，但是更好的办法是设置SSH方式来提交代码，详情请查看笔记《Git设置SSH方式》
+错误描述 OpenSSL SSL_connect: Connection was reset in connection to github.com:443 看错误描述就标识ssl连接不到443端口。 可以设置代理解决。先检查git的全局配置
+查看全局配置 git config --global -l 检查是否有https.proxy及http.proxy项
+设置全局代理设置 示例10808端口是代理软件端口，按个人情况修改。
+git config --global http.proxy 127.0.0.1:10808 git config --global https.proxy 127.0.0.1:10808 git config --global http.proxy 127.0.0.1:10818 git config --global https.proxy 127.0.0.1:10818 已有设置情况修改代理项 git config --global --unset http.proxy git config --global --unset https.proxy 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</content></entry><entry><title>B树与B+树</title><url>/post/b%E6%A0%91%E4%B8%8Eb+%E6%A0%91/</url><categories><category>Mysql</category></categories><tags><tag>数据结构</tag><tag>Mysql</tag></tags><content type="html"> B树、B+树 mysql存储引擎
 一，b树 b树（balance tree）和b+树应用在数据库索引，可以认为是m叉的多路平衡查找树，但是从理论上讲，二叉树查找速度和比较次数都是最小的，为什么不用二叉树呢？
 ​ 平衡二叉树的查找效率是非常高的，并可以通过降低树的深度来提高查找的效率。但是当数据量非常大，树的存储的元素数量是有限的，这样会导致二叉查找树结构由于树的深度过大而造成磁盘I/O读写过于频繁，进而导致查询效率低下。另外数据量过大会导致内存空间不够容纳平衡二叉树所有结点的情况。B树是解决这个问题的很好的结构。数据库索引是存储在磁盘上的，当数据量大时，就不能把整个索引全部加载到内存了，只能逐一加载每一个磁盘页（对应索引树的节点）。所以我们要减少IO次数，对于树来说，IO次数就是树的高度，而“矮胖”就是b树的特征之一，它的每个节点最多包含m个孩子，m称为b树的阶，m的大小取决于磁盘页的大小。
 ​ b树在查询时的比较次数并不比二叉树少，尤其是节点中的数非常多时，但是内存的比较速度非常快，耗时可以忽略，所以只要树的高度低，IO少，就可以提高查询性能，这是b树的优势之一。

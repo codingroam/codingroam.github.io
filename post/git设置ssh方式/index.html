@@ -14,13 +14,13 @@
 &nbsp;</span></span>
 <span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
 <span class=post-meta-item-text>字数：</span>
-<span class=leancloud-world-count>1250 字</span></span>
+<span class=leancloud-world-count>1269 字</span></span>
 <span class=post-readtime><i class="fa fa-eye fa-fw"></i>
 <span class=post-meta-item-text>阅读：</span>
 <span class=leancloud-view-count>3分钟</span></span>
 <span id=/post/git%E8%AE%BE%E7%BD%AEssh%E6%96%B9%E5%BC%8F/ class="leancloud_visitors post-visitor" data-flag-title=Git设置SSH方式><i class="fa fa-binoculars fa-fw"></i>
 <span class=post-meta-item-text>阅读次数：</span>
-<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>Linux环境Git上传出现：The requested URL returned error: 403解决办法小记</p><h2 id=git设置ssh方式>Git设置SSH方式</h2><h3 id=一gitee场景>一、Gitee场景</h3><p>​ 阿里云环境push代码失败，代码托管为Gitee。切换https方式到ssh后提交成功，方式如下：</p><h4 id=1在linux生成sshkey>1、在linux生成sshkey</h4><ol><li>$ ssh-keygen -t rsa -C &ldquo;<a href=mailto:xxxxx@xxxxx.com>xxxxx@xxxxx.com</a>
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>Linux环境Git上传出现：The requested URL returned error: 403解决办法小记</p><h2 id=git设置ssh方式>Git设置SSH方式</h2><h3 id=一gitee场景>一、Gitee场景</h3><p>​ 阿里云环境push代码失败，代码托管为Gitee。切换https方式到ssh后提交成功，方式如下：</p><h4 id=1在linux控制台powershell也是如此生成sshkey>1、在linux控制台(powershell也是如此)生成sshkey</h4><ol><li>$ ssh-keygen -t rsa -C &ldquo;<a href=mailto:xxxxx@xxxxx.com>xxxxx@xxxxx.com</a>
 &rdquo;</li><li>按照提示完成三次回车，即可生成 ssh key</li><li>cat ~/.ssh/id_rsa.pub</li></ol><h4 id=2将ssh-key添加到gitee仓库>2、将ssh key添加到gitee仓库</h4><ol><li>通过仓库主页 <strong>「管理」->「部署公钥管理」</strong></li><li>点击黄色方框中<strong>添加个人公钥</strong>超链接</li></ol><h4 id=3在linux终端输入ssh--t-gitgiteecom>3、在linux终端输入ssh -T <a href=mailto:git@gitee.com>git@gitee.com</a></h4><blockquote><p>首次使用需要确认并添加主机到本机SSH可信列表。若返回 <code>Hi XXX! You've successfully authenticated, but Gitee.com does not provide shell access.</code> 内容，则证明添加成功。</p></blockquote><h4 id=4修改原先https的下载方式>4、修改原先https的下载方式</h4><ol><li>git config &ndash;list 查看配置得到 remote.origin.url=https://gitee.com/wk_acme/git_study.git</li><li>修改 git config remote.origin.url <a href=mailto:git@gitee.com>git@gitee.com</a>
 :wk_acme/git_study.git</li></ol><h4 id=5push代码成功>5、push代码成功</h4><h3 id=二github场景>二、Github场景</h3><h4 id=1首先需要检查你电脑是否已经有-ssh-key>1、首先需要检查你电脑是否已经有 SSH key</h4><p>运行 git Bash 客户端，输入如下代码：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>$ cd ~/.ssh
 </span></span><span style=display:flex><span>$ ls

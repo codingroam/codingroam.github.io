@@ -112,7 +112,7 @@ git config --global http.proxy 127.0.0.1:10808 git config --global https.proxy 1
 三、b+树相比于b树的查询优势： b+树的中间节点不保存数据，所以磁盘页能容纳更多节点元素，更“矮胖”； b+树查询必须查找到叶子节点，b树只要匹配到即可不用管元素位置，因此b+树查找更稳定（并不慢）； 对于范围查找来说，b+树只需遍历叶子节点链表即可，b树却需要重复地中序遍历。 四、图示 B+树 InnoDB
 MyISAM</content></entry><entry><title>Git设置SSH方式</title><url>/post/git%E8%AE%BE%E7%BD%AEssh%E6%96%B9%E5%BC%8F/</url><categories><category>problem-solving</category><category>Git</category></categories><tags><tag>Git</tag><tag>linux</tag><tag>problem-solving</tag></tags><content type="html"> Linux环境Git上传出现：The requested URL returned error: 403解决办法小记
 Git设置SSH方式 一、Gitee场景 ​ 阿里云环境push代码失败，代码托管为Gitee。切换https方式到ssh后提交成功，方式如下：
-1、在linux生成sshkey $ ssh-keygen -t rsa -C &ldquo;xxxxx@xxxxx.com
+1、在linux控制台(powershell也是如此)生成sshkey $ ssh-keygen -t rsa -C &ldquo;xxxxx@xxxxx.com
 &rdquo; 按照提示完成三次回车，即可生成 ssh key cat ~/.ssh/id_rsa.pub 2、将ssh key添加到gitee仓库 通过仓库主页 「管理」->「部署公钥管理」 点击黄色方框中添加个人公钥超链接 3、在linux终端输入ssh -T git@gitee.com
 首次使用需要确认并添加主机到本机SSH可信列表。若返回 Hi XXX! You've successfully authenticated, but Gitee.com does not provide shell access. 内容，则证明添加成功。
 4、修改原先https的下载方式 git config &ndash;list 查看配置得到 remote.origin.url=https://gitee.com/wk_acme/git_study.git 修改 git config remote.origin.url git@gitee.com

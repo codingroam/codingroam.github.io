@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Java伪共享</title><url>/post/java%E4%BC%AA%E5%85%B1%E4%BA%AB/</url><categories><category>Java Base</category><category>计算机原理</category></categories><tags><tag>Java Base</tag><tag>计算机原理</tag></tags><content type="html"> Java伪共享
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>git上传代码报错ssh: connect to host github.com port 22: Connection timed out解决办法</title><url>/post/git%E4%B8%8A%E4%BC%A0%E4%BB%A3%E7%A0%81%E6%8A%A5%E9%94%99ssh-connect-to-host-github.com-port-22-connection-timed-out%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</url><categories><category>problem-solving</category><category>Git</category></categories><tags><tag>Git</tag><tag>problem-solving</tag></tags><content type="html"> git上传代码报错ssh: connect to host github.com port 22: Connection timed out解决办法
+git上传代码报错ssh: connect to host github.com port 22: Connection timed out解决办法 当在远程库上设置了SSH 之后还是报错连接超时，问题如下
+$ git push 报错：
+ssh: connect to host github.com port 22: Connection timed out fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists. 这个时候需要检查一下SSH是否能够连接成功，输入以下命令
+ssh -T git@github.com 稍等片刻如果继续报错，如下：
+ssh: connect to host github.com port 22: Connection timed out则，可以使用一下解决办法
+打开存放ssh的目录
+cd ~/.ssh ls 查看是否存在 id_rsa id_rsa.pun known_hosts 三个文件，如果没有请查看Git设置SSH方式
+，如果有请按照以下方式设置
+1. vim config (进入到vim编辑界面，如果是windows系统powershell，可以设置使用vim,参考文章）
+2. insert 编辑模式
+Host github.com User YourEmail@163.com Hostname ssh.github.com PreferredAuthentications publickey IdentityFile ~/.ssh/id_rsa Port 443 其中， YourEmail 为绑定的邮箱。
+保存之后再次执行"ssh -T git@github.com
+"时，会出现如下提示，回车"yes"即可</content></entry><entry><title>Java伪共享</title><url>/post/java%E4%BC%AA%E5%85%B1%E4%BA%AB/</url><categories><category>Java Base</category><category>计算机原理</category></categories><tags><tag>Java Base</tag><tag>计算机原理</tag></tags><content type="html"> Java伪共享
 Java伪共享 维基百科对伪共享的定义如下：
 In computer science, false sharing is a performance-degrading usage pattern that can arise in systems with distributed, coherent caches at the size of the smallest resource block managed by the caching mechanism. When a system participant attempts to periodically access data that will never be altered by another party, but those data shares a cache block with data that are altered, the caching protocol may force the first participant to reload the whole unit despite a lack of logical necessity. The caching system is unaware of activity within this block and forces the first participant to bear the caching system overhead required by true shared access of a resource
 其大致意思是： CPU的缓存是以缓存行(cache line)为单位进行缓存的，当多个线程修改不同变量，而这些变量又处于同一个缓存行时就会影响彼此的性能。例如：线程1和线程2共享一个缓存行，线程1只读取缓存行中的变量1，线程2修改缓存行中的变量2，虽然线程1和线程2操作的是不同的变量，由于变量1和变量2同处于一个缓存行中，当变量2被修改后，缓存行失效，线程1要重新从主存(或者低级cache)中读取，因此导致缓存失效，从而产生性能问题。为了更深入一步理解伪共享，我们先看一下CPU缓存
@@ -16,7 +29,12 @@ public class VolatileLong { private volatile long v; // private long v0, v1, v2,
 ConcurrentHashMap中伪共享解决方案 ConcurrentHashMap的size操作通过CounterCell来计算，哈希表中的每个节点都对用了一个CounterCell，每个CounterCell记录了对应Node的键值对数目。这样每次计算size时累加各个CounterCell就可以了。ConcurrentHashMap中CounterCell以数组形式保存，而数组在内存中是连续存储的，CounterCell中只有一个long类型的value属性，这样CPU会缓存CounterCell临近的CounterCell，于是就形成了伪共享。
 ConcurrentHashMap中用Contended注解自动对CounterCell来进行填充：
 /** * Table of counter cells. When non-null, size is a power of 2. */ private transient volatile CounterCell[] counterCells; // CounterCell数组，CounterCell在内存中连续 public int size() { long n = sumCount(); return ((n &lt; 0L) ? 0 : (n > (long)Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int)n); } // 计算size时直接对各个CounterCell的value进行累加 final long sumCount() { CounterCell[] as = counterCells; CounterCell a; long sum = baseCount; if (as != null) { for (int i = 0; i &lt; as.length; ++i) { if ((a = as[i]) != null) sum += a.value; } } return sum; } // 使用Contended注解自动进行填充避免伪共享 @sun.misc.Contended static final class CounterCell { volatile long value; CounterCell(long x) { value = x; } } 需要注意的是@sun.misc.Contended注解在user classpath中是不起作用的，需要通过一个虚拟机参数来开启：-XX:-RestrictContended
-4、总结 CPU缓存是以缓存行为单位进行操作的。产生伪共享问题的根源在于不同的核同时操作同一个缓存行。 可以通过填充来解决伪共享问题，Java8 中引入了@sun.misc.Contended注解来自动填充。 并不是所有的场景都需要解决伪共享问题，因为CPU缓存是有限的，填充会牺牲掉一部分缓存</content></entry><entry><title>ThreadLocal与FastThreadLocal</title><url>/post/threadlocal%E4%B8%8Efastthreadlocal/</url><categories><category>ThreadLocal</category><category>Java Base</category><category>netty</category></categories><tags><tag>ThreadLocal</tag><tag>Java Base</tag><tag>netty</tag></tags><content type="html"> ThreadLocal与FastThreadLocal
+4、总结 CPU缓存是以缓存行为单位进行操作的。产生伪共享问题的根源在于不同的核同时操作同一个缓存行。 可以通过填充来解决伪共享问题，Java8 中引入了@sun.misc.Contended注解来自动填充。 并不是所有的场景都需要解决伪共享问题，因为CPU缓存是有限的，填充会牺牲掉一部分缓存</content></entry><entry><title>PowerShell设置使用vim</title><url>/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/</url><categories><category>PowerShell</category><category>Vim</category><category>Git</category><category>problem-solving</category></categories><tags><tag>PowerShell</tag><tag>Vim</tag><tag>Git</tag><tag>problem-solving</tag></tags><content type="html"> PowerShell设置使用vim
+PowerShell设置使用vim 如果系统安装了Git，Git本身有自带的vim，位置为%GITHOME%\usr\bin\vim.exe，如果没有安装Git,可以去github下载vim，Github vim下载
+。
+打开C:\Windows\System32\WindowsPowerShell\v1.0文件夹新建profile.ps1文件，内容如下，重点是$VIMPATH变量，值为第一步中vim.exe路径
+# There's usually much more than this in my profile! $SCRIPTPATH = "C:\Program Files\Git\usr\share\vim" # 此行根据$VIMPATH寻找相应vim路径即可,此行不用更改 $VIMPATH = "D:\DevelopmentSoftware\Git\usr\bin\vim.exe" # 此行为1中vim.exe路径 Set-Alias vi $VIMPATH Set-Alias vim $VIMPATH # for editing your PowerShell profile Function Edit-Profile { vim $profile } # for editing your Vim settings Function Edit-Vimrc { vim $home\_vimrc } 以管理员身份运行PowerShell，运行Set-ExecutionPolicy RemoteSigned，然后输入Y即可
+重新打开PowerShell即可使用vim命令</content></entry><entry><title>ThreadLocal与FastThreadLocal</title><url>/post/threadlocal%E4%B8%8Efastthreadlocal/</url><categories><category>ThreadLocal</category><category>Java Base</category><category>netty</category></categories><tags><tag>ThreadLocal</tag><tag>Java Base</tag><tag>netty</tag></tags><content type="html"> ThreadLocal与FastThreadLocal
 ThreadLocal与FastThreadLocal FastThreadLocal是Netty中常用的一个工具类，他的基本功能与JDK自带的ThreadLocal
 一样，但是性能优于ThreadLocal。在讲解FastThreadLocal之前，先大致讲一下ThreadLocal的原理。
 1、ThreadLocal 如果想要在线程中保存一个变量，这个变量是该线程所独有的，其他线程不能对该变量进行访问和修改，那么我们可以使用ThreadLocal实现这一功能.

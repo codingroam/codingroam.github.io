@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Java IO模型</title><url>/post/java-io%E6%A8%A1%E5%9E%8B/</url><categories><category>java base</category><category>IO</category></categories><tags><tag>java</tag><tag>IO模型</tag><tag>底层原理</tag></tags><content type="html"> Java IO模型
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Seata四种模式（XA、AT、TCC、SAGA）</title><url>/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/</url><categories><category>分布式事务</category><category>中间件</category><category>Seata</category></categories><tags><tag>分布式事务</tag><tag>中间件</tag><tag>Seata</tag></tags><content type="html"> Seata四种模式（XA、AT、TCC、SAGA）
+Seata四种模式（XA、AT、TCC、SAGA） 1、XA模式 XA模式原理： XA 规范 是 X/Open 组织定义的分布式事务处理（DTP，Distributed Transaction Processing）标准，XA 规范 描述了全局的TM与局部的RM之间的接口，几乎所有主流的数据库都对 XA 规范 提供了支持。
+如果有失败的就会回滚事务
+seata的XA模式 seata的XA模式做了一些调整，但大体相似：
+RM一阶段的工作：
+注册分支事务到TC 执行分支业务sql但不提交 报告执行状态到TC TC二阶段的工作：
+TC检测各分支事务执行状态
+如果都成功，通知所有RM提交事务
+如果有失败，通知所有RM回滚事务
+RM二阶段的工作：
+接收TC指令，提交或回滚事务 xa模式的优点：
+事务的强一致性，满足ACID原则。
+常用数据库都支持，实现简单，并且没有代码侵入
+xa模式的缺点：
+因为一阶段需要锁定数据库资源，等待二阶段结束才释放，性能较差 依赖关系型数据库实现事务 实现XA模式
+Seata的starter已经完成了XA模式的自动装配，实现非常简单，步骤如下： 修改application.yml文件（每个参与事务的微服务），开启XA模式：
+配置seata的注册中心 seata: data-source-proxy-mode: XA # 选择XA模式 注意：是每一个微服务都需要
+给发起全局事务的入口方法添加@GlobalTransactional注解，本例中是OrderServiceImpl中的create方法：
+启动所有微服务，postman进行接口测试
+先进行正确的测试，再继续错误的测试
+错误设置，购买商品超出原来剩余的商品数就会让数据库报错测试是否可以事务回滚
+注意：如果测试接口报错响应时间过长，那么就应该设置响应的时间大一点，如下图，然后重启seata
+成功的可以查看seate的控制输出，可以看到事务回滚
+IDEA输出
+查看数据库的数据是否有被更新
+2、AT模式 2.1、 AT模式同样是分阶段提交的事务模型，不过缺弥补了XA模型中资源锁定周期过长的缺陷。 阶段一RM的工作：
+注册分支事务 记录undo-log（数据快照，JSON格式） 执行业务sql并提交 报告事务状态
+阶段二提交时RM的工作：
+删除undo-log即可
+阶段二回滚时RM的工作：
+根据undo-log恢复数据到更新前
+执行示例 例如，一个分支业务的SQL是这样的：update tb_account set money = money - 10 where id = 1
+AT模式与XA模式最大的区别是什么
+XA模式一阶段不提交事务，锁定资源；AT模式一阶段直接提交，不锁定资源。 XA模式依赖数据库机制实现回滚；AT模式利用数据快照实现数据回滚。 XA模式强一致；AT模式最终一致
+2.2、AT模式的脏写问题 2.3、AT模式的写隔离 2.4、AT模式的优缺点 优点：
+一阶段完成直接提交事务，释放数据库资源，性能比较好 利用全局锁实现读写隔离 没有代码侵入，框架自动完成回滚和提交 缺点：
+两阶段之间属于软状态，属于最终一致 框架的快照功能会影响性能，但比XA模式要好很多 2.5、实现AT模式 AT模式中的快照生成、回滚等动作都是由框架自动完成，没有任何代码侵入，因此实现非常简单。
+1、创建相关的数据库文件
+lock_table（全局锁）表导入到TC服务关联的数据库
+DROPTABLEIFEXISTS`lock_table`;CREATETABLE`lock_table`(`row_key`varchar(128)CHARACTERSETutf8COLLATEutf8_general_ciNOTNULL,`xid`varchar(96)CHARACTERSETutf8COLLATEutf8_general_ciNULLDEFAULTNULL,`transaction_id`bigint(20)NULLDEFAULTNULL,`branch_id`bigint(20)NOTNULL,`resource_id`varchar(256)CHARACTERSETutf8COLLATEutf8_general_ciNULLDEFAULTNULL,`table_name`varchar(32)CHARACTERSETutf8COLLATEutf8_general_ciNULLDEFAULTNULL,`pk`varchar(36)CHARACTERSETutf8COLLATEutf8_general_ciNULLDEFAULTNULL,`gmt_create`datetimeNULLDEFAULTNULL,`gmt_modified`datetimeNULLDEFAULTNULL,PRIMARYKEY(`row_key`)USINGBTREE,INDEX`idx_branch_id`(`branch_id`)USINGBTREE)ENGINE=InnoDBCHARACTERSET=utf8COLLATE=utf8_general_ciROW_FORMAT=Compact;undo_log（记录快照）表导入到微服务关联的数据库
+DROPTABLEIFEXISTS`undo_log`;CREATETABLE`undo_log`(`branch_id`bigint(20)NOTNULLCOMMENT'branch transaction id',`xid`varchar(100)CHARACTERSETutf8COLLATEutf8_general_ciNOTNULLCOMMENT'global transaction id',`context`varchar(128)CHARACTERSETutf8COLLATEutf8_general_ciNOTNULLCOMMENT'undo_log context,such as serialization',`rollback_info`longblobNOTNULLCOMMENT'rollback info',`log_status`int(11)NOTNULLCOMMENT'0:normal status,1:defense status',`log_created`datetime(6)NOTNULLCOMMENT'create datetime',`log_modified`datetime(6)NOTNULLCOMMENT'modify datetime',UNIQUEINDEX`ux_undo_log`(`xid`,`branch_id`)USINGBTREE)ENGINE=InnoDBCHARACTERSET=utf8COLLATE=utf8_general_ciCOMMENT='AT transaction mode undo table'ROW_FORMAT=Compact;2、修改application.yml文件，将事务模式修改为AT模式即可：
+#配置seata的注册中心 seata: data-source-proxy-mode: AT #选择XA模式 3、重启并测试
+查看当前的数据库库存数量继续超库存创建订单进行执行错误回滚测试
+查看IDEA的错误日志
+3、TCC模式 3.1、tcc模式原理 TCC模式与AT模式非常相似，每阶段都是独立事务，不同的是TCC通过人工编码来实现数据恢复。需要实现三个方法：
+Try：资源的检测和预留； Confirm：完成资源操作业务；要求 Try 成功 Confirm 一定要能成功。 Cancel：预留资源释放，可以理解为try的反向操作。 举例，一个扣减用户余额的业务。假设账户A原来余额是100，需要余额扣减30元。
+TCC的工作模型图：
+3.2、小结 TCC模式的优点：
+一阶段完成直接提交事务，释放数据库资源，性能好 相比AT模型，无需生成快照，无需使用全局锁，性能最强 不依赖数据库事务，而是依赖补偿操作，可以用于非事务型数据库 TCC模式的缺点：
+有代码侵入，需要人为编写try、Confirm和Cancel接口，太麻烦 软状态，事务是最终一致 需要考虑Confirm和Cancel的失败情况，做好幂等处理 3.2、TCC模式实现案例 不是所有的业务都适合TCC模式，如库存，金额等就比较适合
+改造account-service服务，利用TCC实现分布式事务
+需求如下：
+修改account-service，编写try、confirm、cancel逻辑：
+try业务：添加冻结金额，扣减可用金额 confirm业务：删除冻结金额 cancel业务：删除冻结金额，恢复可用金额 保证confirm、cancel接口的幂等性允许空回滚拒绝业务悬挂
+TCC的空回滚和业务悬挂
+当某分支事务的try阶段阻塞时，可能导致全局事务超时而触发二阶段的cancel操作。在未执行try操作时先执
+行了cancel操作，这时cancel不能做回滚，就是空回滚。
+对于已经空回滚的业务，如果以后继续执行try，就永远不可能confirm或cancel，这就是业务悬挂。应当阻止
+执行空回滚后的try操作，避免悬挂
+业务分析
+为了实现空回滚、防止业务悬挂，以及幂等性要求。我们必须在数据库记录冻结金额的同时，记录当前事务id和执行状态，为此我们设计了一张表（添加在微服务的数据库seata-demo中）：
+DROPTABLEIFEXISTS`account_freeze_tbl`;CREATETABLE`account_freeze_tbl`(`xid`varchar(128)CHARACTERSETutf8COLLATEutf8_general_ciNOTNULL,`user_id`varchar(255)CHARACTERSETutf8COLLATEutf8_general_ciNULLDEFAULTNULL,`freeze_money`int(11)UNSIGNEDNULLDEFAULT0,`state`int(1)NULLDEFAULTNULLCOMMENT'事务状态，0:try，1:confirm，2:cancel',PRIMARYKEY(`xid`)USINGBTREE)ENGINE=InnoDBCHARACTERSET=utf8COLLATE=utf8_general_ciROW_FORMAT=COMPACT;Try业务：记录冻结金额和事务状态到account_freeze表，扣减account表可用金额
+Confirm业务：根据xid删除account_freeze表的冻结记录
+Cancel业务：修改account_freeze表，冻结金额为0，state为2，修改account表，恢复可用金额
+如何判断是否空回滚：cancel业务中，根据xid查询account_freeze，如果为null则说明try还没做，需要空回
+滚
+如何避免业务悬挂：try业务中，根据xid查询account_freeze ，如果已经存在则证明Cancel已经执行，拒绝执
+行try业务
+业务实现
+1、声明TCC接口 @BusinessActionContextParameter()注解的参数才可以被BusinessActionContext获取到 package cn.itcast.account.service; import io.seata.rm.tcc.api.BusinessActionContext; import io.seata.rm.tcc.api.BusinessActionContextParameter; import io.seata.rm.tcc.api.LocalTCC; import io.seata.rm.tcc.api.TwoPhaseBusinessAction; /** * 项目名称：seata-demo * 描述：TCC实现接口 * * @author zhong * @date 2022-06-08 16:05 */ @LocalTCC public interface AccountTCCService { /** * 定义try,注释里面的值必须是与方法同名 * @param userId * @param money */ @TwoPhaseBusinessAction(name = "deduct",commitMethod = "confirm",rollbackMethod = "cancel") void deduct(@BusinessActionContextParameter(paramName = "userId") String userId, @BusinessActionContextParameter(paramName = "money")int money); /** * 定义Confirm * @param ctx 获取事务类型参数 * @return */ boolean confirm(BusinessActionContext ctx); /** * 定义Cancel * @param ctx * @return */ boolean cancel(BusinessActionContext ctx); } 说明：对于account_freeze_tbl数据库表的操作与其他业务一样的，使用MP的CURD进行快速开发，需要实体类、mapper
+2.、创建接口实现类
+package cn.itcast.account.service.impl; import cn.itcast.account.entity.AccountFreeze; import cn.itcast.account.mapper.AccountFreezeMapper; import cn.itcast.account.mapper.AccountMapper; import cn.itcast.account.service.AccountTCCService; import io.seata.core.context.RootContext; import io.seata.rm.tcc.api.BusinessActionContext; import lombok.extern.slf4j.Slf4j; import org.springframework.beans.factory.annotation.Autowired; import org.springframework.stereotype.Service; import org.springframework.transaction.annotation.Transactional; /** * 项目名称：seata-demo * 描述： * * @author zhong * @date 2022-06-08 16:25 */ @Slf4j @Service public class AccountTCCServiceImpl implements AccountTCCService { /** * 注入可用余额dao */ @Autowired private AccountMapper accountMapper; /** * 注入冻结表dao */ @Autowired private AccountFreezeMapper freezeMapper; /** * 资源检测和预留 * 在数据库中设置了非负数字段限定，这里可以直接简化一步，如果为负数就会报错 * @param userId * @param money */ @Override @Transactional public void deduct(String userId, int money) { // 获取全局事务id String xid = RootContext.getXID(); // 业务悬挂判断，如果freeze中有冻结记录，一定是CANCEL执行过，我要拒绝业务 AccountFreeze accountFreeze = freezeMapper.selectById(xid); if(accountFreeze != null){ // 一定是CANCEL执行过，我要拒绝业务 return; } // 1、扣减可用余额 accountMapper.deduct(userId,money); // 2、记录冻结金额，事务状态 AccountFreeze freeze = new AccountFreeze(); freeze.setXid(xid); freeze.setUserId(userId); freeze.setState(AccountFreeze.State.TRY); freeze.setFreezeMoney(money); freezeMapper.insert(freeze); } @Override public boolean confirm(BusinessActionContext ctx) { // 1、获取事务id String xid = ctx.getXid(); // 2、根据事务id删除冻结数据 int count = freezeMapper.deleteById(xid); return count == 1; } @Override public boolean cancel(BusinessActionContext ctx) { // 0、查询冻结记录 String xid = ctx.getXid(); // 获取用户id String userId = ctx.getActionContext("userId").toString(); AccountFreeze freeze = freezeMapper.selectById(xid); // 空回滚的判断，为null代表没有try没有执行 if(freeze == null){ freeze = new AccountFreeze(); freeze.setXid(xid); freeze.setUserId(userId); freeze.setState(AccountFreeze.State.CANCEL); freeze.setFreezeMoney(0); freezeMapper.insert(freeze); } // 幂等判断 if(freeze.getState() == AccountFreeze.State.CANCEL){ // 已经执行过了一次CANCEL，无需重复处理 return true; } // 1、恢复可用余额 accountMapper.refund(freeze.getUserId(), freeze.getFreezeMoney()); // 2、将冻结金额清零，修改状态 freeze.setFreezeMoney(0); freeze.setState(AccountFreeze.State.CANCEL); int count = freezeMapper.updateById(freeze); return count == 1; } } 3、修改业务层连接方式 改为上面定义的TCCM业务实现
+4、测试数据 直接测试错误的信息
+当出现错误的时候会将会数据保存到数据库，如果是成功的那么就会删除
+IDEA的报错输出
+4、SAGA模式
+Saga模式是SEATA提供的长事务解决方案。也分为两个阶段：
+一阶段：直接提交本地事务 二阶段：成功则什么都不做；失败则通过编写补偿业务来回滚 Saga模式优点：
+事务参与者可以基于事件驱动实现异步调用，吞吐高
+一阶段直接提交事务，无锁，性能好
+不用编写TCC中的三个阶段，实现简单
+缺点：
+软状态持续时间不确定，时效性差 没有锁，没有事务隔离，会有脏写</content></entry><entry><title>分布式事务：两阶段提交与三阶段提交</title><url>/post/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E4%B8%8E%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/</url><categories><category>分布式事务</category><category>cap理论</category></categories><tags><tag>分布式事务</tag><tag>cap理论</tag></tags><content type="html"> 分布式事务：两阶段提交与三阶段提交
+分布式事务：两阶段提交与三阶段提交 在分布式系统中著有 CAP 理论，该理论由加州大学伯克利分校的 Eric Brewer 教授提出，阐述了在一个分布式系统中不可能同时满足 一致性（Consistency）、可用性（Availability），以及 分区容错性（Partition tolerance）。
+C：一致性 在分布式系统中数据往往存在多个副本，一致性描述的是这些副本中的数据在内容和组织上的一致。
+A：可用性 可用性描述了系统对用户的服务能力，所谓可用是指在用户容忍的时间范围内返回用户期望的结果。
+P：分区容错性 分布式系统通常由多个节点构成，由于网络是不可靠的，所以存在分布式集群中的节点因为网络通信故障导致被孤立成一个个小集群的可能性，即网络分区，分区容错性要求在出现网络分区时系统仍然能够对外提供一致性的可用服务。
+对于一个分布式系统而言，我们要始终假设网络是不可靠的，因此分区容错性是对一个分布式系统最基本的要求，我们的切入点更多的是尝试在可用性和一致性之间寻找一个平衡点，但这也并非要求我们在系统设计时一直建立在网络出现分区的场景之上，然后对一致性和可用性在选择时非此即彼。实际上 Eric Brewer 在 2012 年就曾指出 CAP 理论证明不能同时满足一致性、可用性，以及分区容错性的观点在实际系统设计指导上存在一定的误导性。传统对于 CAP 理论的理解认为在设计分布式系统时必须满足 P，然后在 C 和 A 之间进行取舍，这是片面的，实际中网络出现分区的可能性还是比较小的，尤其是目前网络环境正在变得越来越好，甚至许多系统都拥有专线支持，所以在网络未出现分区时，还是应该兼顾 A 和 C；另外就是对于一致性、可用性，以及分区容错性三者在度量上也应该有一个评定范围，最简单的以可用性来说，当有多少占比请求出现响应超时才可以被认为是不满足可用性，而不是一出现超时就认为是不可用的；最后我们需要考虑的一点就是分布式系统一般都是一个比较大且复杂的系统，我们应该从更小的粒度上对各个子系统进行评估和设计，而不是简单的从整体上认为需要满足 P，而在 A 和 C 之间做取舍，一些子系统可能需要尽可能同时满足三者。
+让分布式集群始终对外提供可用的一致性服务一直是富有挑战和趣味的一项任务。暂且抛开可用性，拿一致性来说，对于关系型数据库我们通常利用事务来保证数据的强一致性，当我们的数据量越来越大，大到单库已经无法承担时，我们不得不采取分库分表的策略对数据库实现水平拆分，构建分布式数据库集群，这样可以将一个数据库的压力分摊到多个数据库，极大的提升了数据库的存储和响应能力，但是拆分之后也为我们使用数据库带来了许多的限制，比如主键的全局唯一、联表查询、数据聚合等等，另外一个相当棘手的问题就是数据库的事务由原先的单库事务变成了现在的分布式事务。
+分布式事务的实现并不是很难，比如下文要展开的两阶段提交（2PC：Two-Phrase Commit）和三阶段提交（3PC：Three-Phrase Commit）都给我们提供了思路，但是如果要保证数据的强一致性，并要求对外提供可用的服务，就变成了一个几乎不可能的任务（至少目前是），因此很多分布式系统对于数据强一致性都敬而远之。
+两阶段提交协议（2PC：Two-Phrase Commit） 两阶段提交协议的目标在于在分布式系统中保证数据的一致性，许多分布式系统采用该协议提供对分布式事务的支持（提供但不一定有人用，呵呵~）。顾名思义，该协议将一个分布式的事务过程拆分成两个阶段：投票阶段和事务提交阶段。为了让整个数据库集群能够正常的运行，该协议指定了一个“协调者”单点，用于协调整个数据库集群的运行，为了简化描述，我们将数据库里面的各个节点称为“参与者”，三阶段提交协议中同样包含“协调者”和“参与者”这两个定义。
+第一阶段：投票阶段
+该阶段的主要目的在于打探数据库集群中的各个参与者是否能够正常的执行事务，具体步骤如下：
+协调者向所有的参与者发送事务执行请求，并等待参与者反馈事务执行结果。 事务参与者收到请求之后，执行事务，但不提交，并记录事务日志。 参与者将自己事务执行情况反馈给协调者，同时阻塞等待协调者的后续指令。 第二阶段：事务提交阶段
+在第一阶段协调者的询盘之后，各个参与者会回复自己事务的执行情况，这时候存在三种可能：
+所有的参与者回复能够正常执行事务 一个或多个参与者回复事务执行失败 协调者等待超时。 对于第一种情况，协调者将向所有的参与者发出提交事务的通知，具体步骤如下：
+协调者向各个参与者发送commit通知，请求提交事务。 参与者收到事务提交通知之后，执行commit操作，然后释放占有的资源。 参与者向协调者返回事务commit结果信息。 对于第二、三种情况，协调者均认为参与者无法正常成功执行事务，为了整个集群数据的一致性，所以要向各个参与者发送事务回滚通知，具体步骤如下：
+协调者向各个参与者发送事务rollback通知，请求回滚事务。 参与者收到事务回滚通知之后，执行rollback操作，然后释放占有的资源。 参与者向协调者返回事务rollback结果信息。 两阶段提交协议解决的是分布式数据库数据强一致性问题，其原理简单，易于实现，但是缺点也是显而易见的，主要缺点如下：
+单点问题 协调者在整个两阶段提交过程中扮演着举足轻重的作用，一旦协调者所在服务器宕机，那么就会影响整个数据库集群的正常运行，比如在第二阶段中，如果协调者因为故障不能正常发送事务提交或回滚通知，那么参与者们将一直处于阻塞状态，整个数据库集群将无法提供服务。
+同步阻塞 两阶段提交执行过程中，所有的参与者都需要听从协调者的统一调度，期间处于阻塞状态而不能从事其他操作，这样效率及其低下。
+数据不一致性 两阶段提交协议虽然为分布式数据强一致性所设计，但仍然存在数据不一致性的可能，比如在第二阶段中，假设协调者发出了事务commit的通知，但是因为网络问题该通知仅被一部分参与者所收到并执行了commit操作，其余的参与者则因为没有收到通知一直处于阻塞状态，这时候就产生了数据的不一致性。
+三阶段提交协议（2PC：Three-Phrase Commit） 针对两阶段提交存在的问题，三阶段提交协议通过引入一个“预询盘”阶段，以及超时策略来减少整个集群的阻塞时间，提升系统性能。三阶段提交的三个阶段分别为：can_commit，pre_commit，do_commit。
+第一阶段：can_commit
+该阶段协调者会去询问各个参与者是否能够正常执行事务，参与者根据自身情况回复一个预估值，相对于真正的执行事务，这个过程是轻量的，具体步骤如下：
+协调者向各个参与者发送事务询问通知，询问是否可以执行事务操作，并等待回复 各个参与者依据自身状况回复一个预估值，如果预估自己能够正常执行事务就返回确定信息，并进入预备状态，否则返回否定信息 第二阶段：pre_commit
+本阶段协调者会根据第一阶段的询盘结果采取相应操作，询盘结果主要有三种：
+所有的参与者都返回确定信息 一个或多个参与者返回否定信息 协调者等待超时 针对第一种情况，协调者会向所有参与者发送事务执行请求，具体步骤如下：
+协调者向所有的事务参与者发送事务执行通知 参与者收到通知后，执行事务，但不提交 参与者将事务执行情况返回给客户端 在上面的步骤中，如果参与者等待超时，则会中断事务。 针对第二、三种情况，协调者认为事务无法正常执行，于是向各个参与者发出abort通知，请求退出预备状态，具体步骤如下：
+协调者向所有事务参与者发送abort通知 参与者收到通知后，中断事务 第三阶段：do_commit
+如果第二阶段事务未中断，那么本阶段协调者将会依据事务执行返回的结果来决定提交或回滚事务，分为三种情况：
+所有的参与者都能正常执行事务 一个或多个参与者执行事务失败 协调者等待超时 针对第一种情况，协调者向各个参与者发起事务提交请求，具体步骤如下：
+协调者向所有参与者发送事务commit通知 所有参与者在收到通知之后执行commit操作，并释放占有的资源 参与者向协调者反馈事务提交结果 针对第二、三种情况，协调者认为事务无法正常执行，于是向各个参与者发送事务回滚请求，具体步骤如下：
+协调者向所有参与者发送事务rollback通知 所有参与者在收到通知之后执行rollback操作，并释放占有的资源 参与者向协调者反馈事务提交结果 在本阶段如果因为协调者或网络问题，导致参与者迟迟不能收到来自协调者的commit或rollback请求，那么参与者将不会如两阶段提交中那样陷入阻塞，而是等待超时后继续commit。相对于两阶段提交虽然降低了同步阻塞，但仍然无法避免数据的不一致性。
+在分布式数据库中，如果期望达到数据的强一致性，那么服务基本没有可用性可言，这也是为什么许多分布式数据库提供了跨库事务，但也只是个摆设的原因，在实际应用中我们更多追求的是数据的弱一致性或最终一致性，为了强一致性而丢弃可用性是不可取的。</content></entry><entry><title>Java IO模型</title><url>/post/java-io%E6%A8%A1%E5%9E%8B/</url><categories><category>java base</category><category>IO</category></categories><tags><tag>java</tag><tag>IO模型</tag><tag>底层原理</tag></tags><content type="html"> Java IO模型
 Java IO模型 1. 引言 同步异步I/O，阻塞非阻塞I/O是程序员老生常谈的话题了，也是自己一直以来懵懵懂懂的一个话题。比如：何为同步异步？何为阻塞与非阻塞？二者的区别在哪里？阻塞在何处？为什么会有多种IO模型，分别用来解决问题？常用的框架采用的是何种I/O模型？各种IO模型的优劣势在哪里，适用于何种应用场景？
 简而言之，对于I/O的认知，不能仅仅停留在字面上认识，了解内部玄机，才能深刻理解I/O，才能看清I/O相关问题的本质。
 2. I/O 的定义 I/O 的全称是Input/Output。虽常谈及I/O，但想必你也一时不能给出一个完整的定义。搜索了谷歌，发现也尽是些冗长的论述。要想厘清I/O这个概念，我们需要从不同的视角去理解它。

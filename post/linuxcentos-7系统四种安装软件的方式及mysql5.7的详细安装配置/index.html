@@ -14,13 +14,13 @@
 &nbsp;</span></span>
 <span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
 <span class=post-meta-item-text>字数：</span>
-<span class=leancloud-world-count>3037 字</span></span>
+<span class=leancloud-world-count>3067 字</span></span>
 <span class=post-readtime><i class="fa fa-eye fa-fw"></i>
 <span class=post-meta-item-text>阅读：</span>
 <span class=leancloud-view-count>7分钟</span></span>
 <span id=/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/ class="leancloud_visitors post-visitor" data-flag-title="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置"><i class="fa fa-binoculars fa-fw"></i>
 <span class=post-meta-item-text>阅读次数：</span>
-<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法</p><h1 id=linux安装软件的四种方式介绍>Linux安装软件的四种方式介绍</h1><p>四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装</p><h2 id=四种方式比较>四种方式比较</h2><ol><li><p>rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖</p></li><li><p>带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p></li></ol><h2 id=四种方式操作说明>四种方式操作说明</h2><ol><li>rpm与yum命令对比（yum简单，rpm复杂）</li></ol><blockquote><ul><li><p>RPM 全名 RedHat Package Managerment，是由Red Hat公司提出，被众多Linux发行版本所采用，是一种数据库记录的方式来将所需要的软件安装到到Linux系统的一套软件管理机制</p></li><li><p>rpm在安装时有严格的顺序限制，包与包有依赖关系，且安装过程中可能依赖别的包需要手动安装，而yum安装某个功能（例如mysql的server端）会自动下载安装依赖</p></li><li><p>安装软件：rpm -ivh [软件包名称]
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法</p><h1 id=linux安装软件的四种方式介绍>Linux安装软件的四种方式介绍</h1><p>四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装</p><h2 id=四种方式比较>四种方式比较</h2><ol><li><p>rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖</p></li><li><p>带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p></li></ol><h2 id=四种方式操作说明>四种方式操作说明</h2><h3 id=一npm和yum安装>一、npm和yum安装</h3><p>rpm与yum命令对比（yum简单，rpm复杂）</p><blockquote><ul><li><p>RPM 全名 RedHat Package Managerment，是由Red Hat公司提出，被众多Linux发行版本所采用，是一种数据库记录的方式来将所需要的软件安装到到Linux系统的一套软件管理机制</p></li><li><p>rpm在安装时有严格的顺序限制，包与包有依赖关系，且安装过程中可能依赖别的包需要手动安装，而yum安装某个功能（例如mysql的server端）会自动下载安装依赖</p></li><li><p>安装软件：rpm -ivh [软件包名称]
 卸载软件：rpm -e [软件包名称]
 更新软件：rpm -Uvh [软件包名称]</p></li><li><p>yum check-update：列出所有可更新的软件清单命令;</p><p>yum update：更新所有软件或指定软件命令;</p><p>yum install ：仅安装指定的软件命令；</p><p>yum list：列出所有可安装的软件清单命令；</p><p>yum remove ：删除软件包命令；</p><p>yum search ：查找软件包命令：</p></li></ul></blockquote><p>以安装mysql为例，对比yum和rpm的安装过程</p><p>①查看是否安装了mysql/mariadb的服务</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>[root@localhost ~]# rpm -qa |grep -i mysql
 </span></span><span style=display:flex><span>MySQL-client-5.6.23-1.sles11.x86_64
@@ -90,7 +90,7 @@
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>log-error=/var/log/mysqld.log
 </span></span><span style=display:flex><span>pid-file=/var/run/mysqld/mysqld.pid
-</span></span></code></pre></div><ol start=2><li><p>已编译tar包(带bin目录的tar)和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p><p>①带bin的tar包安装</p><p><img src=/images/image-20220527172826841.png alt=image-20220527172826841></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1、[root@localhost ~]#  tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar 
+</span></span></code></pre></div><h3 id=二tar包安装和source源码安装>二、tar包安装和source源码安装</h3><blockquote><p>已编译tar包(带bin目录的tar)和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p></blockquote><p>①带bin的tar包安装</p><p><img src=/images/image-20220527172826841.png alt=image-20220527172826841></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1、[root@localhost ~]#  tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar 
 </span></span><span style=display:flex><span>2、[root@localhost ~]#  cp -r mysql-5.7.26-linux-glibc2.12-x86_64 /usr/local/mysql --&gt;拷贝文件夹到/usr/local目录下并重命名为mysql
 </span></span><span style=display:flex><span>3、[root@localhost ~]# mkdir /usr/local/mysql/data /usr/local/mysql/logs --&gt;创建data和logs文件夹
 </span></span><span style=display:flex><span>4、[root@localhost ~]#  groupadd mysql  --&gt;添加mysql用户组
@@ -147,14 +147,14 @@
 </span></span><span style=display:flex><span>-DDEFAULT_CHARSET=utf8 \
 </span></span><span style=display:flex><span>-DDEFAULT_COLLATION=utf8_general_ci \
 </span></span><span style=display:flex><span>-DWITH_EMBEDDED_SERVER=1
-</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span> 
 </span></span><span style=display:flex><span>make &amp; make install
 </span></span><span style=display:flex><span>(5)/etc/my.cnf配置mysql
 </span></span><span style=display:flex><span>(6) ./mysqld --defaults-file=/etc/my.cnf --initialize #初始化
 </span></span><span style=display:flex><span>(7) cp support-files/mysql.server /etc/init.d/mysql #启动项设置
 </span></span><span style=display:flex><span>(8) service mysqld start
 </span></span><span style=display:flex><span>(9)登录不在赘述
-</span></span></code></pre></div><h2 id=mysql常见报错及处理方式>mysql常见报错及处理方式：</h2><ol><li><p>Can&rsquo;t connect to local MySQL server through socket &lsquo;/tmp/mysql.sock&rsquo; (2)</p><p><a href=https://blog.csdn.net/weixin_43464964/article/details/121807241 target=_blank rel=noopener>https://blog.csdn.net/weixin_43464964/article/details/121807241</a></p></li><li><p>防火墙问题导致mysql连不上：https://www.68idc.com/news/content/582.html</p></li><li><p>连接mysql报错误码1130：https://blog.csdn.net/web_15534274656/article/details/126493936</p></li><li><p>CentOS7查看开放端口命令、查看端口占用情况和开启端口命令、杀掉进程</p><p><a href=https://blog.csdn.net/weixin_48053866/article/details/127715462 target=_blank rel=noopener>https://blog.csdn.net/weixin_48053866/article/details/127715462</a></p></li><li><p>centos 7 tcp6端口地址不通，导致无法访问：https://www.pianshen.com/article/54202723812/</p></li></ol></li></ol><p>​</p></div><footer class=post-footer><div class=post-tags><a href=/tags/linux rel=tag title=Linux>#Linux#</a>
+</span></span></code></pre></div><h2 id=mysql常见报错及处理方式>mysql常见报错及处理方式：</h2><ol><li><p>Can&rsquo;t connect to local MySQL server through socket &lsquo;/tmp/mysql.sock&rsquo; (2)</p><p><a href=https://blog.csdn.net/weixin_43464964/article/details/121807241 target=_blank rel=noopener>https://blog.csdn.net/weixin_43464964/article/details/121807241</a></p></li><li><p>防火墙问题导致mysql连不上：https://www.68idc.com/news/content/582.html</p></li><li><p>连接mysql报错误码1130：https://blog.csdn.net/web_15534274656/article/details/126493936</p></li><li><p>CentOS7查看开放端口命令、查看端口占用情况和开启端口命令、杀掉进程</p><p><a href=https://blog.csdn.net/weixin_48053866/article/details/127715462 target=_blank rel=noopener>https://blog.csdn.net/weixin_48053866/article/details/127715462</a></p></li><li><p>centos 7 tcp6端口地址不通，导致无法访问：https://www.pianshen.com/article/54202723812/</p></li></ol><p>​</p></div><footer class=post-footer><div class=post-tags><a href=/tags/linux rel=tag title=Linux>#Linux#</a>
 <a href=/tags/mysql rel=tag title=mysql>#mysql#</a>
 <a href=/tags/rpm rel=tag title=rpm>#rpm#</a>
 <a href=/tags/yum rel=tag title=yum>#yum#</a>

@@ -1,4 +1,20 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Centos安装 Docker</title><url>/post/centos%E5%AE%89%E8%A3%85docker/</url><categories><category>Linux</category><category>Docker</category></categories><tags><tag>Linux</tag><tag>Docker</tag></tags><content type="html"> Centos安装 Docker
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>【韩顺平】Java类（静态）变量知识点总结</title><url>/post/%E9%9F%A9%E9%A1%BA%E5%B9%B3java%E7%B1%BB%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/</url><categories><category>Java基础</category><category>java</category><category>开发语言</category></categories><tags><tag>Java基础</tag><tag>java</tag><tag>开发语言</tag></tags><content type="html"> 【韩顺平】Java类（静态）变量知识点总结
+一个问题引出类变量：
+提出需求：有一群在玩堆雪人的游戏，不时有新的小孩加入，请问如何知道现在共有多少人在玩
+先用传统方法解决需求，思路如下：
+1.在main方法中定义一个变量count
+2.每当一个小孩加入游戏后，count++
+代码如下：
+public class ChildGame { public static void main(String[] args) { Child child1=new Child("a"); child1.join(); child1.add(); Child child2=new Child("b"); child2.join(); child2.add(); Child child3=new Child("c"); child3.join(); child3.add(); System.out.println("共有"+ (child1.getCount()+child2.getCount()+child3.getCount()) +"名小孩加入游戏"); } } class Child{ private String name; public int count=0; public void add(){ count++; } public int getCount() { return count; } public Child(String name){ this.name=name; } public void join(){ System.out.println(name+"加入了游戏..."); } }  可以看到，传统方法不仅每加入一个小孩就要调用一次add方法，而且在输出时，由于在类中定义的实例变量count只单独存在于每一个对象中，数据并不共享，因此在最终输出总人数时还需要将所有对象的count进行相加才能得出我们的总人数，步骤相当繁琐，并且代码可扩张性也极差。为解决这样的问题，就需要用到我们的类（静态）变量。
+什么是类变量 类变量也叫静态变量/静态属性，是该类的所有对象共享的变量，任何该类的对象去访问它时，取到的都是相同的值，同样，任何一个该类的对象去修改它时，修改的也是同一个变量。
+如何定义类变量 类变量的定义语法有两种
+1.访问修饰符 static 数据类型 变量名；（实际开发中应用更多）
+2.static 访问修饰符 数据类型 变量名；
+如何访问类变量 类变量的访问方式也有两种，但要注意类变量的访问修饰符的访问权限和普通属性一样
+1.类名.类变量名 （说明：通过类名.类变量名这种方法能访问到类变量的原因是由于类变量在随着类的加载时就初始化创建了，所以即使没有创建对象实例也可以进行访问）
+2.对象名.类变量名
+类变量介绍完毕，下面就可以利用类变量来解决我们的这个需求了
+public class ChildGame { public static void main(String[] args) { Child child1=new Child("a"); child1.join(); child1.count++; Child child2=new Child("b"); child2.join(); child2.count++; Child child3=new Child("c"); child3.join(); child3.count++； System.out.println("共有"+Child.count+"名小孩加入游戏"); } } class Child{ private String name; //定义一个变量count,是一个类变量（静态变量） //count变量最大的特点就是会被Child类的所有对象实例共享 public static int count=0; public Child(String name){ this.name=name; } public void join(){ System.out.println(name+"加入了游戏..."); } }  引入类变量解决问题后，我们发现，因为类变量是所有变量所共享的变量，因此，我们每加入一个小孩时，都只需要在该小孩对象中将count++，就能完成对人数的统计，并且，由于类变量在随着类的加载时就初始化创建了，因此我们可以直接用类.变量名的方式来得到我们最终的总人数。</content></entry><entry><title>Centos安装 Docker</title><url>/post/centos%E5%AE%89%E8%A3%85docker/</url><categories><category>Linux</category><category>Docker</category></categories><tags><tag>Linux</tag><tag>Docker</tag></tags><content type="html"> Centos安装 Docker
 Centos安装 Docker 从 2017 年 3 月开始 docker 在原来的基础上分为两个分支版本: Docker CE 和 Docker EE。
 Docker CE 即社区免费版，Docker EE 即企业版，强调安全，但需付费使用。
 本文介绍 Docker CE 的安装使用。

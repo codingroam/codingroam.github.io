@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>docker环境搭建redis集群并模拟扩缩容</title><url>/post/docker%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BAredis%E9%9B%86%E7%BE%A4%E5%B9%B6%E6%A8%A1%E6%8B%9F%E6%89%A9%E7%BC%A9%E5%AE%B9/</url><categories><category>docker</category></categories><tags><tag>docker</tag></tags><content type="html"> docker环境搭建redis集群并模拟扩缩容
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>centos7网卡报错,ip地址丢失不见等问题解决方法</title><url>/post/centos7%E7%BD%91%E5%8D%A1%E6%8A%A5%E9%94%99ip%E5%9C%B0%E5%9D%80%E4%B8%A2%E5%A4%B1%E4%B8%8D%E8%A7%81%E7%AD%89%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/</url><categories><category>Linux</category></categories><tags><tag>Linux</tag></tags><content type="html"> centos7网卡报错,ip地址丢失不见等问题解决方法
+问题出现: ip地址丢失不见,网卡报错,当重启网卡时 Job for network.service failed because the control process exited with error code. See &ldquo;systemctl status network.service&rdquo; and &ldquo;journalctl -xe&rdquo; for details. 按照提示输入systemctl status network.service查看报错如下 Failed to start LSB: Bring up/down networking.
+解决办法: 系统自带的NetworkManager这个管理套件出错，关掉. 关掉方法: systemctl stop NetworkManager
+systemctl disable NetworkManager
+重新启动网络： systemctl start network.service</content></entry><entry><title>docker环境搭建redis集群并模拟扩缩容</title><url>/post/docker%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BAredis%E9%9B%86%E7%BE%A4%E5%B9%B6%E6%A8%A1%E6%8B%9F%E6%89%A9%E7%BC%A9%E5%AE%B9/</url><categories><category>docker</category></categories><tags><tag>docker</tag></tags><content type="html"> docker环境搭建redis集群并模拟扩缩容
 docker环境搭建redis集群并模拟扩缩容 在docker环境拉下最新的redis镜像
 docker pull redis 有了redis镜像，开始搭建redis集群
 1关闭防火墙 [root@vm001 redis]# firewall-cmd --zone=public --add-port=6381-6390/tcp --permanent success [root@vm001 redis]# firewall-cmd --reload success 2配置案例设计 master 6381-6383 slave 6384-6386 master1() - slave1() master2() - slave2() master3() - slave3() master-slave实例具体的映射关系，会由redis自己匹配

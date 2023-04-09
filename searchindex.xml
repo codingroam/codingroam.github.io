@@ -243,8 +243,7 @@ docker run -d -p 3306:3306 --privileged=true \ -v /opt/mysql/log:/var/log/mysql 
 master_host：主数据库的IP地址；
 在从节点数据库中查看主从同步状态 show slave status \G; 在从节点数据库开启主从同步 start slave; 在从节点数据库再次查看主从同步状态是否变为Yes show slave status \G; 主从复制测试 主节点新建数据库，创建表，插入数据，然后在从节点中进行查看。
 从节点数据库查询查看：
-18.1分布式储存—哈希取余算法 [外链图片转存失败,源站可能有防盗链机制,建议将图片保存下来直接上传(img-9bKbNAlH-1667213295650)(https://imagebed-xuhuaiang.oss-cn-shanghai.aliyuncs.com/typora/image-removebg-preview%20(3)].png)
-hash(key) % N个机器台数，计算出哈希值，用来决定数据映射到哪一个节点上。
+18.1分布式储存—哈希取余算法 hash(key) % N个机器台数，计算出哈希值，用来决定数据映射到哪一个节点上。
 优点：
 简单粗暴，直接有效，只需要预估好数据规划好节点，例如3台、8台、10台，就能保证一段时间的数据支撑。使用Hash算法让固定的一部分请求落到同一台服务器上，这样每台服务器固定处理一部分请求（并维护这些请求的信息），起到负载均衡+分而治之的作用。
 缺点：

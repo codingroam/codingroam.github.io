@@ -1,1 +1,20 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>ip - 标签 - 好记性不如烂笔头</title><link>/tags/ip/</link><description>ip - 标签 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 31 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/ip/" rel="self" type="application/rss+xml"/><item><title>VMware虚拟机CentOS 7.5设置静态ip</title><link>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</link><pubDate>Tue, 31 May 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</guid><description>&lt;p>CentOS 7.5设置静态ip,配置网关，DNS等&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ip on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/tags/ip/</link>
+    <description>Recent content in ip on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 31 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/tags/ip/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VMware虚拟机CentOS 7.5设置静态ip</title>
+      <link>https://codingroam.github.io/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</link>
+      <pubDate>Tue, 31 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</guid>
+      <description>&lt;p&gt;CentOS 7.5设置静态ip,配置网关，DNS等&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

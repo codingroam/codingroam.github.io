@@ -1,7 +1,642 @@
-<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Seata - 分类 - 好记性不如烂笔头</title><meta name=author content><meta name=author-link content><meta name=description content="欢迎来到极光code空间站，个人主要专注于程序开发，产品，售前及大数据解决方案。"><meta name=keywords content="229,141,154,229,174,162,44,32,231,168,139,229,186,143,229,145,152,44,32,230,158,182,230,158,132,229,184,136,44,32,230,128,157,232,128,131,44,32,232,175,187,228,185,166,44,32,231,172,148,232,174,176,44,32,230,138,128,230,156,175,44,32,229,136,134,228,186,171,44,32,229,164,167,230,149,176,230,141,174,44,32,228,186,167,229,147,129"><meta itemprop=name content="Seata"><meta itemprop=description content="欢迎来到极光code空间站，个人主要专注于程序开发，产品，售前及大数据解决方案。"><meta property="og:title" content="Seata"><meta property="og:description" content="欢迎来到极光code空间站，个人主要专注于程序开发，产品，售前及大数据解决方案。"><meta property="og:type" content="website"><meta property="og:url" content="/categories/seata/"><meta name=twitter:card content="summary"><meta name=twitter:title content="Seata"><meta name=twitter:description content="欢迎来到极光code空间站，个人主要专注于程序开发，产品，售前及大数据解决方案。"><meta name=application-name content="FixIt"><meta name=apple-mobile-web-app-title content="FixIt"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical href=/categories/seata/><link rel=alternate href=/categories/seata/index.xml type=application/rss+xml title=好记性不如烂笔头><link rel=feed href=/categories/seata/index.xml type=application/rss+xml title=好记性不如烂笔头><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css></head><body data-header-desktop=sticky data-header-mobile=auto><script>(window.localStorage?.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("data-theme","dark")</script><div class=wrapper data-page-style=normal><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=好记性不如烂笔头 data-alt=好记性不如烂笔头 class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li><li class="menu-item language-switch"><span role=button aria-label=选择语言 title=选择语言><i class="fa-solid fa-language fa-fw" aria-hidden=true></i></span><ul class=sub-menu><li class=menu-item>没有更多翻译</li></ul></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=/fixit.min.svg data-alt=/fixit.min.svg class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item menu-system"><span class="menu-system-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></span><span class="menu-system-item language-switch">
-<span role=button aria-label=选择语言 title=选择语言>中文<i class="dropdown-icon fa-solid fa-chevron-down" aria-hidden=true></i></span>
-<select class=language-select onchange="location=this.value"><option disabled>没有更多翻译</option></select></span></li></ul></nav></div></header><main class=container><div class="page archive"><h2 class="single-title animate__animated animate__pulse animate__faster"><i class="fa-regular fa-folder-open fa-fw" aria-hidden=true></i>
-Seata&nbsp;<sup>1</sup></h2><h3 class=group-title>2023</h3><article class=archive-item><a href=/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/ class=archive-item-link>Seata四种模式（XA、AT、TCC、SAGA）</a>
-<span class=archive-item-date title="2023-01-26 00:00:00">01-26</span></article></div></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.2.18"><img class=fixit-icon src=/fixit.min.svg alt="FixIt logo">&nbsp;FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
-<span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>
-<a href=/></a></span></div><div class="footer-line statistics"></div></div></footer></div><div class=widgets><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i><span class="variant-numeric d-none">0%</span></div></div><div id=mask></div><noscript><div class=noscript-warning>FixIt 主题在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script>window.config={code:{copyTitle:"复制到剪贴板",editLockTitle:"锁定可编辑代码块",editUnLockTitle:"解锁可编辑代码块",editable:!0,maxShownLines:10},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验。"},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!0,left:"\\begin{equation}",right:"\\end{equation}"},{display:!0,left:"\\begin{equation*}",right:"\\end{equation*}"},{display:!0,left:"\\begin{align}",right:"\\end{align}"},{display:!0,left:"\\begin{align*}",right:"\\end{align*}"},{display:!0,left:"\\begin{alignat}",right:"\\end{alignat}"},{display:!0,left:"\\begin{alignat*}",right:"\\end{alignat*}"},{display:!0,left:"\\begin{gather}",right:"\\end{gather}"},{display:!0,left:"\\begin{CD}",right:"\\end{CD}"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/js/theme.min.js defer></script></body></html>
+<!DOCTYPE HTML>
+<html lang="zh-cn" dir="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <title> Seata - 好记性不如烂笔头 </title>
+  
+  <meta name="keywords" content="博客, 程序员, 架构师, 思考, 读书, 笔记, 技术, 分享, 大数据, 产品">
+  
+  
+  <meta name="author" content="极光code">
+  
+  <meta property="og:title" content="Seata"/>
+  <meta property="og:site_name" content="好记性不如烂笔头">
+  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
+  <meta name="title" content="Seata - 好记性不如烂笔头" />
+  
+  <meta name="description" content="欢迎来到极光code空间站，个人主要专注于程序开发，产品，售前及大数据解决方案。">
+   
+  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  
+  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
+  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
+  
+  
+  
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<div class="container one-collumn sidebar-position-left   ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-container">
+<div class="site-nav-toggle">
+  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+  </div>
+</div>
+<div class="site-meta ">
+  
+  
+  
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">好记性不如烂笔头</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">锲而不舍，金石可镂！</p>
+</div>
+
+<div class="site-nav-right">
+    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+    
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/post" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/tags" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item menu-item-active">
+        <a href="/categories" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />目录
+        </a>
+      </li>
+    
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
+      </li>
+    </ul>
+    <div class="site-search">
+      <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon"><i class="fa fa-search"></i> </span>
+    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+    </div>
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+<section id="posts" class="posts-collapse">
+<div class="collection-title">
+    <h2 >Seata
+    <small>分类</small>
+    </h2>
+</div>
+
+<div class="collection-title">
+  <h2 class="archive-year motion-element" id="archive-year-2023">2023</h2>
+</div>
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      <h1 class="post-title">
+        <a class="post-title-link" href="https://codingroam.github.io/post/seata%e5%9b%9b%e7%a7%8d%e6%a8%a1%e5%bc%8fxaattccsaga/" itemprop="url">
+            <span itemprop="name">Seata四种模式（XA、AT、TCC、SAGA）</span>
+        </a>
+      </h1>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2023-01-26"
+              content="01-26" >
+          01-26
+        </time>
+      </div>
+    </header>
+  </article>
+
+
+ </section>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+  
+  
+
+
+
+<nav class="pagination">
+    
+    
+        
+        
+          <span class="page-number current">1</span>
+        
+        
+    
+    
+</nav>
+
+
+          </div>
+        </div>
+        <div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+        src="/img/avatar.png"
+        alt="极光code" />
+    <p class="site-author-name" itemprop="name">极光code</p>
+    <p class="site-description motion-element" itemprop="description"> 
+      
+        以梦为马，不负韶华!
+      
+    </p>
+</div>
+      <nav class="site-state motion-element">
+    <div class="site-state-item site-state-posts">
+      <a href="/post/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">日志</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">    
+        <a href="/categories/">      
+         
+        <span class="site-state-item-count">49</span>
+        
+        <span class="site-state-item-name">分类</span>
+        
+        </a>
+    </div>
+
+    <div class="site-state-item site-state-tags">
+        <a href="/tags/">
+         
+        <span class="site-state-item-count">62</span>
+        
+        <span class="site-state-item-name">标签</span>
+        </a>
+    </div>
+</nav>
+      
+<div class="feed-link motion-element">
+<a href="/categories/seata/index.xml" rel="alternate" type="application/rss+xml" target="_blank">
+    <i class="fa fa-rss"></i>
+    RSS 订阅
+</a>
+</div>
+
+      
+<div class="links-of-author motion-element">
+    
+        <span class="links-of-author-item">
+        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
+            <i class="fa fa-fw fa-github"></i>
+            GitHub
+        </a>
+        </span>
+    
+        <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
+            <i class="fa fa-fw fa-globe"></i>
+            知乎
+        </a>
+        </span>
+    
+</div>
+
+
+      
+    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+    <div class="links-of-blogroll-title">
+        <i class="fa fa-fw fa-globe"></i>
+        友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
+    <div class="tagcloud-of-blogroll-title">
+        <i class="fa fa-fw fa-tags"></i>
+        标签云
+    </div>
+    <ul class="tagcloud-of-blogroll-list">
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/linux">Linux
+            <sup>10</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java">Java
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/mysql">Mysql
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/docker">Docker
+            <sup>6</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/git">Git
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/problem-solving">Problem solving
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java-base">Java base
+            <sup>4</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/spring">Spring
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/threadlocal">Threadlocal
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/command">Command
+            <sup>2</sup>
+            </a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    </section>
+    
+  </div>
+</aside>
+
+      </div>
+    </main>
+   
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  <span class="copyright-year">  
+    &copy; 2010 - 2023
+  </span>
+  <span class="with-love"><i class="fa fa-heart"></i></span>
+  <span class="copyright-author">好记性不如烂笔头</span>
+</div>
+<div class="powered-info">
+  <span class="powered-by">
+    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="theme-info">
+    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
+    </a>
+  </span>
+</div>
+<div class="vistor-info">
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="site-pv">
+    <i class="fa fa-eye"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+
+
+</div>
+<div class="license-info">
+  <span class="storage-info">
+    Storage by 
+    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="license-num"> 
+    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
+  </span>
+</div>
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+      <span id="scrollpercent"><span>0</span>%</span>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
+
+
+<script type="text/javascript">
+
+  function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+    var edge = ua.indexOf('Edge/');
+
+    if (msie>0 || trident>0 || edge>0) {
+      return -1;
+    }
+
+    return 1;
+  }
+
+
+  function getCntViewHeight() {
+    var docHeight = $('#content').height(),
+        winHeight = $(window).height(),
+        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
+    return cntViewHeight;
+  }
+
+  function getScrollbarWidth() {
+    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
+    var div = $div[0];
+    var scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+    $div.remove();
+
+    return scrollbarWidth;
+  }
+
+  function registerBackTop() {
+    var THRESHOLD = 50;
+    var $top = $('.back-to-top');
+
+    $(window).on('scroll', function () {
+      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
+
+      var scrollTop = $(window).scrollTop();
+      var cntViewHeight = getCntViewHeight();
+      var scrollPercent = (scrollTop) / (cntViewHeight);
+      var scrollPercentRounded = Math.round(scrollPercent*100);
+      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
+      $('#scrollpercent>span').html(scrollPercentMaxed);
+    });
+
+    $top.on('click', function () {
+      $("html,body").animate({
+                 scrollTop: 0,
+                 screenLeft: 0,
+                 }, 800);
+    });
+  }
+
+  function initScrollSpy () {
+    var tocSelector = '.post-toc';
+    var $tocElement = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocElement
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+      })
+      .on('clear.bs.scrollspy', removeCurrentActiveClass);
+
+    $('body').scrollspy({ target: tocSelector });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+  }
+
+  function initAffix () {
+    var headerHeight = $('.header-inner').height();
+    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
+    var sidebarTop = headerHeight + 10;
+
+    $('.sidebar-inner').affix({
+      offset: {
+        top: sidebarTop,
+        bottom: footerOffset 
+      }
+    });
+
+    
+
+  }
+
+  function initTOCDimension () {
+    var updateTOCHeightTimer;
+
+    $(window).on('resize', function () {
+      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+
+      updateTOCHeightTimer = setTimeout(function () {
+        var tocWrapperHeight = document.body.clientHeight - 100;
+
+        updateTOCHeight(tocWrapperHeight);
+      }, 0);
+    });
+
+    
+    updateTOCHeight(document.body.clientHeight - 100);
+
+    
+    var scrollbarWidth = getScrollbarWidth();
+    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
+  }
+
+  function updateTOCHeight (height) {
+    height = height || 'auto';
+    $('.post-toc').css('max-height', height);
+  }
+
+$(function() {
+
+  var sidebarTop = $('.header-inner').height() + 10;
+  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
+
+  
+  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
+  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
+  var sideHeight = sidebarMt + sidebarInHeight;
+  var contentHeight = $('.content-wrap').height();
+
+  if (contentHeight < sideHeight) {
+    $('.content-wrap').css('min-height', sideHeight);
+  }
+  
+  
+  $('.site-nav-toggle').on('click', function () {
+    var $siteNav = $('.site-nav');
+    var $toggleLine = $('.toggle');
+    var ON_CLASS_NAME = 'site-nav-on';
+    var CLOSE_CLASS_NAME = 'toggle-close';
+    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
+    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
+    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
+
+    $siteNav.stop()[animateAction]('normal', function () {
+      $siteNav[animateCallback](ON_CLASS_NAME);
+      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
+    });
+
+  });
+
+  registerBackTop();
+  
+   
+  initAffix();
+  initTOCDimension();
+
+  $('.sidebar-nav-toc').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).next().removeClass('sidebar-nav-active');      
+    $('.'+$(this).next().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+
+  $('.sidebar-nav-overview').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).prev().removeClass('sidebar-nav-active');      
+    $('.'+$(this).prev().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+});  
+
+</script>
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+</body>
+</html>

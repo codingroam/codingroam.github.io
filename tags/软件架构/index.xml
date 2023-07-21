@@ -1,1 +1,20 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>软件架构 - 标签 - 好记性不如烂笔头</title><link>/tags/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/</link><description>软件架构 - 标签 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 26 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/" rel="self" type="application/rss+xml"/><item><title>软件架构设计读书笔记</title><link>/post/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link><pubDate>Sun, 26 Jun 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid><description>&lt;p>根据软件架构设计：大型网站技术架构与业务架构融合之道一书所作的读书笔记&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>软件架构 on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/tags/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 软件架构 on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 26 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/tags/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>软件架构设计读书笔记</title>
+      <link>https://codingroam.github.io/post/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sun, 26 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid>
+      <description>&lt;p&gt;根据软件架构设计：大型网站技术架构与业务架构融合之道一书所作的读书笔记&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,105 +1,1076 @@
-<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>ThreadLocal与FastThreadLocal - 好记性不如烂笔头</title><meta name=author content><meta name=author-link content><meta name=description content="ThreadLocal与FastThreadLocal"><meta name=keywords content="ThreadLocal,Java Base,netty"><meta itemprop=name content="ThreadLocal与FastThreadLocal"><meta itemprop=description content="ThreadLocal与FastThreadLocal"><meta itemprop=datePublished content="2022-12-14T00:00:00+00:00"><meta itemprop=dateModified content="2022-12-14T00:00:00+00:00"><meta itemprop=wordCount content="3339"><meta itemprop=keywords content="ThreadLocal,Java Base,netty,"><meta property="og:title" content="ThreadLocal与FastThreadLocal"><meta property="og:description" content="ThreadLocal与FastThreadLocal"><meta property="og:type" content="article"><meta property="og:url" content="/post/threadlocal%E4%B8%8Efastthreadlocal/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-12-14T00:00:00+00:00"><meta property="article:modified_time" content="2022-12-14T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="ThreadLocal与FastThreadLocal"><meta name=twitter:description content="ThreadLocal与FastThreadLocal"><meta name=application-name content="FixIt"><meta name=apple-mobile-web-app-title content="FixIt"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical href=/post/threadlocal%E4%B8%8Efastthreadlocal/><link rel=prev href=/post/threadlocal%E7%88%B6%E5%AD%90%E7%BA%BF%E7%A8%8B%E4%BC%A0%E9%80%92%E9%97%AE%E9%A2%98/><link rel=next href=/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"ThreadLocal与FastThreadLocal","inLanguage":"zh-cn","mainEntityOfPage":{"@type":"WebPage","@id":"\/post\/threadlocal%E4%B8%8Efastthreadlocal\/"},"genre":"post","keywords":"ThreadLocal, Java Base, netty","wordcount":3339,"url":"\/post\/threadlocal%E4%B8%8Efastthreadlocal\/","datePublished":"2022-12-14T00:00:00+00:00","dateModified":"2022-12-14T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wang"},"description":"ThreadLocal与FastThreadLocal"}</script></head><body data-header-desktop=sticky data-header-mobile=auto><script>(window.localStorage?.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("data-theme","dark")</script><div class=wrapper data-page-style=normal><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=好记性不如烂笔头 data-alt=好记性不如烂笔头 class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li><li class="menu-item language-switch"><span role=button aria-label=选择语言 title=选择语言><i class="fa-solid fa-language fa-fw" aria-hidden=true></i></span><ul class=sub-menu><li class=menu-item>没有更多翻译</li></ul></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=/fixit.min.svg data-alt=/fixit.min.svg class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item menu-system"><span class="menu-system-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></span><span class="menu-system-item language-switch">
-<span role=button aria-label=选择语言 title=选择语言>中文<i class="dropdown-icon fa-solid fa-chevron-down" aria-hidden=true></i></span>
-<select class=language-select onchange="location=this.value"><option disabled>没有更多翻译</option></select></span></li></ul></nav></div></header><main class=container><article class="page single special"><div class=header><h1 class="single-title animate__animated animate__pulse animate__faster">ThreadLocal与FastThreadLocal</h1></div><div class=content id=content><p>ThreadLocal与FastThreadLocal</p><h3 id=threadlocal与fastthreadlocal>ThreadLocal与FastThreadLocal</h3><p>FastThreadLocal是Netty中常用的一个工具类，他的基本功能与JDK自带的<a href=https://codingroam.github.io/post/threadlocal/ target=_blank rel="external nofollow noopener noreferrer">ThreadLocal</a>一样，但是性能优于ThreadLocal。在讲解FastThreadLocal之前，先大致讲一下ThreadLocal的原理。</p><h4 id=1threadlocal>1、ThreadLocal</h4><p>如果想要在线程中保存一个变量，这个变量是该线程所独有的，其他线程不能对该变量进行访问和修改，那么我们可以使用ThreadLocal实现这一功能.</p><p>ThreadLocal的功能主要是通过ThreadLocalMap来实现的，每个线程都会有一个ThreadLocalMap类型的成员变量，ThreadLocalMap本质上就是一个哈希表，key为ThreadLocal，value为该ThreadLocal为该线程保存的变量，如下图所示：
-<img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214165714815.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214165714815.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214165714815.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214165714815.png 2x" sizes=auto data-title=image-20221214165714815 data-alt=image-20221214165714815 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>ThreadLocalMap中使用一个Entry类型的数组来作为哈希表，并用线性探测法解决哈希冲突，数组的大小永远是2的n次方。Entry是一个静态内部类，且继承了WeakReference&lt;ThreadLocal>，表示其保存的ThreadLocal是一个弱引用，这是为了防止内存泄漏，因为当所有指向ThreadLocal的强引用都为null时，该Entry也就没有必要再指向这个ThreadLocal了，这样下一次gc时该ThreadLoca就会被回收掉。Entry的成员变量Object value就是T和read Local为线程保存的独有的变量。</p><p>set方法将ThreadLocal和相应的value保存为一个Entry，再根据ThreadLocal的哈希值将Entry放入哈希表中的相应的位置，并用线性探测法解决哈希冲突。setEntry方法中，如果在查找哈希表的过程中发现某个Entry所保存的ThreadLocal被垃圾回收了，那么会将该Entry清除掉</p><div class=highlight id=id-1><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>private</span> ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span> <span style=color:#00a000>getEntry</span><span style=color:#666>(</span>ThreadLocal<span style=color:#666>&lt;?&gt;</span> key<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#0b0;font-weight:700>int</span> i <span style=color:#666>=</span> key<span style=color:#666>.</span><span style=color:#b44>threadLocalHashCode</span> <span style=color:#666>&amp;</span> <span style=color:#666>(</span>table<span style=color:#666>.</span><span style=color:#b44>length</span> <span style=color:#666>-</span> <span style=color:#666>1</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span> e <span style=color:#666>=</span> table<span style=color:#666>[</span>i<span style=color:#666>];</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//找到了相应的entry，直接返回
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>e <span style=color:#666>!=</span> <span style=color:#a2f;font-weight:700>null</span> <span style=color:#666>&amp;&amp;</span> e<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>()</span> <span style=color:#666>==</span> key<span style=color:#666>)</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> e<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>else</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> getEntryAfterMiss<span style=color:#666>(</span>key<span style=color:#666>,</span> i<span style=color:#666>,</span> e<span style=color:#666>);</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>private</span> ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span> <span style=color:#00a000>getEntryAfterMiss</span><span style=color:#666>(</span>ThreadLocal<span style=color:#666>&lt;?&gt;</span> key<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> i<span style=color:#666>,</span> ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span> e<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span><span style=color:#666>[]</span> tab <span style=color:#666>=</span> table<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#0b0;font-weight:700>int</span> len <span style=color:#666>=</span> tab<span style=color:#666>.</span><span style=color:#b44>length</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>while</span> <span style=color:#666>(</span>e <span style=color:#666>!=</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        ThreadLocal<span style=color:#666>&lt;?&gt;</span> k <span style=color:#666>=</span> e<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>k <span style=color:#666>==</span> key<span style=color:#666>)</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> e<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//该threadLocal已经为null，那么entry也就没有存在的必要了，因此需要被清除
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>k <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>)</span>
-</span></span><span style=display:flex><span>            expungeStaleEntry<span style=color:#666>(</span>i<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>else</span>
-</span></span><span style=display:flex><span>            i <span style=color:#666>=</span> nextIndex<span style=color:#666>(</span>i<span style=color:#666>,</span> len<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        e <span style=color:#666>=</span> tab<span style=color:#666>[</span>i<span style=color:#666>];</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>private</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>set</span><span style=color:#666>(</span>ThreadLocal<span style=color:#666>&lt;?&gt;</span> key<span style=color:#666>,</span> Object value<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span><span style=color:#666>[]</span> tab <span style=color:#666>=</span> table<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#0b0;font-weight:700>int</span> len <span style=color:#666>=</span> tab<span style=color:#666>.</span><span style=color:#b44>length</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//将threadlocal的哈希值与哈希表的长度取余，放入哈希表中相应的位置
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#0b0;font-weight:700>int</span> i <span style=color:#666>=</span> key<span style=color:#666>.</span><span style=color:#b44>threadLocalHashCode</span> <span style=color:#666>&amp;</span> <span style=color:#666>(</span>len<span style=color:#666>-</span><span style=color:#666>1</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>for</span> <span style=color:#666>(</span>ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span> e <span style=color:#666>=</span> tab<span style=color:#666>[</span>i<span style=color:#666>];</span>
-</span></span><span style=display:flex><span>         e <span style=color:#666>!=</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>         e <span style=color:#666>=</span> tab<span style=color:#666>[</span>i <span style=color:#666>=</span> nextIndex<span style=color:#666>(</span>i<span style=color:#666>,</span> len<span style=color:#666>)])</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        ThreadLocal<span style=color:#666>&lt;?&gt;</span> k <span style=color:#666>=</span> e<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//哈希表中保存了这个threadLocal，因此直接修改value值
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>k <span style=color:#666>==</span> key<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            e<span style=color:#666>.</span><span style=color:#b44>value</span> <span style=color:#666>=</span> value<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//entry不为null，但entry保存threadLocal为null，说明该threadLocal已经被垃圾回收了，需要替换掉这个entry
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>k <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            replaceStaleEntry<span style=color:#666>(</span>key<span style=color:#666>,</span> value<span style=color:#666>,</span> i<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    tab<span style=color:#666>[</span>i<span style=color:#666>]</span> <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> ThreadLocal<span style=color:#666>.</span><span style=color:#b44>ThreadLocalMap</span><span style=color:#666>.</span><span style=color:#b44>Entry</span><span style=color:#666>(</span>key<span style=color:#666>,</span> value<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#0b0;font-weight:700>int</span> sz <span style=color:#666>=</span> <span style=color:#666>++</span>size<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//如果哈希表的装载因子超过阈值，则需要对哈希表扩容，并对所有的entry重新做哈希
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(!</span>cleanSomeSlots<span style=color:#666>(</span>i<span style=color:#666>,</span> sz<span style=color:#666>)</span> <span style=color:#666>&amp;&amp;</span> sz <span style=color:#666>&gt;=</span> threshold<span style=color:#666>)</span>
-</span></span><span style=display:flex><span>        rehash<span style=color:#666>();</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span></span></span></code></pre></div><h4 id=2fastthreadlocal>2、FastThreadLocal</h4><p>从 InternalThreadLocalMap 内部实现来看，与 ThreadLocalMap 一样都是采用数组的存储方式，但是 InternalThreadLocalMap 并没有使用线性探测法来解决 Hash 冲突，而是在 FastThreadLocal 初始化的时候分配一个数组索引 index，index 的值采用原子类 AtomicInteger 保证顺序递增，通过调用 InternalThreadLocalMap.nextVariableIndex() 方法获得。然后在读写数据的时候通过数组下标 index 直接定位到 FastThreadLocal 的位置，时间复杂度为 O(1)。如果数组下标递增到非常大，那么数组也会比较大，所以 FastThreadLocal 是通过空间换时间的思想提升读写性能</p><div class=highlight id=id-2><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>FastThreadLocal</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    index <span style=color:#666>=</span> InternalThreadLocalMap<span style=color:#666>.</span><span style=color:#b44>nextVariableIndex</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>int</span> <span style=color:#00a000>nextVariableIndex</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//nextIndex是一个静态变量，每次调用nextVariableIndex()都会自增1，让后赋给FastThreadLocal的index属性
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#0b0;font-weight:700>int</span> index <span style=color:#666>=</span> nextIndex<span style=color:#666>.</span><span style=color:#b44>getAndIncrement</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>index <span style=color:#666>&lt;</span> <span style=color:#666>0</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        nextIndex<span style=color:#666>.</span><span style=color:#b44>decrementAndGet</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> IllegalStateException<span style=color:#666>(</span><span style=color:#b44>&#34;too many thread-local indexed variables&#34;</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>return</span> index<span style=color:#666>;</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>static</span> <span style=color:#a2f;font-weight:700>final</span> AtomicInteger nextIndex <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> AtomicInteger<span style=color:#666>();</span></span></span></code></pre></div><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212559533.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212559533.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212559533.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212559533.png 2x" sizes=auto data-title=image-20221214212559533 data-alt=image-20221214212559533 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>通过上面 FastThreadLocal 的内部结构图可知，FastThreadLocal 使用 Object 数组替代了 Entry 数组，Object[0] 存储的是一个Set&lt;FastThreadLocal> 集合，从数组下标 1 开始都是直接存储的 value 数据，不再采用 ThreadLocal 的键值对形式进行存储。</p><p>假设现在我们有一批数据需要添加到数组中，分别为 value1、value2、value3、value4，对应的 FastThreadLocal 在初始化的时候生成的数组索引分别为 1、2、3、4。如下图所示。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212704846.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212704846.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212704846.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212704846.png 2x" sizes=auto data-title=image-20221214212704846 data-alt=image-20221214212704846 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><h5 id=使用代码示例>使用代码示例</h5><div class=highlight id=id-3><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>FastThreadLocalTest</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#a2f;font-weight:700>final</span> FastThreadLocal<span style=color:#666>&lt;;</span>String<span style=color:#666>&gt;</span> THREAD_NAME_LOCAL <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> FastThreadLocal<span style=color:#666>&lt;;&gt;();</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#a2f;font-weight:700>final</span> FastThreadLocal<span style=color:#666>&lt;;</span>TradeOrder<span style=color:#666>&gt;</span> TRADE_THREAD_LOCAL <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> FastThreadLocal<span style=color:#666>&lt;;&gt;();</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>main</span><span style=color:#666>(</span>String<span style=color:#666>[]</span> args<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>for</span> <span style=color:#666>(</span><span style=color:#0b0;font-weight:700>int</span> i <span style=color:#666>=</span> <span style=color:#666>0</span><span style=color:#666>;</span> i <span style=color:#666>&lt;;</span> <span style=color:#666>2</span><span style=color:#666>;</span> i<span style=color:#666>++)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#0b0;font-weight:700>int</span> tradeId <span style=color:#666>=</span> i<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>            String threadName <span style=color:#666>=</span> <span style=color:#b44>&#34;thread-&#34;</span> <span style=color:#666>+</span> i<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>new</span> FastThreadLocalThread<span style=color:#666>(()</span> <span style=color:#666>-&gt;</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>                THREAD_NAME_LOCAL<span style=color:#666>.</span><span style=color:#b44>set</span><span style=color:#666>(</span>threadName<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>                TradeOrder tradeOrder <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> TradeOrder<span style=color:#666>(</span>tradeId<span style=color:#666>,</span> tradeId <span style=color:#666>%</span> <span style=color:#666>2</span> <span style=color:#666>==</span> <span style=color:#666>0</span> <span style=color:#666>?</span> <span style=color:#b44>&#34;已支付&#34;</span> <span style=color:#666>:</span> <span style=color:#b44>&#34;未支付&#34;</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>                TRADE_THREAD_LOCAL<span style=color:#666>.</span><span style=color:#b44>set</span><span style=color:#666>(</span>tradeOrder<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>                System<span style=color:#666>.</span><span style=color:#b44>out</span><span style=color:#666>.</span><span style=color:#b44>println</span><span style=color:#666>(</span><span style=color:#b44>&#34;threadName: &#34;</span> <span style=color:#666>+</span> THREAD_NAME_LOCAL<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>());</span>
-</span></span><span style=display:flex><span>                System<span style=color:#666>.</span><span style=color:#b44>out</span><span style=color:#666>.</span><span style=color:#b44>println</span><span style=color:#666>(</span><span style=color:#b44>&#34;tradeOrder info：&#34;</span> <span style=color:#666>+</span> TRADE_THREAD_LOCAL<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>());</span>
-</span></span><span style=display:flex><span>            <span style=color:#666>},</span> threadName<span style=color:#666>).</span><span style=color:#b44>start</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span></span></span></code></pre></div><p>FastThreadLocal 的使用方法几乎和 ThreadLocal 保持一致，只需要把代码中 Thread、ThreadLocal 替换为 FastThreadLocalThread 和 FastThreadLocal 即可。</p><h5 id=fastthreadlocal源码分析>FastThreadLocal源码分析</h5><ul><li><p>FastThreadLocal.set()</p><div class=highlight id=id-4><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>final</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>set</span><span style=color:#666>(</span>V value<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>value <span style=color:#666>!=</span> InternalThreadLocalMap<span style=color:#666>.</span><span style=color:#b44>UNSET</span><span style=color:#666>)</span> <span style=color:#666>{</span> <span style=color:#080;font-style:italic>// 1. value 是否为缺省值
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        InternalThreadLocalMap threadLocalMap <span style=color:#666>=</span> InternalThreadLocalMap<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>();</span> <span style=color:#080;font-style:italic>// 2. 获取当前线程的 InternalThreadLocalMap
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        setKnownNotUnset<span style=color:#666>(</span>threadLocalMap<span style=color:#666>,</span> value<span style=color:#666>);</span> <span style=color:#080;font-style:italic>// 3. 将 InternalThreadLocalMap 中数据替换为新的 value
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#666>}</span> <span style=color:#a2f;font-weight:700>else</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        remove<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span></span></span></code></pre></div><p>set() 的过程主要分为三步：</p><ol><li>判断 value 是否为缺省值(UNSET)，如果等于缺省值，那么直接调用 remove() 方法。这里我们还不知道缺省值和 remove() 之间的联系是什么，我们暂且把 remove() 放在最后分析。</li><li>如果 value 不等于缺省值，接下来会获取当前线程的 InternalThreadLocalMap。</li><li>然后将 InternalThreadLocalMap 中对应数据替换为新的 value。</li></ol></li></ul><h5 id=fastthreadlocal使用字节填充解决伪共享>FastThreadLocal使用字节填充解决伪共享</h5><p>FastThreadLocal也是用在多线程场景，所以FastThreadLocal需要解决伪共享问题，FastThreadLocal使用字节填充解决伪共享，详情请移步<a href=https://codingroam.github.io/post/java%E4%BC%AA%E5%85%B1%E4%BA%AB/ target=_blank rel="external nofollow noopener noreferrer">java伪共享</a></p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214213916504.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214213916504.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214213916504.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214213916504.png 2x" sizes=auto data-title=image-20221214213916504 data-alt=image-20221214213916504 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><blockquote><p>缓存行
+<!DOCTYPE HTML>
+<html lang="zh-cn" dir="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <title> ThreadLocal与FastThreadLocal - 好记性不如烂笔头 </title>
+  
+  <meta name="keywords" content="博客, 程序员, 架构师, 思考, 读书, 笔记, 技术, 分享, 大数据, 产品">
+  
+  
+  <meta name="author" content="极光code">
+  
+  <meta property="og:title" content="ThreadLocal与FastThreadLocal"/>
+  <meta property="og:site_name" content="好记性不如烂笔头">
+  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
+  <meta name="title" content="ThreadLocal与FastThreadLocal - 好记性不如烂笔头" />
+  
+  <meta name="description" content="ThreadLocal与FastThreadLocal" />
+   
+  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  
+  <link href="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css" rel="stylesheet"/>
+  
+  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
+  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
+  
+  
+  
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<div class="container one-collumn sidebar-position-left page-home  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-container">
+<div class="site-nav-toggle">
+  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+  </div>
+</div>
+<div class="site-meta ">
+  
+  
+  
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">好记性不如烂笔头</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">锲而不舍，金石可镂！</p>
+</div>
+
+<div class="site-nav-right">
+    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+    
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item menu-item-active">
+        <a href="/post" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/tags" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/categories" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />目录
+        </a>
+      </li>
+    
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
+      </li>
+    </ul>
+    <div class="site-search">
+      <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon"><i class="fa fa-search"></i> </span>
+    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+    </div>
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+<section id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      
+      <h1 class="post-title" itemprop="name headline">
+        <a class="post-title-link" href="https://codingroam.github.io/post/threadlocal%E4%B8%8Efastthreadlocal/" itemprop="url">
+        ThreadLocal与FastThreadLocal
+        </a>
+      </h1>
+      
+      <div class="post-meta">
+      <span class="post-pushdate">
+<i class="fa fa-calendar-o fa-fw"></i>
+<span class="post-meta-item-text">时间：</span>
+<time itemprop="dateCreated" datetime="2016-03-22T13:04:35+08:00" content="2022-12-14">
+    2022-12-14
+</time>
+</span> 
+      
+
+  <span class="post-category" >
+  <i class="fa fa-folder-o fa-fw"></i>  
+  <span class="post-meta-item-text">分类：</span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/threadlocal" itemprop="url" rel="index">
+        <span itemprop="name">ThreadLocal</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/java-base" itemprop="url" rel="index">
+        <span itemprop="name">Java Base</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/netty" itemprop="url" rel="index">
+        <span itemprop="name">netty</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+</span>
+
+
+      <span class="post-wordcount">
+<i class="fa fa-file-word-o fa-fw"></i>
+<span class="post-meta-item-text">字数：</span>
+<span class="leancloud-world-count">3440 字</span>
+</span>
+      <span class="post-readtime">
+<i class="fa fa-eye fa-fw"></i>
+<span class="post-meta-item-text">阅读：</span>
+<span class="leancloud-view-count">7分钟</span>
+</span>
+      <span id="/post/threadlocal%E4%B8%8Efastthreadlocal/" class="leancloud_visitors post-visitor" data-flag-title="ThreadLocal与FastThreadLocal">
+<i class="fa fa-binoculars fa-fw"></i>
+<span class="post-meta-item-text">阅读次数：</span>
+<span class="leancloud-visitors-count"></span>
+</span>
+      </div>
+     
+    </header>
+  
+    <div class="post-body" itemprop="articleBody">
+    <p>ThreadLocal与FastThreadLocal</p>
+<h3 id="threadlocal与fastthreadlocal">ThreadLocal与FastThreadLocal</h3>
+<p>FastThreadLocal是Netty中常用的一个工具类，他的基本功能与JDK自带的<a href="https://codingroam.github.io/post/threadlocal/" target="_blank" rel="noopener">ThreadLocal</a>
+一样，但是性能优于ThreadLocal。在讲解FastThreadLocal之前，先大致讲一下ThreadLocal的原理。</p>
+<h4 id="1threadlocal">1、ThreadLocal</h4>
+<p>如果想要在线程中保存一个变量，这个变量是该线程所独有的，其他线程不能对该变量进行访问和修改，那么我们可以使用ThreadLocal实现这一功能.</p>
+<p>ThreadLocal的功能主要是通过ThreadLocalMap来实现的，每个线程都会有一个ThreadLocalMap类型的成员变量，ThreadLocalMap本质上就是一个哈希表，key为ThreadLocal，value为该ThreadLocal为该线程保存的变量，如下图所示：
+<img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214165714815.png" alt="image-20221214165714815"></p>
+<p>ThreadLocalMap中使用一个Entry类型的数组来作为哈希表，并用线性探测法解决哈希冲突，数组的大小永远是2的n次方。Entry是一个静态内部类，且继承了WeakReference&lt;ThreadLocal<?>&gt;，表示其保存的ThreadLocal是一个弱引用，这是为了防止内存泄漏，因为当所有指向ThreadLocal的强引用都为null时，该Entry也就没有必要再指向这个ThreadLocal了，这样下一次gc时该ThreadLoca就会被回收掉。Entry的成员变量Object value就是T和read Local为线程保存的独有的变量。</p>
+<p>set方法将ThreadLocal和相应的value保存为一个Entry，再根据ThreadLocal的哈希值将Entry放入哈希表中的相应的位置，并用线性探测法解决哈希冲突。setEntry方法中，如果在查找哈希表的过程中发现某个Entry所保存的ThreadLocal被垃圾回收了，那么会将该Entry清除掉</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">private</span> <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span> <span class="nf">getEntry</span><span class="o">(</span><span class="n">ThreadLocal</span><span class="o">&lt;?&gt;</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">threadLocalHashCode</span> <span class="o">&amp;</span> <span class="o">(</span><span class="n">table</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span> <span class="n">e</span> <span class="o">=</span> <span class="n">table</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//找到了相应的entry，直接返回
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="o">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">e</span><span class="o">.</span><span class="na">get</span><span class="o">()</span> <span class="o">==</span> <span class="n">key</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">e</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">getEntryAfterMiss</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kd">private</span> <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span> <span class="nf">getEntryAfterMiss</span><span class="o">(</span><span class="n">ThreadLocal</span><span class="o">&lt;?&gt;</span> <span class="n">key</span><span class="o">,</span> <span class="kt">int</span> <span class="n">i</span><span class="o">,</span> <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">[]</span> <span class="n">tab</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">tab</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="o">(</span><span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ThreadLocal</span><span class="o">&lt;?&gt;</span> <span class="n">k</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">key</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">e</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//该threadLocal已经为null，那么entry也就没有存在的必要了，因此需要被清除
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">expungeStaleEntry</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">            <span class="n">i</span> <span class="o">=</span> <span class="n">nextIndex</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">e</span> <span class="o">=</span> <span class="n">tab</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">ThreadLocal</span><span class="o">&lt;?&gt;</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">[]</span> <span class="n">tab</span> <span class="o">=</span> <span class="n">table</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">len</span> <span class="o">=</span> <span class="n">tab</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//将threadlocal的哈希值与哈希表的长度取余，放入哈希表中相应的位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="na">threadLocalHashCode</span> <span class="o">&amp;</span> <span class="o">(</span><span class="n">len</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span> <span class="n">e</span> <span class="o">=</span> <span class="n">tab</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+</span></span><span class="line"><span class="cl">         <span class="n">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">         <span class="n">e</span> <span class="o">=</span> <span class="n">tab</span><span class="o">[</span><span class="n">i</span> <span class="o">=</span> <span class="n">nextIndex</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">len</span><span class="o">)])</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ThreadLocal</span><span class="o">&lt;?&gt;</span> <span class="n">k</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//哈希表中保存了这个threadLocal，因此直接修改value值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">key</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">e</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//entry不为null，但entry保存threadLocal为null，说明该threadLocal已经被垃圾回收了，需要替换掉这个entry
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">k</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">replaceStaleEntry</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">i</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">tab</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadLocal</span><span class="o">.</span><span class="na">ThreadLocalMap</span><span class="o">.</span><span class="na">Entry</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="o">++</span><span class="n">size</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//如果哈希表的装载因子超过阈值，则需要对哈希表扩容，并对所有的entry重新做哈希
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="o">(!</span><span class="n">cleanSomeSlots</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="n">sz</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">sz</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rehash</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="2fastthreadlocal">2、FastThreadLocal</h4>
+<p>从 InternalThreadLocalMap 内部实现来看，与 ThreadLocalMap 一样都是采用数组的存储方式，但是 InternalThreadLocalMap 并没有使用线性探测法来解决 Hash 冲突，而是在 FastThreadLocal 初始化的时候分配一个数组索引 index，index 的值采用原子类 AtomicInteger 保证顺序递增，通过调用 InternalThreadLocalMap.nextVariableIndex() 方法获得。然后在读写数据的时候通过数组下标 index 直接定位到 FastThreadLocal 的位置，时间复杂度为 O(1)。如果数组下标递增到非常大，那么数组也会比较大，所以 FastThreadLocal 是通过空间换时间的思想提升读写性能</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="nf">FastThreadLocal</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">index</span> <span class="o">=</span> <span class="n">InternalThreadLocalMap</span><span class="o">.</span><span class="na">nextVariableIndex</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">nextVariableIndex</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//nextIndex是一个静态变量，每次调用nextVariableIndex()都会自增1，让后赋给FastThreadLocal的index属性
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">nextIndex</span><span class="o">.</span><span class="na">getAndIncrement</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nextIndex</span><span class="o">.</span><span class="na">decrementAndGet</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;too many thread-local indexed variables&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">index</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kd">static</span> <span class="kd">final</span> <span class="n">AtomicInteger</span> <span class="n">nextIndex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">();</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212559533.png" alt="image-20221214212559533"></p>
+<p>通过上面 FastThreadLocal 的内部结构图可知，FastThreadLocal 使用 Object 数组替代了 Entry 数组，Object[0] 存储的是一个Set&lt;FastThreadLocal<?>&gt; 集合，从数组下标 1 开始都是直接存储的 value 数据，不再采用 ThreadLocal 的键值对形式进行存储。</p>
+<p>假设现在我们有一批数据需要添加到数组中，分别为 value1、value2、value3、value4，对应的 FastThreadLocal 在初始化的时候生成的数组索引分别为 1、2、3、4。如下图所示。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214212704846.png" alt="image-20221214212704846"></p>
+<h5 id="使用代码示例">使用代码示例</h5>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FastThreadLocalTest</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">FastThreadLocal</span><span class="o">&lt;;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">THREAD_NAME_LOCAL</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FastThreadLocal</span><span class="o">&lt;;&gt;();</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">FastThreadLocal</span><span class="o">&lt;;</span><span class="n">TradeOrder</span><span class="o">&gt;</span> <span class="n">TRADE_THREAD_LOCAL</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FastThreadLocal</span><span class="o">&lt;;&gt;();</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;;</span> <span class="mi">2</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">tradeId</span> <span class="o">=</span> <span class="n">i</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">String</span> <span class="n">threadName</span> <span class="o">=</span> <span class="s">&#34;thread-&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">new</span> <span class="n">FastThreadLocalThread</span><span class="o">(()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">THREAD_NAME_LOCAL</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">threadName</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">TradeOrder</span> <span class="n">tradeOrder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TradeOrder</span><span class="o">(</span><span class="n">tradeId</span><span class="o">,</span> <span class="n">tradeId</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="s">&#34;已支付&#34;</span> <span class="o">:</span> <span class="s">&#34;未支付&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">TRADE_THREAD_LOCAL</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">tradeOrder</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;threadName: &#34;</span> <span class="o">+</span> <span class="n">THREAD_NAME_LOCAL</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;tradeOrder info：&#34;</span> <span class="o">+</span> <span class="n">TRADE_THREAD_LOCAL</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">            <span class="o">},</span> <span class="n">threadName</span><span class="o">).</span><span class="na">start</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>FastThreadLocal 的使用方法几乎和 ThreadLocal 保持一致，只需要把代码中 Thread、ThreadLocal 替换为 FastThreadLocalThread 和 FastThreadLocal 即可。</p>
+<h5 id="fastthreadlocal源码分析">FastThreadLocal源码分析</h5>
+<ul>
+<li>
+<p>FastThreadLocal.set()</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">final</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">V</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">!=</span> <span class="n">InternalThreadLocalMap</span><span class="o">.</span><span class="na">UNSET</span><span class="o">)</span> <span class="o">{</span> <span class="c1">// 1. value 是否为缺省值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">InternalThreadLocalMap</span> <span class="n">threadLocalMap</span> <span class="o">=</span> <span class="n">InternalThreadLocalMap</span><span class="o">.</span><span class="na">get</span><span class="o">();</span> <span class="c1">// 2. 获取当前线程的 InternalThreadLocalMap
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">setKnownNotUnset</span><span class="o">(</span><span class="n">threadLocalMap</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span> <span class="c1">// 3. 将 InternalThreadLocalMap 中数据替换为新的 value
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">remove</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>set() 的过程主要分为三步：</p>
+<ol>
+<li>判断 value 是否为缺省值(UNSET)，如果等于缺省值，那么直接调用 remove() 方法。这里我们还不知道缺省值和 remove() 之间的联系是什么，我们暂且把 remove() 放在最后分析。</li>
+<li>如果 value 不等于缺省值，接下来会获取当前线程的 InternalThreadLocalMap。</li>
+<li>然后将 InternalThreadLocalMap 中对应数据替换为新的 value。</li>
+</ol>
+</li>
+</ul>
+<h5 id="fastthreadlocal使用字节填充解决伪共享">FastThreadLocal使用字节填充解决伪共享</h5>
+<p>FastThreadLocal也是用在多线程场景，所以FastThreadLocal需要解决伪共享问题，FastThreadLocal使用字节填充解决伪共享，详情请移步<a href="https://codingroam.github.io/post/java%E4%BC%AA%E5%85%B1%E4%BA%AB/" target="_blank" rel="noopener">java伪共享</a>
+</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221214213916504.png" alt="image-20221214213916504"></p>
+<blockquote>
+<p>缓存行
 Cache是由很多个cache line组成的。每个cache line通常是64字节，并且它有效地引用主内存中的一块儿地址。一个Java的long类型变量是8字节，因此在一个缓存行中可以存8个long类型的变量。
 CPU每次从主存中拉取数据时，会把相邻的数据也存入同一个cache line。
-在访问一个long数组的时候，如果数组中的一个值被加载到缓存中，它会自动加载另外7个。因此你能非常快的遍历这个数组。事实上，你可以非常快速的遍历在连续内存块中分配的任意数据结构。</p><p>伪共享
-由于多个线程同时操作同一缓存行的不同变量，但是这些变量之间却没有啥关联，但是每次修改，都会导致缓存的数据变成无效，从而明明没有任何修改的内容，还是需要去主存中读（CPU读取主存中的数据会比从L1中读取慢了近2个数量级）但是其实这块内容并没有任何变化，由于缓存的最小单位是一个缓存行，这就是伪共享。</p><p>如果让多线程频繁操作的并且没有关系的变量在不同的缓存行中，那么就不会因为缓存行的问题导致没有关系的变量的修改去影响另外没有修改的变量去读主存了（那么从L1中取是从主存取快2个数量级的）那么性能就会好很多很多。</p></blockquote><h5 id=fastthreadlocal-的一些思考>FastThreadLocal 的一些思考</h5><ul><li><p>FastThreadLocal 真的一定比 ThreadLocal 快吗？答案是不一定的，只有使用FastThreadLocalThread 类型的线程才会更快，如果是普通线程反而会更慢。</p></li><li><p>FastThreadLocal 会浪费很大的空间吗？虽然 FastThreadLocal 采用的空间换时间的思路，但是在 FastThreadLocal 设计之初就认为不会存在特别多的 FastThreadLocal 对象，而且在数据中没有使用的元素只是存放了同一个缺省对象的引用，并不会占用太多内存空间。</p></li></ul><h5 id=fastthreadlocal-vs-threadlocal>FastThreadLocal vs ThreadLocal</h5><ol><li>高效查找。FastThreadLocal 在定位数据的时候可以直接根据数组下标 index 获取，时间复杂度 O(1)。而 JDK 原生的 ThreadLocal 在数据较多时哈希表很容易发生 Hash 冲突，线性探测法在解决 Hash 冲突时需要不停地向下寻找，效率较低。此外，FastThreadLocal 相比 ThreadLocal 数据扩容更加简单高效，FastThreadLocal 以 index 为基准向上取整到 2 的次幂作为扩容后容量，然后把原数据拷贝到新数组。而 ThreadLocal 由于采用的哈希表，所以在扩容后需要再做一轮 rehash。</li><li>安全性更高。JDK 原生的 ThreadLocal 使用不当可能造成内存泄漏，只能等待线程销毁。在使用线程池的场景下，ThreadLocal 只能通过主动检测的方式防止内存泄漏，从而造成了一定的开销。然而 FastThreadLocal 不仅提供了 remove() 主动清除对象的方法，而且在线程池场景中 Netty 还封装了 FastThreadLocalRunnable，FastThreadLocalRunnable 最后会执行 FastThreadLocal.removeAll() 将 Set 集合中所有 FastThreadLocal 对象都清理掉</li></ol></div></article></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.2.18"><img class=fixit-icon src=/fixit.min.svg alt="FixIt logo">&nbsp;FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
-<span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>
-<a href=/></a></span></div><div class="footer-line statistics"></div></div></footer></div><div class=widgets><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i><span class="variant-numeric d-none">0%</span></div></div><div id=mask></div><noscript><div class=noscript-warning>FixIt 主题在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script>window.config={code:{copyTitle:"复制到剪贴板",editLockTitle:"锁定可编辑代码块",editUnLockTitle:"解锁可编辑代码块",editable:!0,maxShownLines:10},comment:{enable:!1},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验。"},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!0,left:"\\begin{equation}",right:"\\end{equation}"},{display:!0,left:"\\begin{equation*}",right:"\\end{equation*}"},{display:!0,left:"\\begin{align}",right:"\\end{align}"},{display:!0,left:"\\begin{align*}",right:"\\end{align*}"},{display:!0,left:"\\begin{alignat}",right:"\\end{alignat}"},{display:!0,left:"\\begin{alignat*}",right:"\\end{alignat*}"},{display:!0,left:"\\begin{gather}",right:"\\end{gather}"},{display:!0,left:"\\begin{CD}",right:"\\end{CD}"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/js/theme.min.js defer></script></body></html>
+在访问一个long数组的时候，如果数组中的一个值被加载到缓存中，它会自动加载另外7个。因此你能非常快的遍历这个数组。事实上，你可以非常快速的遍历在连续内存块中分配的任意数据结构。</p>
+<p>伪共享
+由于多个线程同时操作同一缓存行的不同变量，但是这些变量之间却没有啥关联，但是每次修改，都会导致缓存的数据变成无效，从而明明没有任何修改的内容，还是需要去主存中读（CPU读取主存中的数据会比从L1中读取慢了近2个数量级）但是其实这块内容并没有任何变化，由于缓存的最小单位是一个缓存行，这就是伪共享。</p>
+<p>如果让多线程频繁操作的并且没有关系的变量在不同的缓存行中，那么就不会因为缓存行的问题导致没有关系的变量的修改去影响另外没有修改的变量去读主存了（那么从L1中取是从主存取快2个数量级的）那么性能就会好很多很多。</p>
+</blockquote>
+<h5 id="fastthreadlocal-的一些思考">FastThreadLocal 的一些思考</h5>
+<ul>
+<li>
+<p>FastThreadLocal 真的一定比 ThreadLocal 快吗？答案是不一定的，只有使用FastThreadLocalThread 类型的线程才会更快，如果是普通线程反而会更慢。</p>
+</li>
+<li>
+<p>FastThreadLocal 会浪费很大的空间吗？虽然 FastThreadLocal 采用的空间换时间的思路，但是在 FastThreadLocal 设计之初就认为不会存在特别多的 FastThreadLocal 对象，而且在数据中没有使用的元素只是存放了同一个缺省对象的引用，并不会占用太多内存空间。</p>
+</li>
+</ul>
+<h5 id="fastthreadlocal-vs-threadlocal">FastThreadLocal vs ThreadLocal</h5>
+<ol>
+<li>高效查找。FastThreadLocal 在定位数据的时候可以直接根据数组下标 index 获取，时间复杂度 O(1)。而 JDK 原生的 ThreadLocal 在数据较多时哈希表很容易发生 Hash 冲突，线性探测法在解决 Hash 冲突时需要不停地向下寻找，效率较低。此外，FastThreadLocal 相比 ThreadLocal 数据扩容更加简单高效，FastThreadLocal 以 index 为基准向上取整到 2 的次幂作为扩容后容量，然后把原数据拷贝到新数组。而 ThreadLocal 由于采用的哈希表，所以在扩容后需要再做一轮 rehash。</li>
+<li>安全性更高。JDK 原生的 ThreadLocal 使用不当可能造成内存泄漏，只能等待线程销毁。在使用线程池的场景下，ThreadLocal 只能通过主动检测的方式防止内存泄漏，从而造成了一定的开销。然而 FastThreadLocal 不仅提供了 remove() 主动清除对象的方法，而且在线程池场景中 Netty 还封装了 FastThreadLocalRunnable，FastThreadLocalRunnable 最后会执行 FastThreadLocal.removeAll() 将 Set 集合中所有 FastThreadLocal 对象都清理掉</li>
+</ol>
+    </div>
+          
+    <footer class="post-footer">
+     
+ 
+<div class="post-tags">     
+    
+    <a href="/tags/threadlocal" rel="tag" title="ThreadLocal">#ThreadLocal#</a>
+    
+    <a href="/tags/java-base" rel="tag" title="Java Base">#Java Base#</a>
+    
+    <a href="/tags/netty" rel="tag" title="netty">#netty#</a>
+    
+</div>
+
+
+
+      
+
+
+<div class="addthis_inline_share_toolbox"></div>
+
+
+
+     <div class="post-nav">
+<div class="article-copyright">
+    <div class="article-copyright-img">
+        <img src="/img/qq_qrcode.png" width="129px" height="129px"/>
+        <div style="text-align:center;">QQ扫一扫交流</div>
+    </div>
+    <div class="article-copyright-info">
+        <p> 
+            <span>标题：</span>ThreadLocal与FastThreadLocal
+        </p>
+        <p> 
+            <span>链接：</span>https://codingroam.github.io/post/threadlocal%E4%B8%8Efastthreadlocal/
+        </p>
+        <p> 
+            <span>作者：</span>极光code
+        </p>
+        
+        
+        <p> 
+            <span>声明： </span>本博客文章除特别声明外，均采用 <a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank' style='text-decoration: underline;'>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！
+        </p>
+    </div>
+</div>
+<div class="clear"></div>
+</div>
+     <div class="reward-qr-info">
+  <div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">   
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/img/wechat-pay.png" alt="WeChat Pay"/>
+        <p>微信打赏</p>
+      </div>
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/img/ali-pay.png" alt="Alipay"/>
+        <p>支付宝打赏</p>
+      </div>
+  </div>
+</div>
+     <div class="post-nav">
+    <div class="post-nav-next post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/" rel="next" title="PowerShell设置使用vim">
+        <i class="fa fa-chevron-left"></i> PowerShell设置使用vim
+        </a>
+    
+    </div>
+
+    <div class="post-nav-prev post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/threadlocal%E7%88%B6%E5%AD%90%E7%BA%BF%E7%A8%8B%E4%BC%A0%E9%80%92%E9%97%AE%E9%A2%98/" rel="prev" title="ThreadLocal父子线程传递问题">
+        ThreadLocal父子线程传递问题 
+        <i class="fa fa-chevron-right"></i>
+        </a>
+    
+    </div>
+</div>  
+     
+
+
+
+
+<div id="wcomments"></div>
+
+
+
+
+
+
+
+    </footer>
+  </article>
+</section>
+
+          </div>
+        </div>
+        <div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+        src="/img/avatar.png"
+        alt="极光code" />
+    <p class="site-author-name" itemprop="name">极光code</p>
+    <p class="site-description motion-element" itemprop="description"> 
+      
+        以梦为马，不负韶华!
+      
+    </p>
+</div>
+      <nav class="site-state motion-element">
+    <div class="site-state-item site-state-posts">
+      <a href="/post/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">日志</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">    
+        <a href="/categories/">      
+         
+        <span class="site-state-item-count">49</span>
+        
+        <span class="site-state-item-name">分类</span>
+        
+        </a>
+    </div>
+
+    <div class="site-state-item site-state-tags">
+        <a href="/tags/">
+         
+        <span class="site-state-item-count">62</span>
+        
+        <span class="site-state-item-name">标签</span>
+        </a>
+    </div>
+</nav>
+      
+      
+<div class="links-of-author motion-element">
+    
+        <span class="links-of-author-item">
+        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
+            <i class="fa fa-fw fa-github"></i>
+            GitHub
+        </a>
+        </span>
+    
+        <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
+            <i class="fa fa-fw fa-globe"></i>
+            知乎
+        </a>
+        </span>
+    
+</div>
+
+
+      
+    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+    <div class="links-of-blogroll-title">
+        <i class="fa fa-fw fa-globe"></i>
+        友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
+    <div class="tagcloud-of-blogroll-title">
+        <i class="fa fa-fw fa-tags"></i>
+        标签云
+    </div>
+    <ul class="tagcloud-of-blogroll-list">
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/linux">Linux
+            <sup>10</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java">Java
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/mysql">Mysql
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/docker">Docker
+            <sup>6</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/git">Git
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/problem-solving">Problem solving
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java-base">Java base
+            <sup>4</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/spring">Spring
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/threadlocal">Threadlocal
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/command">Command
+            <sup>2</sup>
+            </a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    </section>
+    
+  </div>
+</aside>
+
+      </div>
+    </main>
+   
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  <span class="copyright-year">  
+    &copy; 2010 - 2023
+  </span>
+  <span class="with-love"><i class="fa fa-heart"></i></span>
+  <span class="copyright-author">好记性不如烂笔头</span>
+</div>
+<div class="powered-info">
+  <span class="powered-by">
+    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="theme-info">
+    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
+    </a>
+  </span>
+</div>
+<div class="vistor-info">
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="site-pv">
+    <i class="fa fa-eye"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+
+
+</div>
+<div class="license-info">
+  <span class="storage-info">
+    Storage by 
+    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="license-num"> 
+    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
+  </span>
+</div>
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+      <span id="scrollpercent"><span>0</span>%</span>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
+
+
+<script type="text/javascript">
+
+  function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+    var edge = ua.indexOf('Edge/');
+
+    if (msie>0 || trident>0 || edge>0) {
+      return -1;
+    }
+
+    return 1;
+  }
+
+
+  function getCntViewHeight() {
+    var docHeight = $('#content').height(),
+        winHeight = $(window).height(),
+        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
+    return cntViewHeight;
+  }
+
+  function getScrollbarWidth() {
+    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
+    var div = $div[0];
+    var scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+    $div.remove();
+
+    return scrollbarWidth;
+  }
+
+  function registerBackTop() {
+    var THRESHOLD = 50;
+    var $top = $('.back-to-top');
+
+    $(window).on('scroll', function () {
+      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
+
+      var scrollTop = $(window).scrollTop();
+      var cntViewHeight = getCntViewHeight();
+      var scrollPercent = (scrollTop) / (cntViewHeight);
+      var scrollPercentRounded = Math.round(scrollPercent*100);
+      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
+      $('#scrollpercent>span').html(scrollPercentMaxed);
+    });
+
+    $top.on('click', function () {
+      $("html,body").animate({
+                 scrollTop: 0,
+                 screenLeft: 0,
+                 }, 800);
+    });
+  }
+
+  function initScrollSpy () {
+    var tocSelector = '.post-toc';
+    var $tocElement = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocElement
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+      })
+      .on('clear.bs.scrollspy', removeCurrentActiveClass);
+
+    $('body').scrollspy({ target: tocSelector });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+  }
+
+  function initAffix () {
+    var headerHeight = $('.header-inner').height();
+    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
+    var sidebarTop = headerHeight + 10;
+
+    $('.sidebar-inner').affix({
+      offset: {
+        top: sidebarTop,
+        bottom: footerOffset 
+      }
+    });
+
+    
+
+  }
+
+  function initTOCDimension () {
+    var updateTOCHeightTimer;
+
+    $(window).on('resize', function () {
+      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+
+      updateTOCHeightTimer = setTimeout(function () {
+        var tocWrapperHeight = document.body.clientHeight - 100;
+
+        updateTOCHeight(tocWrapperHeight);
+      }, 0);
+    });
+
+    
+    updateTOCHeight(document.body.clientHeight - 100);
+
+    
+    var scrollbarWidth = getScrollbarWidth();
+    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
+  }
+
+  function updateTOCHeight (height) {
+    height = height || 'auto';
+    $('.post-toc').css('max-height', height);
+  }
+
+$(function() {
+
+  var sidebarTop = $('.header-inner').height() + 10;
+  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
+
+  
+  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
+  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
+  var sideHeight = sidebarMt + sidebarInHeight;
+  var contentHeight = $('.content-wrap').height();
+
+  if (contentHeight < sideHeight) {
+    $('.content-wrap').css('min-height', sideHeight);
+  }
+  
+  
+  $('.site-nav-toggle').on('click', function () {
+    var $siteNav = $('.site-nav');
+    var $toggleLine = $('.toggle');
+    var ON_CLASS_NAME = 'site-nav-on';
+    var CLOSE_CLASS_NAME = 'toggle-close';
+    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
+    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
+    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
+
+    $siteNav.stop()[animateAction]('normal', function () {
+      $siteNav[animateCallback](ON_CLASS_NAME);
+      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
+    });
+
+  });
+
+  registerBackTop();
+  
+   
+  initAffix();
+  initTOCDimension();
+
+  $('.sidebar-nav-toc').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).next().removeClass('sidebar-nav-active');      
+    $('.'+$(this).next().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+
+  $('.sidebar-nav-overview').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).prev().removeClass('sidebar-nav-active');      
+    $('.'+$(this).prev().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+});  
+
+</script>
+
+
+
+
+
+<script src="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js"></script>
+<script type="text/javascript">
+$(function() {
+  $('.post-body').viewer(); 
+});
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+  const locale = {
+    placeholder: '欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^'
+  };
+  $(function(){
+    if (detectIE()>0) {
+      $.getScript(document.location.protocol+'//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js', function(){
+         new Waline({
+          el: '#wcomments', 
+          visitor: true,
+          emoji: [], 
+          wordLimit: '200', 
+          uploadImage: false,
+          locale, 
+          requiredMeta: ['nick', 'mail'], 
+          serverURL: "Your WalineSerURL", 
+          lang: "zh-cn"
+        });
+      });      
+    } else {
+      $('#wcomments').html('抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。');
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+
+
+
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+</body>
+</html>

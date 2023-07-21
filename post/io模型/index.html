@@ -1,12 +1,916 @@
-<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>IO模型 - 好记性不如烂笔头</title><meta name=author content><meta name=author-link content><meta name=description content="IO"><meta name=keywords content="IO模型,底层原理,linux/unix"><meta itemprop=name content="IO模型"><meta itemprop=description content="IO"><meta itemprop=datePublished content="2022-12-29T00:00:00+00:00"><meta itemprop=dateModified content="2022-12-29T00:00:00+00:00"><meta itemprop=wordCount content="4451"><meta itemprop=keywords content="IO模型,底层原理,linux/unix,"><meta property="og:title" content="IO模型"><meta property="og:description" content="IO"><meta property="og:type" content="article"><meta property="og:url" content="/post/io%E6%A8%A1%E5%9E%8B/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-12-29T00:00:00+00:00"><meta property="article:modified_time" content="2022-12-29T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="IO模型"><meta name=twitter:description content="IO"><meta name=application-name content="FixIt"><meta name=apple-mobile-web-app-title content="FixIt"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical href=/post/io%E6%A8%A1%E5%9E%8B/><link rel=prev href=/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/><link rel=next href=/post/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E4%B8%8E%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"IO模型","inLanguage":"zh-cn","mainEntityOfPage":{"@type":"WebPage","@id":"\/post\/io%E6%A8%A1%E5%9E%8B\/"},"genre":"post","keywords":"IO模型, 底层原理, linux\/unix","wordcount":4451,"url":"\/post\/io%E6%A8%A1%E5%9E%8B\/","datePublished":"2022-12-29T00:00:00+00:00","dateModified":"2022-12-29T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wang"},"description":"IO"}</script></head><body data-header-desktop=sticky data-header-mobile=auto><script>(window.localStorage?.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("data-theme","dark")</script><div class=wrapper data-page-style=normal><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=好记性不如烂笔头 data-alt=好记性不如烂笔头 class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li><li class="menu-item language-switch"><span role=button aria-label=选择语言 title=选择语言><i class="fa-solid fa-language fa-fw" aria-hidden=true></i></span><ul class=sub-menu><li class=menu-item>没有更多翻译</li></ul></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=/fixit.min.svg data-alt=/fixit.min.svg class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item menu-system"><span class="menu-system-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></span><span class="menu-system-item language-switch">
-<span role=button aria-label=选择语言 title=选择语言>中文<i class="dropdown-icon fa-solid fa-chevron-down" aria-hidden=true></i></span>
-<select class=language-select onchange="location=this.value"><option disabled>没有更多翻译</option></select></span></li></ul></nav></div></header><main class=container><article class="page single special"><div class=header><h1 class="single-title animate__animated animate__pulse animate__faster">IO模型</h1></div><div class=content id=content><p>IO模型</p><h3 id=io模型>IO模型</h3><h1 id=1-引言>1. 引言</h1><p>同步异步I/O，阻塞非阻塞I/O是程序员老生常谈的话题了，也是自己一直以来懵懵懂懂的一个话题。比如：何为同步异步？何为阻塞与非阻塞？二者的区别在哪里？阻塞在何处？为什么会有多种IO模型，分别用来解决问题？常用的框架采用的是何种I/O模型？各种IO模型的优劣势在哪里，适用于何种应用场景？</p><p>简而言之，对于I/O的认知，不能仅仅停留在字面上认识，了解内部玄机，才能深刻理解I/O，才能看清I/O相关问题的本质。</p><h1 id=2-io-的定义>2. I/O 的定义</h1><p>I/O 的全称是Input/Output。虽常谈及I/O，但想必你也一时不能给出一个完整的定义。搜索了谷歌，发现也尽是些冗长的论述。要想厘清I/O这个概念，我们需要从不同的视角去理解它。</p><h2 id=21-计算机视角>2.1. 计算机视角</h2><p>冯•诺伊曼计算机的基本思想中有提到计算机硬件组成应为五大部分：控制器，运算器，存储器，输入和输出。其中输入是指将数据输入到计算机的设备，比如键盘鼠标；输出是指从计算机中获取数据的设备，比如显示器；以及既是输入又是输出设备，硬盘，网卡等。</p><p>用户通过操作系统才能完成对计算机的操作。计算机启动时，第一个启动的程序是操作系统的内核，它将负责计算机的资源管理和进程的调度。换句话说：操作系统负责从输入设备读取数据并将数据写入到输出设备。</p><p>所以I/O之于计算机，有两层意思：</p><ol><li>I/O设备</li><li>对I/O设备的数据读写</li></ol><p><em>对于一次I/O操作，必然涉及2个参与方，一个输入端，一个输出端，而又根据参与双方的设备类型，我们又可以分为磁盘I/O，网络I/O（一次网络的请求响应，网卡）等。</em></p><h2 id=22-程序视角>2.2. 程序视角</h2><p>应用程序作为一个文件保存在磁盘中，只有加载到内存到成为一个进程才能运行。应用程序运行在计算机内存中，必然会涉及到数据交换，比如读写磁盘文件，访问数据库，调用远程API等等。但我们编写的程序并不能像操作系统内核一样直接进行I/O操作。</p><p>因为为了确保操作系统的安全稳定运行，操作系统启动后，将会开启保护模式：将内存分为内核空间（内核对应进程所在内存空间）和用户空间，进行内存隔离。我们构建的程序将运行在用户空间，用户空间无法操作内核空间，也就意味着用户空间的程序不能直接访问由内核管理的I/O，比如：硬盘、网卡等。</p><p>但操作系统向外提供API，其由各种类型的系统调用（System Call）组成，以提供安全的访问控制。
-所以应用程序要想访问内核管理的I/O，必须通过调用内核提供的系统调用(system call）进行间接访问。</p><p>所以I/O之于应用程序来说，强调的通过<strong>向内核发起系统调用完成对I/O的间接访问</strong>。换句话说应用程序发起的一次IO操作实际包含两个阶段：</p><ol><li>IO调用阶段：应用程序进程向内核发起系统调用</li><li>IO执行阶段：内核执行IO操作并返回
+<!DOCTYPE HTML>
+<html lang="zh-cn" dir="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <title> IO模型 - 好记性不如烂笔头 </title>
+  
+  <meta name="keywords" content="博客, 程序员, 架构师, 思考, 读书, 笔记, 技术, 分享, 大数据, 产品">
+  
+  
+  <meta name="author" content="极光code">
+  
+  <meta property="og:title" content="IO模型"/>
+  <meta property="og:site_name" content="好记性不如烂笔头">
+  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
+  <meta name="title" content="IO模型 - 好记性不如烂笔头" />
+  
+  <meta name="description" content="IO" />
+   
+  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  
+  <link href="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css" rel="stylesheet"/>
+  
+  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
+  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
+  
+  
+  
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<div class="container one-collumn sidebar-position-left page-home  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-container">
+<div class="site-nav-toggle">
+  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+  </div>
+</div>
+<div class="site-meta ">
+  
+  
+  
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">好记性不如烂笔头</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">锲而不舍，金石可镂！</p>
+</div>
+
+<div class="site-nav-right">
+    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+    
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item menu-item-active">
+        <a href="/post" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/tags" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/categories" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />目录
+        </a>
+      </li>
+    
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
+      </li>
+    </ul>
+    <div class="site-search">
+      <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon"><i class="fa fa-search"></i> </span>
+    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+    </div>
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+<section id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      
+      <h1 class="post-title" itemprop="name headline">
+        <a class="post-title-link" href="https://codingroam.github.io/post/io%E6%A8%A1%E5%9E%8B/" itemprop="url">
+        IO模型
+        </a>
+      </h1>
+      
+      <div class="post-meta">
+      <span class="post-pushdate">
+<i class="fa fa-calendar-o fa-fw"></i>
+<span class="post-meta-item-text">时间：</span>
+<time itemprop="dateCreated" datetime="2016-03-22T13:04:35+08:00" content="2022-12-29">
+    2022-12-29
+</time>
+</span> 
+      
+
+  <span class="post-category" >
+  <i class="fa fa-folder-o fa-fw"></i>  
+  <span class="post-meta-item-text">分类：</span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/java-base" itemprop="url" rel="index">
+        <span itemprop="name">java base</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/io" itemprop="url" rel="index">
+        <span itemprop="name">IO</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/linux/unix" itemprop="url" rel="index">
+        <span itemprop="name">linux/unix</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+</span>
+
+
+      <span class="post-wordcount">
+<i class="fa fa-file-word-o fa-fw"></i>
+<span class="post-meta-item-text">字数：</span>
+<span class="leancloud-world-count">4451 字</span>
+</span>
+      <span class="post-readtime">
+<i class="fa fa-eye fa-fw"></i>
+<span class="post-meta-item-text">阅读：</span>
+<span class="leancloud-view-count">9分钟</span>
+</span>
+      <span id="/post/io%E6%A8%A1%E5%9E%8B/" class="leancloud_visitors post-visitor" data-flag-title="IO模型">
+<i class="fa fa-binoculars fa-fw"></i>
+<span class="post-meta-item-text">阅读次数：</span>
+<span class="leancloud-visitors-count"></span>
+</span>
+      </div>
+     
+    </header>
+  
+    <div class="post-body" itemprop="articleBody">
+    <p>IO模型</p>
+<h3 id="io模型">IO模型</h3>
+<h1 id="1-引言">1. 引言</h1>
+<p>同步异步I/O，阻塞非阻塞I/O是程序员老生常谈的话题了，也是自己一直以来懵懵懂懂的一个话题。比如：何为同步异步？何为阻塞与非阻塞？二者的区别在哪里？阻塞在何处？为什么会有多种IO模型，分别用来解决问题？常用的框架采用的是何种I/O模型？各种IO模型的优劣势在哪里，适用于何种应用场景？</p>
+<p>简而言之，对于I/O的认知，不能仅仅停留在字面上认识，了解内部玄机，才能深刻理解I/O，才能看清I/O相关问题的本质。</p>
+<h1 id="2-io-的定义">2. I/O 的定义</h1>
+<p>I/O 的全称是Input/Output。虽常谈及I/O，但想必你也一时不能给出一个完整的定义。搜索了谷歌，发现也尽是些冗长的论述。要想厘清I/O这个概念，我们需要从不同的视角去理解它。</p>
+<h2 id="21-计算机视角">2.1. 计算机视角</h2>
+<p>冯•诺伊曼计算机的基本思想中有提到计算机硬件组成应为五大部分：控制器，运算器，存储器，输入和输出。其中输入是指将数据输入到计算机的设备，比如键盘鼠标；输出是指从计算机中获取数据的设备，比如显示器；以及既是输入又是输出设备，硬盘，网卡等。</p>
+<p>用户通过操作系统才能完成对计算机的操作。计算机启动时，第一个启动的程序是操作系统的内核，它将负责计算机的资源管理和进程的调度。换句话说：操作系统负责从输入设备读取数据并将数据写入到输出设备。</p>
+<p>所以I/O之于计算机，有两层意思：</p>
+<ol>
+<li>I/O设备</li>
+<li>对I/O设备的数据读写</li>
+</ol>
+<p><em>对于一次I/O操作，必然涉及2个参与方，一个输入端，一个输出端，而又根据参与双方的设备类型，我们又可以分为磁盘I/O，网络I/O（一次网络的请求响应，网卡）等。</em></p>
+<h2 id="22-程序视角">2.2. 程序视角</h2>
+<p>应用程序作为一个文件保存在磁盘中，只有加载到内存到成为一个进程才能运行。应用程序运行在计算机内存中，必然会涉及到数据交换，比如读写磁盘文件，访问数据库，调用远程API等等。但我们编写的程序并不能像操作系统内核一样直接进行I/O操作。</p>
+<p>因为为了确保操作系统的安全稳定运行，操作系统启动后，将会开启保护模式：将内存分为内核空间（内核对应进程所在内存空间）和用户空间，进行内存隔离。我们构建的程序将运行在用户空间，用户空间无法操作内核空间，也就意味着用户空间的程序不能直接访问由内核管理的I/O，比如：硬盘、网卡等。</p>
+<p>但操作系统向外提供API，其由各种类型的系统调用（System Call）组成，以提供安全的访问控制。
+所以应用程序要想访问内核管理的I/O，必须通过调用内核提供的系统调用(system call）进行间接访问。</p>
+<p>所以I/O之于应用程序来说，强调的通过<strong>向内核发起系统调用完成对I/O的间接访问</strong>。换句话说应用程序发起的一次IO操作实际包含两个阶段：</p>
+<ol>
+<li>IO调用阶段：应用程序进程向内核发起系统调用</li>
+<li>IO执行阶段：内核执行IO操作并返回
 2.1. 准备数据阶段：内核等待I/O设备准备好数据
-2.2. 拷贝数据阶段：将数据从内核缓冲区拷贝到用户空间缓冲区</li></ol><p>怎么理解准备数据阶段呢？
+2.2. 拷贝数据阶段：将数据从内核缓冲区拷贝到用户空间缓冲区</li>
+</ol>
+<p>怎么理解准备数据阶段呢？
 对于写请求：等待系统调用的完整请求数据，并写入内核缓冲区；
-对于读请求：等待系统调用的完整请求数据；（若请求数据不存在于内核缓冲区）则将外围设备的数据读入到内核缓冲区。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230654791.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230654791.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230654791.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230654791.png 2x" sizes=auto data-title=image-20221229230654791 data-alt=image-20221229230654791 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>而应用程序进程在发起IO调用至内核执行IO返回之前，应用程序进程/线程所处状态，就是我们下面要讨论的第二个话题阻塞IO与非阻塞IO。</p><h1 id=3-io-模型之阻塞iobio>3. IO 模型之阻塞I/O(BIO)</h1><p>应用程序中进程在发起IO调用后至内核执行IO操作返回结果之前，若发起系统调用的线程一直处于等待状态，则此次IO操作为阻塞IO。阻塞IO简称BIO，Blocking IO。其处理流程如下图所示：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230738876.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230738876.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230738876.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230738876.png 2x" sizes=auto data-title=image-20221229230738876 data-alt=image-20221229230738876 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>从上图可知当用户进程发起IO系统调用后，内核从准备数据到拷贝数据到用户空间的两个阶段期间<strong>用户调用线程选择阻塞等待</strong>数据返回。</p><p>因此BIO带来了一个问题：如果内核数据需要耗时很久才能准备好，那么用户进程将被阻塞，浪费性能。为了提升应用的性能，虽然可以通过多线程来提升性能，但线程的创建依然会借助系统调用，同时多线程会导致频繁的线程上下文的切换，同样会影响性能。所以要想解决BIO带来的问题，我们就得看到问题的本质，那就是<strong>阻塞</strong>二字。</p><h1 id=4-io-模型之非阻塞ionio>4. IO 模型之非阻塞I/O(NIO)</h1><p>那解决方案自然也容易想到，将阻塞变为非阻塞，那就是用户进程在发起系统调用时指定为非阻塞，内核接收到请求后，就会立即返回，然后用户进程通过轮询的方式来拉取处理结果。也就是如下图所示：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230814611.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230814611.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230814611.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230814611.png 2x" sizes=auto data-title=image-20221229230814611 data-alt=image-20221229230814611 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>应用程序中进程在发起IO调用后至内核执行IO操作返回结果之前，若发起系统调用的线程不会等待而是立即返回，则此次IO操作为非阻塞IO模型。非阻塞IO简称NIO，Non-Blocking IO。</p><p>然而，非阻塞IO虽然相对于阻塞IO大幅提升了性能，但依旧不是完美的解决方案，其依然存在性能问题，也就是频繁的轮询导致频繁的系统调用，会耗费大量的CPU资源。比如当并发很高时，假设有1000个并发，那么单位时间循环内将会有1000次系统调用去轮询执行结果，而实际上可能只有2个请求结果执行完毕，这就会有998次无效的系统调用，造成严重的性能浪费。有问题就要解决，那<strong>NIO问题的本质就是频繁轮询导致的无效系统调用</strong>。</p><h1 id=5-io模型之io多路复用>5. IO模型之IO多路复用</h1><p>解决NIO的思路就是降解无效的系统调用，如何降解呢？我们一起来看看以下几种IO多路复用的解决思路。</p><h2 id=51-io多路复用之selectpoll>5.1. IO多路复用之select/poll</h2><blockquote><p>系统调用 select()或Poll()会一直阻塞，直到一个或多个文件描述符集合成为就绪态。</p></blockquote><p><strong>select()函数</strong>：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213314654.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213314654.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213314654.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213314654.png 2x" sizes=auto data-title=image-20230220213314654 data-alt=image-20230220213314654 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p><strong>poll()函数</strong>：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213710621.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213710621.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213710621.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213710621.png 2x" sizes=auto data-title=image-20230220213710621 data-alt=image-20230220213710621 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>系统调用 poll()执行的任务同 select()很相似。两者间主要的区别在于我们要如何指定待检查的文件描述符。在 select()中，我们提供三个集合，在每个集合中标明我们感兴趣的文件描述符。而在 poll()中我们提供一列文件描述符，并在每个文件描述符上标明我们感兴趣的事件</p><p>select()和 poll()之间的一些区别：</p><ul><li><p>select()所使用的数据类型 fd_set 对于被检查的文件描述符数量有一个上限，在 Linux 下，这个上限值默认为 1024，修改这个上限需要重新编译。与之相反，poll()对于被检查的文件描述符数量本质上是没有限制的</p></li><li><p>select()的参数 fd_set 同时也是保存调用结果的地方，如果要在循环中重复调用select()的话，我们必须每次都要重新初始化 fd_set。而 poll()通过独立的两个字段 events（针对输入）和 revents（针对输出）来处理，从而避免每次都要重新初始化参数</p></li></ul><p>Select是内核提供的系统调用，它支持一次查询多个系统调用的可用状态，当任意一个结果状态可用时就会返回，用户进程再发起一次系统调用进行数据读取。换句话说，就是NIO中N次的系统调用，借助Select，只需要发起一次系统调用就够了。其IO流程如下所示：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230854293.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230854293.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230854293.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230854293.png 2x" sizes=auto data-title=image-20221229230854293 data-alt=image-20221229230854293 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>select/epoll 虽然解决了NIO重复无效系统调用用的问题，但同时又引入了新的问题。问题是：</p><ol><li><p>每次调用 select()或 poll()，内核都<strong>必须检查所有被指定的文件描述符，看它们是否处于就绪态</strong>。当检查大量处于密集范围内的文件描述符时，该操作耗费的时间将大大超过接下来的操作</p></li><li><p>每次调用 select()或 poll()时，程序都必须传递一个表示所有需要被检查的文件描述符的数据结构到内核，内核检查过描述符后，修改这个数据结构并返回给程序。<strong>内核与用户进程数据传递较多</strong></p></li><li><p>select()或 poll()调用完成后，程序必须检查返回的数据结构中的每个元素，以此查明</p><p>哪个文件描述符处于就绪态了</p></li></ol><p>换句话说，select/poll虽然减少了用户进程的发起的系统调用，但内核的工作量只增不减。在高并发的情况下，内核的性能问题依旧。所以select/poll的问题本质是：内核存在无效的循环遍历。</p><h2 id=52-io多路复用之epoll>5.2. IO多路复用之epoll</h2><p>针对select/pool引入的问题，我们把解决问题的思路转回到内核上，如何减少内核重复无效的循环遍历呢？变主动为被动，基于事件驱动来实现。其流程图如下所示：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230928333.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230928333.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230928333.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230928333.png 2x" sizes=auto data-title=image-20221229230928333 data-alt=image-20221229230928333 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p><strong>epoll API 由以下 3 个系统调用组成</strong>：</p><ul><li><p>epoll_create()创建一个 epoll 实例，返回代表该实例的文件描述符。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221000190.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221000190.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221000190.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221000190.png 2x" sizes=auto data-title=image-20230220221000190 data-alt=image-20230220221000190 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p></li><li><p>epoll_ctl()操作同 epoll 实例相关联的兴趣列表。通过 epoll_ctl()，我们可以增加新的描述符到列表中，将已有的文件描述符从该列表中移除，以及修改代表文件描述符上事件类型的位掩码。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221103353.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221103353.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221103353.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221103353.png 2x" sizes=auto data-title=image-20230220221103353 data-alt=image-20230220221103353 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p></li><li><p>epoll_wait()返回与 epoll 实例相关联的就绪列表中的成员。单个 epoll_wait()调用能返回多个就绪态文件描述符的信息。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221200356.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221200356.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221200356.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221200356.png 2x" sizes=auto data-title=image-20230220221200356 data-alt=image-20230220221200356 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p></li></ul><p><strong>epoll与select/poll比较</strong>：</p><ul><li><p>每次调用 select()和 poll()时，内核必须检查所有在调用中指定的文件描述符。与之相反，当通过 epoll_ctl()指定了需要监视的文件描述符时，内核会在与打开的文件描述上下文相关联的列表中记录该描述符。之后每当执行 I/O 操作使得文件描述符成为就绪态时，内核就在 epoll 描述符的就绪列表中添加一个元素。（单个打开的文件描述上下文中的一次 I/O 事件可能导致与之相关的多个文件描述符成为就绪态。）之后的epoll_wait()调用从就绪列表中简单地取出这些元素。</p></li><li><p>每次调用 select()或 poll()时，我们传递一个标记了所有待监视的文件描述符的数据结构给内核，调用返回时，内核将所有标记为就绪态的文件描述符的数据结构再传回给我们。与之相反，在 epoll 中我们使用 epoll_ctl()在内核空间中建立一个数据结构，该数据结构会将待监视的文件描述符都记录下来。一旦这个数据结构建立完成，稍后每次调用 epoll_wait()时就不需要再传递任何与文件描述符有关的信息给内核了，而调用返回的信息中只包含那些已经处于就绪态的描述符</p></li></ul><p>epoll，已经大大优化了IO的执行效率，但在IO执行的第一阶段：数据准备阶段都还是被阻塞的。所以这是一个可以继续优化的点。</p><h1 id=6-io-模型之信号驱动iosigio>6. IO 模型之信号驱动IO(SIGIO)</h1><p>信号驱动IO与BIO和NIO最大的区别就在于，在IO执行的数据准备阶段，不会阻塞用户进程。
-如下图所示：当用户进程需要等待数据的时候，会向内核发送一个信号，告诉内核我要什么数据，然后用户进程就继续做别的事情去了，而当内核中的数据准备好之后，内核立马发给用户进程一个信号，说”数据准备好了，快来查收“，用户进程收到信号之后，立马调用recvfrom，去查收数据。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231102123.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231102123.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231102123.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231102123.png 2x" sizes=auto data-title=image-20221229231102123 data-alt=image-20221229231102123 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>乍一看，信号驱动式I/O模型有种异步操作的感觉，但是在IO执行的第二阶段，也就是将数据从内核空间复制到用户空间这个阶段，用户进程还是被阻塞的。</p><p>综上，你会发现，不管是BIO还是NIO还是SIGIO，它们最终都会被阻塞在IO执行的第二阶段。
-那如果能将IO执行的第二阶段变成非阻塞，那就完美了。</p><h1 id=7-io-模型之异步ioaio>7. IO 模型之异步IO(AIO)</h1><p>异步IO真正实现了IO全流程的非阻塞。用户进程发出系统调用后立即返回，内核等待数据准备完成，然后将数据拷贝到用户进程缓冲区，然后发送信号告诉用户进程<strong>IO操作执行完毕</strong>（与SIGIO相比，一个是发送信号告诉用户进程数据准备完毕，一个是IO执行完毕）。其流程如下：</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231136787.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231136787.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231136787.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231136787.png 2x" sizes=auto data-title=image-20221229231136787 data-alt=image-20221229231136787 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>所以，之所以称为异步IO，取决于IO执行的第二阶段是否阻塞。因此前面讲的BIO，NIO和SIGIO均为同步IO。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231217243.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231217243.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231217243.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231217243.png 2x" sizes=auto data-title=image-20221229231217243 data-alt=image-20221229231217243 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p></div></article></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.2.18"><img class=fixit-icon src=/fixit.min.svg alt="FixIt logo">&nbsp;FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
-<span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>
-<a href=/></a></span></div><div class="footer-line statistics"></div></div></footer></div><div class=widgets><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i><span class="variant-numeric d-none">0%</span></div></div><div id=mask></div><noscript><div class=noscript-warning>FixIt 主题在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script>window.config={code:{copyTitle:"复制到剪贴板",editLockTitle:"锁定可编辑代码块",editUnLockTitle:"解锁可编辑代码块",editable:!0,maxShownLines:10},comment:{enable:!1},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验。"},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!0,left:"\\begin{equation}",right:"\\end{equation}"},{display:!0,left:"\\begin{equation*}",right:"\\end{equation*}"},{display:!0,left:"\\begin{align}",right:"\\end{align}"},{display:!0,left:"\\begin{align*}",right:"\\end{align*}"},{display:!0,left:"\\begin{alignat}",right:"\\end{alignat}"},{display:!0,left:"\\begin{alignat*}",right:"\\end{alignat*}"},{display:!0,left:"\\begin{gather}",right:"\\end{gather}"},{display:!0,left:"\\begin{CD}",right:"\\end{CD}"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/js/theme.min.js defer></script></body></html>
+对于读请求：等待系统调用的完整请求数据；（若请求数据不存在于内核缓冲区）则将外围设备的数据读入到内核缓冲区。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230654791.png" alt="image-20221229230654791"></p>
+<p>而应用程序进程在发起IO调用至内核执行IO返回之前，应用程序进程/线程所处状态，就是我们下面要讨论的第二个话题阻塞IO与非阻塞IO。</p>
+<h1 id="3-io-模型之阻塞iobio">3. IO 模型之阻塞I/O(BIO)</h1>
+<p>应用程序中进程在发起IO调用后至内核执行IO操作返回结果之前，若发起系统调用的线程一直处于等待状态，则此次IO操作为阻塞IO。阻塞IO简称BIO，Blocking IO。其处理流程如下图所示：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230738876.png" alt="image-20221229230738876"></p>
+<p>从上图可知当用户进程发起IO系统调用后，内核从准备数据到拷贝数据到用户空间的两个阶段期间<strong>用户调用线程选择阻塞等待</strong>数据返回。</p>
+<p>因此BIO带来了一个问题：如果内核数据需要耗时很久才能准备好，那么用户进程将被阻塞，浪费性能。为了提升应用的性能，虽然可以通过多线程来提升性能，但线程的创建依然会借助系统调用，同时多线程会导致频繁的线程上下文的切换，同样会影响性能。所以要想解决BIO带来的问题，我们就得看到问题的本质，那就是<strong>阻塞</strong>二字。</p>
+<h1 id="4-io-模型之非阻塞ionio">4. IO 模型之非阻塞I/O(NIO)</h1>
+<p>那解决方案自然也容易想到，将阻塞变为非阻塞，那就是用户进程在发起系统调用时指定为非阻塞，内核接收到请求后，就会立即返回，然后用户进程通过轮询的方式来拉取处理结果。也就是如下图所示：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230814611.png" alt="image-20221229230814611"></p>
+<p>应用程序中进程在发起IO调用后至内核执行IO操作返回结果之前，若发起系统调用的线程不会等待而是立即返回，则此次IO操作为非阻塞IO模型。非阻塞IO简称NIO，Non-Blocking IO。</p>
+<p>然而，非阻塞IO虽然相对于阻塞IO大幅提升了性能，但依旧不是完美的解决方案，其依然存在性能问题，也就是频繁的轮询导致频繁的系统调用，会耗费大量的CPU资源。比如当并发很高时，假设有1000个并发，那么单位时间循环内将会有1000次系统调用去轮询执行结果，而实际上可能只有2个请求结果执行完毕，这就会有998次无效的系统调用，造成严重的性能浪费。有问题就要解决，那<strong>NIO问题的本质就是频繁轮询导致的无效系统调用</strong>。</p>
+<h1 id="5-io模型之io多路复用">5. IO模型之IO多路复用</h1>
+<p>解决NIO的思路就是降解无效的系统调用，如何降解呢？我们一起来看看以下几种IO多路复用的解决思路。</p>
+<h2 id="51-io多路复用之selectpoll">5.1. IO多路复用之select/poll</h2>
+<blockquote>
+<p>系统调用 select()或Poll()会一直阻塞，直到一个或多个文件描述符集合成为就绪态。</p>
+</blockquote>
+<p><strong>select()函数</strong>：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213314654.png" alt="image-20230220213314654"></p>
+<p><strong>poll()函数</strong>：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220213710621.png" alt="image-20230220213710621"></p>
+<p>系统调用 poll()执行的任务同 select()很相似。两者间主要的区别在于我们要如何指定待检查的文件描述符。在 select()中，我们提供三个集合，在每个集合中标明我们感兴趣的文件描述符。而在 poll()中我们提供一列文件描述符，并在每个文件描述符上标明我们感兴趣的事件</p>
+<p>select()和 poll()之间的一些区别：</p>
+<ul>
+<li>
+<p>select()所使用的数据类型 fd_set 对于被检查的文件描述符数量有一个上限，在 Linux 下，这个上限值默认为 1024，修改这个上限需要重新编译。与之相反，poll()对于被检查的文件描述符数量本质上是没有限制的</p>
+</li>
+<li>
+<p>select()的参数 fd_set 同时也是保存调用结果的地方，如果要在循环中重复调用select()的话，我们必须每次都要重新初始化 fd_set。而 poll()通过独立的两个字段 events（针对输入）和 revents（针对输出）来处理，从而避免每次都要重新初始化参数</p>
+</li>
+</ul>
+<p>Select是内核提供的系统调用，它支持一次查询多个系统调用的可用状态，当任意一个结果状态可用时就会返回，用户进程再发起一次系统调用进行数据读取。换句话说，就是NIO中N次的系统调用，借助Select，只需要发起一次系统调用就够了。其IO流程如下所示：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230854293.png" alt="image-20221229230854293"></p>
+<p>select/epoll 虽然解决了NIO重复无效系统调用用的问题，但同时又引入了新的问题。问题是：</p>
+<ol>
+<li>
+<p>每次调用 select()或 poll()，内核都<strong>必须检查所有被指定的文件描述符，看它们是否处于就绪态</strong>。当检查大量处于密集范围内的文件描述符时，该操作耗费的时间将大大超过接下来的操作</p>
+</li>
+<li>
+<p>每次调用 select()或 poll()时，程序都必须传递一个表示所有需要被检查的文件描述符的数据结构到内核，内核检查过描述符后，修改这个数据结构并返回给程序。<strong>内核与用户进程数据传递较多</strong></p>
+</li>
+<li>
+<p>select()或 poll()调用完成后，程序必须检查返回的数据结构中的每个元素，以此查明</p>
+<p>哪个文件描述符处于就绪态了</p>
+</li>
+</ol>
+<p>换句话说，select/poll虽然减少了用户进程的发起的系统调用，但内核的工作量只增不减。在高并发的情况下，内核的性能问题依旧。所以select/poll的问题本质是：内核存在无效的循环遍历。</p>
+<h2 id="52-io多路复用之epoll">5.2. IO多路复用之epoll</h2>
+<p>针对select/pool引入的问题，我们把解决问题的思路转回到内核上，如何减少内核重复无效的循环遍历呢？变主动为被动，基于事件驱动来实现。其流程图如下所示：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229230928333.png" alt="image-20221229230928333"></p>
+<p><strong>epoll API 由以下 3 个系统调用组成</strong>：</p>
+<ul>
+<li>
+<p>epoll_create()创建一个 epoll 实例，返回代表该实例的文件描述符。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221000190.png" alt="image-20230220221000190"></p>
+</li>
+<li>
+<p>epoll_ctl()操作同 epoll 实例相关联的兴趣列表。通过 epoll_ctl()，我们可以增加新的描述符到列表中，将已有的文件描述符从该列表中移除，以及修改代表文件描述符上事件类型的位掩码。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221103353.png" alt="image-20230220221103353"></p>
+</li>
+<li>
+<p>epoll_wait()返回与 epoll 实例相关联的就绪列表中的成员。单个 epoll_wait()调用能返回多个就绪态文件描述符的信息。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230220221200356.png" alt="image-20230220221200356"></p>
+</li>
+</ul>
+<p><strong>epoll与select/poll比较</strong>：</p>
+<ul>
+<li>
+<p>每次调用 select()和 poll()时，内核必须检查所有在调用中指定的文件描述符。与之相反，当通过 epoll_ctl()指定了需要监视的文件描述符时，内核会在与打开的文件描述上下文相关联的列表中记录该描述符。之后每当执行 I/O 操作使得文件描述符成为就绪态时，内核就在 epoll 描述符的就绪列表中添加一个元素。（单个打开的文件描述上下文中的一次 I/O 事件可能导致与之相关的多个文件描述符成为就绪态。）之后的epoll_wait()调用从就绪列表中简单地取出这些元素。</p>
+</li>
+<li>
+<p>每次调用 select()或 poll()时，我们传递一个标记了所有待监视的文件描述符的数据结构给内核，调用返回时，内核将所有标记为就绪态的文件描述符的数据结构再传回给我们。与之相反，在 epoll 中我们使用 epoll_ctl()在内核空间中建立一个数据结构，该数据结构会将待监视的文件描述符都记录下来。一旦这个数据结构建立完成，稍后每次调用 epoll_wait()时就不需要再传递任何与文件描述符有关的信息给内核了，而调用返回的信息中只包含那些已经处于就绪态的描述符</p>
+</li>
+</ul>
+<p>epoll，已经大大优化了IO的执行效率，但在IO执行的第一阶段：数据准备阶段都还是被阻塞的。所以这是一个可以继续优化的点。</p>
+<h1 id="6-io-模型之信号驱动iosigio">6. IO 模型之信号驱动IO(SIGIO)</h1>
+<p>信号驱动IO与BIO和NIO最大的区别就在于，在IO执行的数据准备阶段，不会阻塞用户进程。
+如下图所示：当用户进程需要等待数据的时候，会向内核发送一个信号，告诉内核我要什么数据，然后用户进程就继续做别的事情去了，而当内核中的数据准备好之后，内核立马发给用户进程一个信号，说”数据准备好了，快来查收“，用户进程收到信号之后，立马调用recvfrom，去查收数据。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231102123.png" alt="image-20221229231102123"></p>
+<p>乍一看，信号驱动式I/O模型有种异步操作的感觉，但是在IO执行的第二阶段，也就是将数据从内核空间复制到用户空间这个阶段，用户进程还是被阻塞的。</p>
+<p>综上，你会发现，不管是BIO还是NIO还是SIGIO，它们最终都会被阻塞在IO执行的第二阶段。
+那如果能将IO执行的第二阶段变成非阻塞，那就完美了。</p>
+<h1 id="7-io-模型之异步ioaio">7. IO 模型之异步IO(AIO)</h1>
+<p>异步IO真正实现了IO全流程的非阻塞。用户进程发出系统调用后立即返回，内核等待数据准备完成，然后将数据拷贝到用户进程缓冲区，然后发送信号告诉用户进程<strong>IO操作执行完毕</strong>（与SIGIO相比，一个是发送信号告诉用户进程数据准备完毕，一个是IO执行完毕）。其流程如下：</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231136787.png" alt="image-20221229231136787"></p>
+<p>所以，之所以称为异步IO，取决于IO执行的第二阶段是否阻塞。因此前面讲的BIO，NIO和SIGIO均为同步IO。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221229231217243.png" alt="image-20221229231217243"></p>
+    </div>
+          
+    <footer class="post-footer">
+     
+ 
+<div class="post-tags">     
+    
+    <a href="/tags/io%e6%a8%a1%e5%9e%8b" rel="tag" title="IO模型">#IO模型#</a>
+    
+    <a href="/tags/%e5%ba%95%e5%b1%82%e5%8e%9f%e7%90%86" rel="tag" title="底层原理">#底层原理#</a>
+    
+    <a href="/tags/linux/unix" rel="tag" title="linux/unix">#linux/unix#</a>
+    
+</div>
+
+
+
+      
+
+
+<div class="addthis_inline_share_toolbox"></div>
+
+
+
+     <div class="post-nav">
+<div class="article-copyright">
+    <div class="article-copyright-img">
+        <img src="/img/qq_qrcode.png" width="129px" height="129px"/>
+        <div style="text-align:center;">QQ扫一扫交流</div>
+    </div>
+    <div class="article-copyright-info">
+        <p> 
+            <span>标题：</span>IO模型
+        </p>
+        <p> 
+            <span>链接：</span>https://codingroam.github.io/post/io%E6%A8%A1%E5%9E%8B/
+        </p>
+        <p> 
+            <span>作者：</span>极光code
+        </p>
+        
+        
+        <p> 
+            <span>声明： </span>本博客文章除特别声明外，均采用 <a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank' style='text-decoration: underline;'>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！
+        </p>
+    </div>
+</div>
+<div class="clear"></div>
+</div>
+     <div class="reward-qr-info">
+  <div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">   
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/img/wechat-pay.png" alt="WeChat Pay"/>
+        <p>微信打赏</p>
+      </div>
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/img/ali-pay.png" alt="Alipay"/>
+        <p>支付宝打赏</p>
+      </div>
+  </div>
+</div>
+     <div class="post-nav">
+    <div class="post-nav-next post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E4%B8%8E%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/" rel="next" title="分布式事务：两阶段提交与三阶段提交">
+        <i class="fa fa-chevron-left"></i> 分布式事务：两阶段提交与三阶段提交
+        </a>
+    
+    </div>
+
+    <div class="post-nav-prev post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用">
+        NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用 
+        <i class="fa fa-chevron-right"></i>
+        </a>
+    
+    </div>
+</div>  
+     
+
+
+
+
+<div id="wcomments"></div>
+
+
+
+
+
+
+
+    </footer>
+  </article>
+</section>
+
+          </div>
+        </div>
+        <div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+        src="/img/avatar.png"
+        alt="极光code" />
+    <p class="site-author-name" itemprop="name">极光code</p>
+    <p class="site-description motion-element" itemprop="description"> 
+      
+        以梦为马，不负韶华!
+      
+    </p>
+</div>
+      <nav class="site-state motion-element">
+    <div class="site-state-item site-state-posts">
+      <a href="/post/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">日志</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">    
+        <a href="/categories/">      
+         
+        <span class="site-state-item-count">49</span>
+        
+        <span class="site-state-item-name">分类</span>
+        
+        </a>
+    </div>
+
+    <div class="site-state-item site-state-tags">
+        <a href="/tags/">
+         
+        <span class="site-state-item-count">62</span>
+        
+        <span class="site-state-item-name">标签</span>
+        </a>
+    </div>
+</nav>
+      
+      
+<div class="links-of-author motion-element">
+    
+        <span class="links-of-author-item">
+        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
+            <i class="fa fa-fw fa-github"></i>
+            GitHub
+        </a>
+        </span>
+    
+        <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
+            <i class="fa fa-fw fa-globe"></i>
+            知乎
+        </a>
+        </span>
+    
+</div>
+
+
+      
+    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+    <div class="links-of-blogroll-title">
+        <i class="fa fa-fw fa-globe"></i>
+        友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
+    <div class="tagcloud-of-blogroll-title">
+        <i class="fa fa-fw fa-tags"></i>
+        标签云
+    </div>
+    <ul class="tagcloud-of-blogroll-list">
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/linux">Linux
+            <sup>10</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java">Java
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/mysql">Mysql
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/docker">Docker
+            <sup>6</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/git">Git
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/problem-solving">Problem solving
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java-base">Java base
+            <sup>4</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/spring">Spring
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/threadlocal">Threadlocal
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/command">Command
+            <sup>2</sup>
+            </a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    </section>
+    
+  </div>
+</aside>
+
+      </div>
+    </main>
+   
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  <span class="copyright-year">  
+    &copy; 2010 - 2023
+  </span>
+  <span class="with-love"><i class="fa fa-heart"></i></span>
+  <span class="copyright-author">好记性不如烂笔头</span>
+</div>
+<div class="powered-info">
+  <span class="powered-by">
+    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="theme-info">
+    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
+    </a>
+  </span>
+</div>
+<div class="vistor-info">
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="site-pv">
+    <i class="fa fa-eye"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+
+
+</div>
+<div class="license-info">
+  <span class="storage-info">
+    Storage by 
+    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="license-num"> 
+    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
+  </span>
+</div>
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+      <span id="scrollpercent"><span>0</span>%</span>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
+
+
+<script type="text/javascript">
+
+  function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+    var edge = ua.indexOf('Edge/');
+
+    if (msie>0 || trident>0 || edge>0) {
+      return -1;
+    }
+
+    return 1;
+  }
+
+
+  function getCntViewHeight() {
+    var docHeight = $('#content').height(),
+        winHeight = $(window).height(),
+        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
+    return cntViewHeight;
+  }
+
+  function getScrollbarWidth() {
+    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
+    var div = $div[0];
+    var scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+    $div.remove();
+
+    return scrollbarWidth;
+  }
+
+  function registerBackTop() {
+    var THRESHOLD = 50;
+    var $top = $('.back-to-top');
+
+    $(window).on('scroll', function () {
+      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
+
+      var scrollTop = $(window).scrollTop();
+      var cntViewHeight = getCntViewHeight();
+      var scrollPercent = (scrollTop) / (cntViewHeight);
+      var scrollPercentRounded = Math.round(scrollPercent*100);
+      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
+      $('#scrollpercent>span').html(scrollPercentMaxed);
+    });
+
+    $top.on('click', function () {
+      $("html,body").animate({
+                 scrollTop: 0,
+                 screenLeft: 0,
+                 }, 800);
+    });
+  }
+
+  function initScrollSpy () {
+    var tocSelector = '.post-toc';
+    var $tocElement = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocElement
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+      })
+      .on('clear.bs.scrollspy', removeCurrentActiveClass);
+
+    $('body').scrollspy({ target: tocSelector });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+  }
+
+  function initAffix () {
+    var headerHeight = $('.header-inner').height();
+    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
+    var sidebarTop = headerHeight + 10;
+
+    $('.sidebar-inner').affix({
+      offset: {
+        top: sidebarTop,
+        bottom: footerOffset 
+      }
+    });
+
+    
+
+  }
+
+  function initTOCDimension () {
+    var updateTOCHeightTimer;
+
+    $(window).on('resize', function () {
+      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+
+      updateTOCHeightTimer = setTimeout(function () {
+        var tocWrapperHeight = document.body.clientHeight - 100;
+
+        updateTOCHeight(tocWrapperHeight);
+      }, 0);
+    });
+
+    
+    updateTOCHeight(document.body.clientHeight - 100);
+
+    
+    var scrollbarWidth = getScrollbarWidth();
+    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
+  }
+
+  function updateTOCHeight (height) {
+    height = height || 'auto';
+    $('.post-toc').css('max-height', height);
+  }
+
+$(function() {
+
+  var sidebarTop = $('.header-inner').height() + 10;
+  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
+
+  
+  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
+  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
+  var sideHeight = sidebarMt + sidebarInHeight;
+  var contentHeight = $('.content-wrap').height();
+
+  if (contentHeight < sideHeight) {
+    $('.content-wrap').css('min-height', sideHeight);
+  }
+  
+  
+  $('.site-nav-toggle').on('click', function () {
+    var $siteNav = $('.site-nav');
+    var $toggleLine = $('.toggle');
+    var ON_CLASS_NAME = 'site-nav-on';
+    var CLOSE_CLASS_NAME = 'toggle-close';
+    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
+    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
+    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
+
+    $siteNav.stop()[animateAction]('normal', function () {
+      $siteNav[animateCallback](ON_CLASS_NAME);
+      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
+    });
+
+  });
+
+  registerBackTop();
+  
+   
+  initAffix();
+  initTOCDimension();
+
+  $('.sidebar-nav-toc').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).next().removeClass('sidebar-nav-active');      
+    $('.'+$(this).next().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+
+  $('.sidebar-nav-overview').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).prev().removeClass('sidebar-nav-active');      
+    $('.'+$(this).prev().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+});  
+
+</script>
+
+
+
+
+
+<script src="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js"></script>
+<script type="text/javascript">
+$(function() {
+  $('.post-body').viewer(); 
+});
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+  const locale = {
+    placeholder: '欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^'
+  };
+  $(function(){
+    if (detectIE()>0) {
+      $.getScript(document.location.protocol+'//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js', function(){
+         new Waline({
+          el: '#wcomments', 
+          visitor: true,
+          emoji: [], 
+          wordLimit: '200', 
+          uploadImage: false,
+          locale, 
+          requiredMeta: ['nick', 'mail'], 
+          serverURL: "Your WalineSerURL", 
+          lang: "zh-cn"
+        });
+      });      
+    } else {
+      $('#wcomments').html('抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。');
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+
+
+
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+</body>
+</html>

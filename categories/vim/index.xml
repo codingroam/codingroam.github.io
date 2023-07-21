@@ -1,1 +1,20 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Vim - 分类 - 好记性不如烂笔头</title><link>/categories/vim/</link><description>Vim - 分类 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 14 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/vim/" rel="self" type="application/rss+xml"/><item><title>PowerShell设置使用vim</title><link>/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/</link><pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/</guid><description>&lt;p>PowerShell设置使用vim&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vim on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/categories/vim/</link>
+    <description>Recent content in Vim on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 14 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/categories/vim/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PowerShell设置使用vim</title>
+      <link>https://codingroam.github.io/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/</link>
+      <pubDate>Wed, 14 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/powershell%E8%AE%BE%E7%BD%AE%E4%BD%BF%E7%94%A8vim/</guid>
+      <description>&lt;p&gt;PowerShell设置使用vim&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

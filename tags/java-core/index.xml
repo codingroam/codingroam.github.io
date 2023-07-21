@@ -1,1 +1,20 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Java Core - 标签 - 好记性不如烂笔头</title><link>/tags/java-core/</link><description>Java Core - 标签 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 30 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/java-core/" rel="self" type="application/rss+xml"/><item><title>Java SPI</title><link>/post/java-spi/</link><pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate><author>作者</author><guid>/post/java-spi/</guid><description>&lt;p>SPI之ServiceLoader应用与源码分析&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java Core on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/tags/java-core/</link>
+    <description>Recent content in Java Core on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 30 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/tags/java-core/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java SPI</title>
+      <link>https://codingroam.github.io/post/java-spi/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/java-spi/</guid>
+      <description>&lt;p&gt;SPI之ServiceLoader应用与源码分析&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

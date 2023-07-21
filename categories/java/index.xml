@@ -1,1 +1,56 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Java - 分类 - 好记性不如烂笔头</title><link>/categories/java/</link><description>Java - 分类 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 05 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/java/" rel="self" type="application/rss+xml"/><item><title>Linux命令大全：2W多字，一次实现Linux自由</title><link>/post/linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A82w%E5%A4%9A%E5%AD%97%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0linux%E8%87%AA%E7%94%B1/</link><pubDate>Sun, 05 Mar 2023 00:00:00 +0000</pubDate><author>作者</author><guid>/post/linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A82w%E5%A4%9A%E5%AD%97%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0linux%E8%87%AA%E7%94%B1/</guid><description>&lt;p>Linux命令大全：2W多字，一次实现Linux自由&lt;/p></description></item><item><title>Java SPI</title><link>/post/java-spi/</link><pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate><author>作者</author><guid>/post/java-spi/</guid><description>&lt;p>SPI之ServiceLoader应用与源码分析&lt;/p></description></item><item><title>Java程序使用jPowershell与powershell交互</title><link>/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</link><pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate><author>作者</author><guid>/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</guid><description>&lt;p>Java程序使用jPowershell与powershell交互&lt;/p></description></item><item><title>关于IDEA生成jar包后FileEncoding依然是GBK</title><link>/post/%E5%85%B3%E4%BA%8Eidea%E7%94%9F%E6%88%90jar%E5%8C%85%E5%90%8Efileencoding%E4%BE%9D%E7%84%B6%E6%98%AFgbk/</link><pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate><author>作者</author><guid>/post/%E5%85%B3%E4%BA%8Eidea%E7%94%9F%E6%88%90jar%E5%8C%85%E5%90%8Efileencoding%E4%BE%9D%E7%84%B6%E6%98%AFgbk/</guid><description>&lt;p>关于IDEA生成jar包后FileEncoding依然是GBK&lt;/p></description></item><item><title>你真的懂String吗？</title><link>/post/%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82string%E5%90%97/</link><pubDate>Sat, 05 Mar 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82string%E5%90%97/</guid><description>&lt;p>你真的懂String吗？&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/categories/java/</link>
+    <description>Recent content in Java on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 05 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux命令大全：2W多字，一次实现Linux自由</title>
+      <link>https://codingroam.github.io/post/linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A82w%E5%A4%9A%E5%AD%97%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0linux%E8%87%AA%E7%94%B1/</link>
+      <pubDate>Sun, 05 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A82w%E5%A4%9A%E5%AD%97%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0linux%E8%87%AA%E7%94%B1/</guid>
+      <description>&lt;p&gt;Linux命令大全：2W多字，一次实现Linux自由&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Java SPI</title>
+      <link>https://codingroam.github.io/post/java-spi/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/java-spi/</guid>
+      <description>&lt;p&gt;SPI之ServiceLoader应用与源码分析&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Java程序使用jPowershell与powershell交互</title>
+      <link>https://codingroam.github.io/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</guid>
+      <description>&lt;p&gt;Java程序使用jPowershell与powershell交互&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>关于IDEA生成jar包后FileEncoding依然是GBK</title>
+      <link>https://codingroam.github.io/post/%E5%85%B3%E4%BA%8Eidea%E7%94%9F%E6%88%90jar%E5%8C%85%E5%90%8Efileencoding%E4%BE%9D%E7%84%B6%E6%98%AFgbk/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/%E5%85%B3%E4%BA%8Eidea%E7%94%9F%E6%88%90jar%E5%8C%85%E5%90%8Efileencoding%E4%BE%9D%E7%84%B6%E6%98%AFgbk/</guid>
+      <description>&lt;p&gt;关于IDEA生成jar包后FileEncoding依然是GBK&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>你真的懂String吗？</title>
+      <link>https://codingroam.github.io/post/%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82string%E5%90%97/</link>
+      <pubDate>Sat, 05 Mar 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82string%E5%90%97/</guid>
+      <description>&lt;p&gt;你真的懂String吗？&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,1 +1,20 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>原理知识 - 标签 - 好记性不如烂笔头</title><link>/tags/%E5%8E%9F%E7%90%86%E7%9F%A5%E8%AF%86/</link><description>原理知识 - 标签 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 02 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%8E%9F%E7%90%86%E7%9F%A5%E8%AF%86/" rel="self" type="application/rss+xml"/><item><title>MySql原理学习记录</title><link>/post/mysql%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</link><pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/mysql%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</guid><description>&lt;p>根据《MySql是怎样运行的一书》整理记录知识点&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>原理知识 on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/tags/%E5%8E%9F%E7%90%86%E7%9F%A5%E8%AF%86/</link>
+    <description>Recent content in 原理知识 on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 02 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/tags/%E5%8E%9F%E7%90%86%E7%9F%A5%E8%AF%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySql原理学习记录</title>
+      <link>https://codingroam.github.io/post/mysql%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Thu, 02 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/mysql%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</guid>
+      <description>&lt;p&gt;根据《MySql是怎样运行的一书》整理记录知识点&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

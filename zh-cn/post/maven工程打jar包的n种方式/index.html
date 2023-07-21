@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Maven工程打jar包的N种方式 - Loving life and dreams.</title><meta name="author" content="xxxx">
+<meta name="author-link" content="">
+<meta name="description" content="Maven工程打jar包的N种方式" /><meta name="keywords" content='实用技巧, maven, jar, springboot' /><meta itemprop="name" content="Maven工程打jar包的N种方式">
+<meta itemprop="description" content="Maven工程打jar包的N种方式"><meta itemprop="datePublished" content="2023-01-30T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-01-30T00:00:00+00:00" />
+<meta itemprop="wordCount" content="1913"><meta itemprop="image" content="https://codingroam.github.io/logo.png"/>
+<meta itemprop="keywords" content="实用技巧,maven,jar,springboot," /><meta property="og:title" content="Maven工程打jar包的N种方式" />
+<meta property="og:description" content="Maven工程打jar包的N种方式" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://codingroam.github.io/zh-cn/post/maven%E5%B7%A5%E7%A8%8B%E6%89%93jar%E5%8C%85%E7%9A%84n%E7%A7%8D%E6%96%B9%E5%BC%8F/" /><meta property="og:image" content="https://codingroam.github.io/logo.png"/><meta property="article:section" content="zh-CN" />
+<meta property="article:published_time" content="2023-01-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-01-30T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://codingroam.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Maven工程打jar包的N种方式"/>
+<meta name="twitter:description" content="Maven工程打jar包的N种方式"/>
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://codingroam.github.io/zh-cn/post/maven%E5%B7%A5%E7%A8%8B%E6%89%93jar%E5%8C%85%E7%9A%84n%E7%A7%8D%E6%96%B9%E5%BC%8F/" /><link rel="prev" href="https://codingroam.github.io/zh-cn/post/mysql%E6%80%BB%E7%BB%93--mvccread-view%E5%92%8Cundo-log/" /><link rel="next" href="https://codingroam.github.io/zh-cn/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Maven工程打jar包的N种方式",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/codingroam.github.io\/zh-cn\/post\/maven%E5%B7%A5%E7%A8%8B%E6%89%93jar%E5%8C%85%E7%9A%84n%E7%A7%8D%E6%96%B9%E5%BC%8F\/"
+    },"genre": "zh-CN","keywords": "实用技巧, maven, jar, springboot","wordcount":  1913 ,
+    "url": "https:\/\/codingroam.github.io\/zh-cn\/post\/maven%E5%B7%A5%E7%A8%8B%E6%89%93jar%E5%8C%85%E7%9A%84n%E7%A7%8D%E6%96%B9%E5%BC%8F\/","datePublished": "2023-01-30T00:00:00+00:00","dateModified": "2023-01-30T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "wang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="Loving life and dreams."><img loading="lazy" src="/fixit.min.svg" srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes="auto" data-title="Loving life and dreams." data-alt="Loving life and dreams." class="logo" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/><span class="header-title-text">我的 Hugo FixIt 网站</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/"
+                
+                
+              ></a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="Loving life and dreams."><img loading="lazy" src="/fixit.min.svg" srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes="auto" data-title="/fixit.min.svg" data-alt="/fixit.min.svg" class="logo" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/><span class="header-title-text">我的 Hugo FixIt 网站</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/"
+                  
+                  
+                ></a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><article class="page single special">
+    <div class="header"><h1 class="single-title animate__animated animate__pulse animate__faster">Maven工程打jar包的N种方式</h1></div><div
+      class="content"
+      id="content"
+      
+      
+    ><p>Maven工程打jar包的N种方式</p>
+<p>Maven工程打jar包
+一、IDEA自带打包插件 二、maven插件打包 2.1 制作瘦包（直接打包，不打包依赖包） 2.2 制作瘦包和依赖包（相互分离） 2.3 制作胖包（项目依赖包和项目打为一个包） 2.4 制作胖包（transform部分自定义） 三、SpringBoot项目打包 四、Scala项目打包 五、groovy项目打包</p>
+<p><strong>内容</strong>：此种方式可以自己选择制作胖包或者瘦包，但推荐此种方式制作瘦包。 <strong>输出</strong>：输出目录在out目录下 <strong>流程步骤</strong>：</p>
+<ol>
+<li>第一步： 依次选择 file-&gt;projecct structure-&gt;artifacts-&gt;点击+ (选择jar)-&gt;选择 from module with dependencies <img loading="lazy" src="https://img-blog.csdnimg.cn/20201127122646929.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==,size_16,color_FFFFFF,t_70#pic_center" srcset="https://img-blog.csdnimg.cn/20201127122646929.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==%2csize_16%2ccolor_FFFFFF%2ct_70#pic_center, https://img-blog.csdnimg.cn/20201127122646929.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==%2csize_16%2ccolor_FFFFFF%2ct_70#pic_center 1.5x, https://img-blog.csdnimg.cn/20201127122646929.png?x-oss-process=image/watermark%2ctype_ZmFuZ3poZW5naGVpdGk%2cshadow_10%2ctext_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==%2csize_16%2ccolor_FFFFFF%2ct_70#pic_center 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/></li>
+</ol>
+<li>第二步：弹出窗口中指定Main Class，是否选择依赖jar包，是否包含测试。（尽量不选依赖包，防止依赖包选择不全） ![img](https://img-blog.csdnimg.cn/20201127122706462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==,size_16,color_FFFFFF,t_70#pic_center)![img](https://img-blog.csdnimg.cn/20201127122723284.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==,size_16,color_FFFFFF,t_70#pic_center)![img](https://img-blog.csdnimg.cn/20201127122732840.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==,size_16,color_FFFFFF,t_70#pic_center)![img](https://img-blog.csdnimg.cn/20201127122750258.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0h1Z2hfR3Vhbg==,size_16,color_FFFFFF,t_70#pic_center)</li> 
+3. 第三步：点击Build–&gt;Build Artifacts–&gt;选择bulid
+<p><strong>输出</strong>：输出目录在target目录下</p>
+<h2 id="21-制作瘦包直接打包不打包依赖包">2.1 制作瘦包（直接打包，不打包依赖包）</h2>
+<p><strong>内容</strong>：仅打包出项目中的代码到JAR包中。 <strong>方式</strong>：在pom.xml中添加如下plugin; 随后执行maven install</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;!--</span> <span class="n">java</span><span class="err">编译插件</span> <span class="o">--&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">compiler</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="err">指定版本</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;</span><span class="mf">1.8</span><span class="o">&lt;/</span><span class="n">source</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">target</span><span class="o">&gt;</span><span class="mf">1.8</span><span class="o">&lt;/</span><span class="n">target</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">encoding</span><span class="o">&gt;</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="o">&lt;/</span><span class="n">encoding</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="22-制作瘦包和依赖包相互分离">2.2 制作瘦包和依赖包（相互分离）</h2>
+<p><strong>内容</strong>：将依赖JAR包输出到lib目录方式（打包方式对于JAVA项目是通用的） 将项目中的JAR包的依赖包输出到指定的目录下,修改outputDirectory配置，如下面的${project.build.directory}/lib。 <strong>方式</strong>：</p>
+<ol>
+<li>pom.xml的build&gt;plugins中添加如下配置。</li>
+<li>点击maven project（右边栏）-&gt;选择Lifecycle-&gt;点击package打包 <strong>注意</strong>：如果想将打包好的JAR包通过命令直接运行，如java -jar xx.jar。需要制定manifest配置的classpathPrefix与上面配置的相对应。如上面把依赖JAR包输出到了lib，则这里的classpathPrefix也应指定为lib/；同时，并指定出程序的入口类，在配置mainClass节点中配好入口类的全类名。</li>
+</ol>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugins</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;!--</span> <span class="n">java</span><span class="err">编译插件</span> <span class="o">--&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">compiler</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">source</span><span class="o">&gt;</span><span class="mf">1.8</span><span class="o">&lt;/</span><span class="n">source</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">target</span><span class="o">&gt;</span><span class="mf">1.8</span><span class="o">&lt;/</span><span class="n">target</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">encoding</span><span class="o">&gt;</span><span class="n">UTF</span><span class="o">-</span><span class="mi">8</span><span class="o">&lt;/</span><span class="n">encoding</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">jar</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">archive</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">manifest</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">addClasspath</span><span class="o">&gt;</span><span class="kc">true</span><span class="o">&lt;/</span><span class="n">addClasspath</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">classpathPrefix</span><span class="o">&gt;</span><span class="n">lib</span><span class="o">/&lt;/</span><span class="n">classpathPrefix</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">mainClass</span><span class="o">&gt;</span><span class="n">com</span><span class="o">.</span><span class="na">yourpakagename</span><span class="o">.</span><span class="na">mainClassName</span><span class="o">&lt;/</span><span class="n">mainClass</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">manifest</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">archive</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">dependency</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">id</span><span class="o">&gt;</span><span class="n">copy</span><span class="o">&lt;/</span><span class="n">id</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">phase</span><span class="o">&gt;</span><span class="n">install</span><span class="o">&lt;/</span><span class="n">phase</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">copy</span><span class="o">-</span><span class="n">dependencies</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">outputDirectory</span><span class="o">&gt;</span><span class="n">$</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">   <span class="n">project</span><span class="o">.</span><span class="na">build</span><span class="o">.</span><span class="na">directory</span><span class="o">}/</span><span class="n">lib</span><span class="o">&lt;/</span><span class="n">outputDirectory</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugins</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>注意</strong>：默认的classpath会在jar包内。为了方便,可以在Main方法配置后加上manifestEntries配置，指定classpath。</p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">jar</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">classesDirectory</span><span class="o">&gt;</span><span class="n">target</span><span class="o">/</span><span class="n">classes</span><span class="o">/&lt;/</span><span class="n">classesDirectory</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">archive</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">manifest</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;!--</span> <span class="err">主函数的入口</span> <span class="o">--&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">mainClass</span><span class="o">&gt;</span><span class="n">com</span><span class="o">.</span><span class="na">yourpakagename</span><span class="o">.</span><span class="na">mainClassName</span><span class="o">&lt;/</span><span class="n">mainClass</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;!--</span> <span class="err">打包时</span> <span class="n">MANIFEST</span><span class="o">.</span><span class="na">MF</span><span class="err">文件不记录的时间戳版本</span> <span class="o">--&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">useUniqueVersions</span><span class="o">&gt;</span><span class="kc">false</span><span class="o">&lt;/</span><span class="n">useUniqueVersions</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">addClasspath</span><span class="o">&gt;</span><span class="kc">true</span><span class="o">&lt;/</span><span class="n">addClasspath</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">classpathPrefix</span><span class="o">&gt;</span><span class="n">lib</span><span class="o">/&lt;/</span><span class="n">classpathPrefix</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">manifest</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">manifestEntries</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">Class</span><span class="o">-</span><span class="n">Path</span><span class="o">&gt;.&lt;/</span><span class="n">Class</span><span class="o">-</span><span class="n">Path</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">manifestEntries</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">archive</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="23-制作胖包项目依赖包和项目打为一个包">2.3 制作胖包（项目依赖包和项目打为一个包）</h2>
+<p><strong>内容</strong>：将项目中的依赖包和项目代码都打为一个JAR包 <strong>方式</strong>：</p>
+<ol>
+<li>pom.xml的build&gt;plugins中添加如下配置；</li>
+<li>点击maven project（右边栏）-&gt;选择Plugins-&gt;选择assembly-&gt;点击assembly:assembly <strong>注意</strong>：1. 针对传统的JAVA项目打包； 2. 打包指令为插件的assembly命令，尽量不用package指令。</li>
+</ol>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">assembly</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="mf">2.5.5</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">archive</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">manifest</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">mainClass</span><span class="o">&gt;</span><span class="n">com</span><span class="o">.</span><span class="na">xxg</span><span class="o">.</span><span class="na">Main</span><span class="o">&lt;/</span><span class="n">mainClass</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">manifest</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">archive</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">descriptorRefs</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">descriptorRef</span><span class="o">&gt;</span><span class="n">jar</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">dependencies</span><span class="o">&lt;/</span><span class="n">descriptorRef</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">descriptorRefs</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>  
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="24-制作胖包transform部分自定义">2.4 制作胖包（transform部分自定义）</h2>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">maven</span><span class="o">.</span><span class="na">plugins</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">shade</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="mf">2.4.3</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">phase</span><span class="o">&gt;</span><span class="n">package</span><span class="o">&lt;/</span><span class="n">phase</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">shade</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">filters</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;</span><span class="n">filter</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;</span><span class="n">artifact</span><span class="o">&gt;*:*&lt;/</span><span class="n">artifact</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;</span><span class="n">excludes</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">							<span class="o">&lt;</span><span class="n">exclude</span><span class="o">&gt;</span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/*.</span><span class="na">SF</span><span class="o">&lt;/</span><span class="n">exclude</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">							<span class="o">&lt;</span><span class="n">exclude</span><span class="o">&gt;</span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/*.</span><span class="na">DSA</span><span class="o">&lt;/</span><span class="n">exclude</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">							<span class="o">&lt;</span><span class="n">exclude</span><span class="o">&gt;</span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/*.</span><span class="na">RSA</span><span class="o">&lt;/</span><span class="n">exclude</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;/</span><span class="n">excludes</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;/</span><span class="n">filter</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;/</span><span class="n">filters</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">transformers</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;</span><span class="n">transformer</span> <span class="n">implementation</span><span class="o">=</span><span class="s">&#34;org.apache.maven.plugins.shade.resource.AppendingTransformer&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;</span><span class="n">resource</span><span class="o">&gt;</span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/</span><span class="n">spring</span><span class="o">.</span><span class="na">handlers</span><span class="o">&lt;/</span><span class="n">resource</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;/</span><span class="n">transformer</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;</span><span class="n">transformer</span> <span class="n">implementation</span><span class="o">=</span><span class="s">&#34;org.apache.maven.plugins.shade.resource.AppendingTransformer&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;</span><span class="n">resource</span><span class="o">&gt;</span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/</span><span class="n">spring</span><span class="o">.</span><span class="na">schemas</span><span class="o">&lt;/</span><span class="n">resource</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;/</span><span class="n">transformer</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;</span><span class="n">transformer</span> <span class="n">implementation</span><span class="o">=</span><span class="s">&#34;org.apache.maven.plugins.shade.resource.AppendingTransformer&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;</span><span class="n">resource</span><span class="o">&gt;</span><span class="n">META</span><span class="o">-</span><span class="n">INF</span><span class="o">/</span><span class="n">spring</span><span class="o">.</span><span class="na">tooling</span><span class="o">&lt;/</span><span class="n">resource</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;/</span><span class="n">transformer</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;</span><span class="n">transformer</span> <span class="n">implementation</span><span class="o">=</span><span class="s">&#34;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&#34;</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">						<span class="o">&lt;</span><span class="n">mainClass</span><span class="o">&gt;</span><span class="n">com</span><span class="o">.</span><span class="na">xxx</span><span class="o">.</span><span class="na">xxxInvoke</span><span class="o">&lt;/</span><span class="n">mainClass</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;/</span><span class="n">transformer</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;/</span><span class="n">transformers</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">minimizeJar</span><span class="o">&gt;</span><span class="kc">true</span><span class="o">&lt;/</span><span class="n">minimizeJar</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">shadedArtifactAttached</span><span class="o">&gt;</span><span class="kc">true</span><span class="o">&lt;/</span><span class="n">shadedArtifactAttached</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>内容</strong>：将当前项目里所有依赖包和当前项目的源码都打成一个JAR包，同时还会将没有依赖包的JAR包也打出来，以.original保存 <strong>方式</strong>：</p>
+<ol>
+<li>在pom.xml的build&gt;plugins中加入如下配置</li>
+<li>点击maven project（右边栏）-&gt;选择Lifecycle-&gt;点击package或install打包</li>
+</ol>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">springframework</span><span class="o">.</span><span class="na">boot</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">spring</span><span class="o">-</span><span class="n">boot</span><span class="o">-</span><span class="n">maven</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>方式</strong>：</p>
+<ol>
+<li>在pom.xml的build&gt;plugins中加入如下配置</li>
+<li>点击maven project（右边栏）-&gt;选择Lifecycle-&gt;点击package或install打包</li>
+</ol>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">scala</span><span class="o">-</span><span class="n">tools</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">maven</span><span class="o">-</span><span class="n">scala</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">compile</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">testCompile</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;/</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">scalaVersion</span><span class="o">&gt;</span><span class="n">$</span><span class="o">{</span>
+</span></span><span class="line"><span class="cl">   <span class="n">scala</span><span class="o">.</span><span class="na">version</span><span class="o">}&lt;/</span><span class="n">scalaVersion</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">arg</span><span class="o">&gt;-</span><span class="n">target</span><span class="o">:</span><span class="n">jvm</span><span class="o">-</span><span class="mf">1.5</span><span class="o">&lt;/</span><span class="n">arg</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">args</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>方式</strong>：</p>
+<ol>
+<li>在pom.xml的build&gt;plugins中加入如下配置</li>
+<li>点击maven project（右边栏）-&gt;选择Lifecycle-&gt;点击package或install打包</li>
+</ol>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="n">plugin</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">groupId</span><span class="o">&gt;</span><span class="n">org</span><span class="o">.</span><span class="na">codehaus</span><span class="o">.</span><span class="na">gmavenplus</span><span class="o">&lt;/</span><span class="n">groupId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">artifactId</span><span class="o">&gt;</span><span class="n">gmavenplus</span><span class="o">-</span><span class="n">plugin</span><span class="o">&lt;/</span><span class="n">artifactId</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;</span><span class="mf">1.2</span><span class="o">&lt;/</span><span class="n">version</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">addSources</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">addStubSources</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">compile</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="o">&lt;</span><span class="n">goal</span><span class="o">&gt;</span><span class="n">execute</span><span class="o">&lt;/</span><span class="n">goal</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="o">&lt;/</span><span class="n">goals</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="o">&lt;/</span><span class="n">execution</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">&lt;/</span><span class="n">executions</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="o">&lt;/</span><span class="n">plugin</span><span class="o">&gt;</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div></article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.2.18"><img class="fixit-icon" src="/fixit.min.svg" alt="FixIt logo" />&nbsp;FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2021 - 2023</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">xxxx</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/autocomplete/autocomplete.min.js" defer></script><script src="/lib/lunr/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验。"},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"enablePWA":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

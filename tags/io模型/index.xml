@@ -1,1 +1,29 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>IO模型 - 标签 - 好记性不如烂笔头</title><link>/tags/io%E6%A8%A1%E5%9E%8B/</link><description>IO模型 - 标签 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Thu, 29 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/io%E6%A8%A1%E5%9E%8B/" rel="self" type="application/rss+xml"/><item><title>IO模型</title><link>/post/io%E6%A8%A1%E5%9E%8B/</link><pubDate>Thu, 29 Dec 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/io%E6%A8%A1%E5%9E%8B/</guid><description>&lt;p>IO模型&lt;/p></description></item><item><title>NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用</title><link>/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/</link><pubDate>Thu, 29 Dec 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/</guid><description>&lt;p>NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>IO模型 on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/tags/io%E6%A8%A1%E5%9E%8B/</link>
+    <description>Recent content in IO模型 on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 29 Dec 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/tags/io%E6%A8%A1%E5%9E%8B/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IO模型</title>
+      <link>https://codingroam.github.io/post/io%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Thu, 29 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/io%E6%A8%A1%E5%9E%8B/</guid>
+      <description>&lt;p&gt;IO模型&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用</title>
+      <link>https://codingroam.github.io/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/</link>
+      <pubDate>Thu, 29 Dec 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
+      <description>&lt;p&gt;NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

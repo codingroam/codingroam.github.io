@@ -1,1 +1,20 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Windows - 分类 - 好记性不如烂笔头</title><link>/categories/windows/</link><description>Windows - 分类 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 30 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/windows/" rel="self" type="application/rss+xml"/><item><title>Java程序使用jPowershell与powershell交互</title><link>/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</link><pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate><author>作者</author><guid>/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</guid><description>&lt;p>Java程序使用jPowershell与powershell交互&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Windows on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/categories/windows/</link>
+    <description>Recent content in Windows on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 30 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/categories/windows/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java程序使用jPowershell与powershell交互</title>
+      <link>https://codingroam.github.io/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</link>
+      <pubDate>Mon, 30 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/java%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8jpowershell%E4%B8%8Epowershell%E4%BA%A4%E4%BA%92/</guid>
+      <description>&lt;p&gt;Java程序使用jPowershell与powershell交互&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

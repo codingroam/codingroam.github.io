@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Spring学习记录 - Loving life and dreams.</title><meta name="author" content="xxxx">
+<meta name="author-link" content="">
+<meta name="description" content="Spring learning" /><meta name="keywords" content='Spring, 源码' /><meta itemprop="name" content="Spring学习记录">
+<meta itemprop="description" content="Spring learning"><meta itemprop="datePublished" content="2022-11-15T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2022-11-15T00:00:00+00:00" />
+<meta itemprop="wordCount" content="12758"><meta itemprop="image" content="https://codingroam.github.io/logo.png"/>
+<meta itemprop="keywords" content="Spring,源码," /><meta property="og:title" content="Spring学习记录" />
+<meta property="og:description" content="Spring learning" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://codingroam.github.io/zh-cn/post/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" /><meta property="og:image" content="https://codingroam.github.io/logo.png"/><meta property="article:section" content="zh-CN" />
+<meta property="article:published_time" content="2022-11-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-11-15T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://codingroam.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Spring学习记录"/>
+<meta name="twitter:description" content="Spring learning"/>
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://codingroam.github.io/zh-cn/post/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" /><link rel="prev" href="https://codingroam.github.io/zh-cn/post/linux-unix-file/" /><link rel="next" href="https://codingroam.github.io/zh-cn/post/%E7%B2%BE%E9%80%9Agit/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Spring学习记录",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/codingroam.github.io\/zh-cn\/post\/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95\/"
+    },"genre": "zh-CN","keywords": "Spring, 源码","wordcount":  12758 ,
+    "url": "https:\/\/codingroam.github.io\/zh-cn\/post\/spring%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95\/","datePublished": "2022-11-15T00:00:00+00:00","dateModified": "2022-11-15T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "wang"
+      },"description": "Spring learning"
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="Loving life and dreams."><img loading="lazy" src="/fixit.min.svg" srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes="auto" data-title="Loving life and dreams." data-alt="Loving life and dreams." class="logo" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/><span class="header-title-text">我的 Hugo FixIt 网站</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/"
+                
+                
+              ></a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="Loving life and dreams."><img loading="lazy" src="/fixit.min.svg" srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes="auto" data-title="/fixit.min.svg" data-alt="/fixit.min.svg" class="logo" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/><span class="header-title-text">我的 Hugo FixIt 网站</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/"
+                  
+                  
+                ></a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><article class="page single special">
+    <div class="header"><h1 class="single-title animate__animated animate__pulse animate__faster">Spring学习记录</h1></div><div
+      class="content"
+      id="content"
+      
+      
+    ><p>根据雷神《spring注解驱动开发》整理记录知识点</p>
+<h1 id="spring学习记录">Spring学习记录</h1>
+<ol>
+<li>
+<p>本文是一篇spring(4.3.12.release版本)源码相关的文章。本文的源码解析就不按照传统的去贴代码的方式去讲解spring源码了，本文的源码解析以流程的方式来讲解spring在每一步都干了什么，所以谓之曰spring源码导读。。。。</p>
+</li>
+<li>
+<p>在正式开始spring源码导读之前，读者总得知道spring里的各个标签是干啥的吧，因此文中前一部分罗列了spring常见的注解用法。并搞了点SpringAOP和spring事务源码的解析作为后面正式开始的导读的开胃菜</p>
+</li>
+<li>
+<p>介绍完了，让我们开始吧！！！。</p>
+<h2 id="spring注解">spring注解</h2>
+<ul>
+<li>@Configuration 用于标注配置类</li>
+<li>@Bean 结合@Configuration（full mode）使用或结合@Component（light mode）使用。可以导入第三方组件,入方法有参数默认从IOC容器中获取，可以指定initMethod和destroyMethod 指定初始化和销毁方法,多实例对象不会调用销毁方法.</li>
+<li>包扫描@ComponentScan (@ComponentScans可以配置多个扫描,@TypeFilter:指定过滤规则,自己实现TypeFilter类)
+组件(@Service、@Controller、@Repository):包扫描+组件注解导入注解。</li>
+<li>@Scope:设置组件作用域 1.prototype:多例的2.singleton:单例的（默认值）</li>
+<li>@Lazy 懒加载</li>
+<li>@Conditional({Condition}):按照一定的条件进行判断,满足条件给容器中注册Bean,传入Condition数组,，使用时需自己创建类继承Condition然后重写match方法。</li>
+<li>@Import[快速给容器中导入一个组件]
+<ol>
+<li>Import(类名),容器中就会自动注册这个组件，id默认是组件的全名</li>
+<li>ImportSelector：返回需要导入的组件的全类名的数组</li>
+<li>ImportBeanDefinitionRegistrar：手动注册bean</li>
+</ol>
+</li>
+<li>FactoryBean:工厂Bean,交给spring用来生产Bean到spring容器中.可以通过前缀&amp;来获取工厂Bean本身.</li>
+<li>@Value:给属性赋值,也可以使用SpEL和外部文件的值</li>
+<li>@PropertySource:读取外部配置文件中的k/v保存到运行环境中,结合@value使用,或使用ConfigurableEnvironment获取</li>
+<li>@Profile:结合@Bean使用,默认为default环境,可以通过命令行参数来切换环境</li>
+<li>自定义组件使用Spring容器底层的组件:需要让自定义组件实现xxxAware，(例如:ApplicationContextAware),spring在创建对象的时候,会帮我们自动注入。spring通过BeanPostProcessor机制来实现XXXXAware的自动注入。</li>
+</ul>
+</li>
+</ol>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">ApplicationContextProcessor</span><span class="o">.</span><span class="na">java</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">private</span> <span class="kt">void</span> <span class="nf">invokeAwareInterfaces</span><span class="o">(</span><span class="n">Object</span> <span class="n">bean</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">bean</span> <span class="k">instanceof</span> <span class="n">Aware</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="n">bean</span> <span class="k">instanceof</span> <span class="n">ResourceLoaderAware</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="o">((</span><span class="n">ResourceLoaderAware</span><span class="o">)</span><span class="n">bean</span><span class="o">).</span><span class="na">setResourceLoader</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">applicationContext</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="n">bean</span> <span class="k">instanceof</span> <span class="n">ApplicationContextAware</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="o">((</span><span class="n">ApplicationContextAware</span><span class="o">)</span><span class="n">bean</span><span class="o">).</span><span class="na">setApplicationContext</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">applicationContext</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>@Autowried 装配优先级如下:
+<ol>
+<li>使用按照类型去容器中找对应的组件</li>
+<li>按照属性名称去作为组件id去找对应的组件</li>
+</ol>
+</li>
+<li>@Qualifier:指定默认的组件,结合@Autowried使用
+&ndash;标注在构造器:spring创建对象调用构造器创建对象
+&ndash;标注在方法上:</li>
+<li>@Primary:spring自动装配的时候,默认首先bean,配合@Bean使用</li>
+<li>@Resource(JSR250):jsr规范:按照组件名称进行装配</li>
+<li>@Inject(JSR330):jsr规范和@Autowired功能一致,不支持require=false;</li>
+</ul>
+<h2 id="bean生命周期">Bean生命周期:</h2>
+<p><strong>初始化和销毁</strong></p>
+<ol>
+<li>通过@Bean 指定init-method和destroy-method</li>
+<li>实现InitializingBean定义初始化逻辑,实现DisposableBean定义销毁方法</li>
+<li>实现BeanPostProcessor接口的后置拦截器放入容器中，可以拦截bean初始化，并可以在被拦截的Bean的初始化前后进行一些处理工作。</li>
+</ol>
+<p>spring底层常用的BeanPostProcessor：</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">* BeanValidationPostProcessor用来实现数据校验
+</span></span><span class="line"><span class="cl">* AutowireAnnotationBeanPostProcessor,@Autowire实现
+</span></span><span class="line"><span class="cl">* ApplicationContextProcessor实现XXXAware的自动注入。</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>执行时机</strong></p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">doCreateBean</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">populateBean</span><span class="err">（）：给</span><span class="n">bean</span><span class="err">的各种属性赋值</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">initializeBean</span><span class="err">（）：初始化</span><span class="n">bean</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="err">处理</span><span class="n">Aware</span><span class="err">方法</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">applyBeanPostProcessorsBeforeInitialization</span><span class="err">：后置处理器的实例化前拦截</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">invokeInitMethods</span><span class="o">:</span><span class="err">执行</span><span class="nd">@Bean</span><span class="err">指定的</span><span class="n">initMethod</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">applyBeanPostProcessorsAfterInitialization</span><span class="err">：后置处理器的实例化后拦截</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="springaop实现原理">SpringAOP实现原理</h2>
+<p><strong>使用步骤</strong></p>
+<ol>
+<li>@EnableAspectJAutoProxy 开启基于注解的aop模式</li>
+<li>@Aspect：定义切面类，切面类里定义通知</li>
+<li>@PointCut 切入点，可以写切入点表达式，指定在哪个方法切入</li>
+<li>通知方法
+<ul>
+<li>@Before(前置通知)</li>
+<li>@After(后置通知)</li>
+<li>@AfterReturning(返回通知)</li>
+<li>@AfterTrowing(异常通知)@Around(环绕通知)</li>
+</ul>
+</li>
+<li>JoinPoint：连接点,是一个类，配合通知使用，用于获取切入的点的信息</li>
+</ol>
+<p><strong>SpringAop原理</strong></p>
+<ol>
+<li>@EnableAspectJAutoProxy
+<ul>
+<li>@EnableAspectJAutoProxy 通过@Import(AspectJAutoProxyRegistrar.class)给spring容器中导入了一个AnnotationAwareAspectJAutoProxyCreator。</li>
+<li>AnnotationAwareAspectJAutoProxyCreator实现了InstantiationAwareBeanPostProcessor,InstantiationAwareBeanPostProcessor是一个BeanPostProcessor。它可以拦截spring的Bean初始化(Initialization)前后和实例化(Initialization)前后。</li>
+</ul>
+</li>
+<li>AnnotationAwareAspectJAutoProxyCreator的postProcessBeforeInstantiation(bean实例化前)：会通过调用isInfrastructureClass(beanClass)来判断 被拦截的类是否是基础类型的Advice、PointCut、Advisor、AopInfrastructureBean，或者是否是切面（@Aspect），若是则放入adviseBean集合。这里主要是用来处理我们的切面类。</li>
+<li>AnnotationAwareAspectJAutoProxyCreator的BeanPostProcessorsAfterInitialization（bean初始化后）：
+<ol>
+<li>首先找到被拦截的Bean的匹配的增强器（通知方法），这里有切入点表达式匹配的逻辑</li>
+<li>将增强器保存到proxyFactory中，</li>
+<li>根据被拦截的Bean是否实现了接口，spring自动决定使用JdkDynamicAopProxy还是ObjenesisCglibAopProxy</li>
+<li>最后返回被拦截的Bean的代理对象，注册到spring容器中</li>
+</ol>
+</li>
+<li>代理Bean的目标方法执行过程：CglibAopProxy.intercept();
+<ol>
+<li>保存所有的增强器，并处理转换为一个拦截器链</li>
+<li>如果没有拦截器链，就直接执行目标方法</li>
+<li>如果有拦截器链，就将目标方法，拦截器链等信息传入并创建CglibMethodInvocation对象，并调用proceed()方法获取返回值。proceed方法内部会依次执行拦截器链。</li>
+</ol>
+</li>
+</ol>
+<h2 id="spring-声明式事务">spring 声明式事务</h2>
+<p><strong>基本步骤</strong></p>
+<ol>
+<li>配置数据源：DataSource</li>
+<li>配置事务管理器来控制事务：PlatformTransactionManager</li>
+<li>@EnableTransactionManagement开启基于注解的事务管理功能</li>
+<li>给方法上面标注@Transactional标识当前方法是一个事务方法</li>
+</ol>
+<p><strong>声明式事务实现原理</strong></p>
+<ol>
+<li>@EnableTransactionManagement利用TransactionManagementConfigurationSelector给spring容器中导入两个组件：AutoProxyRegistrar和ProxyTransactionManagementConfiguration</li>
+<li>AutoProxyRegistrar给spring容器中注册一个InfrastructureAdvisorAutoProxyCreator，InfrastructureAdvisorAutoProxyCreator实现了InstantiationAwareBeanPostProcessor,InstantiationAwareBeanPostProcessor是一个BeanPostProcessor。它可以拦截spring的Bean初始化(Initialization)前后和实例化(Initialization)前后。利用后置处理器机制在被拦截的bean创建以后包装该bean并返回一个代理对象代理对象执行方法利用拦截器链进行调用（同<strong>springAop</strong>的原理）</li>
+<li>ProxyTransactionManagementConfiguration：是一个spring的配置类,它为spring容器注册了一个BeanFactoryTransactionAttributeSourceAdvisor,是一个事务事务增强器。它有两个重要的字段：AnnotationTransactionAttributeSource和TransactionInterceptor。
+<ol>
+<li>AnnotationTransactionAttributeSource：用于解析事务注解的相关信息</li>
+<li>TransactionInterceptor：事务拦截器，在事务方法执行时，都会调用TransactionInterceptor的invoke-&gt;invokeWithinTransaction方法，这里面通过配置的PlatformTransactionManager控制着事务的提交和回滚。</li>
+</ol>
+</li>
+</ol>
+<h2 id="spring-扩展钩子">Spring 扩展(钩子)</h2>
+<ol>
+<li>BeanFactoryPostProcessor：beanFactory后置处理器，的拦截时机：所有Bean的定义信息已经加载到容器，但还没有被实例化。可以对beanFactory进行一些操作。</li>
+<li>BeanPostProcessor：bean后置处理器，拦截时机：bean创建对象初始化前后进行拦截工作。可以对每一个Bean进行一些操作。</li>
+<li>BeanDefinitionRegistryPostProcessor：是BeanFactoryPostProcessor的子接口，拦截时机：所有Bean的定义信息已经加载到容器，但还没有被实例化，可以对每一个Bean的BeanDefinition进行一些操作。</li>
+<li>ApplicationListener,自定义ApplicationListener实现类并加入到容器中,可以监听spring容器中发布的事件。spring在创建容器的时候（finishRefresh（）方法）会发布ContextRefreshedEvent事件，关闭的时候（doClose()）会发布ContextClosedEvent事件。也可以通过spring容器的publishEvent发布自己的事件。
+<ol>
+<li>事件发布流程：publishEvent方法
+<ol>
+<li>获取事件的多播器，getApplicationEventMulticaster()。</li>
+<li>调用multicastEvent(applicationEvent, eventType)派发事件。获取到所有的ApplicationListener,即getApplicationListeners()，然后同步或者异步的方式执行监听器的onApplicationEvent。</li>
+</ol>
+</li>
+<li>事件的多播器的初始化中（initApplicationEventMulticaster（）），如果容器中没有配置applicationEventMulticaster，就使用SimpleApplicationEventMulticaster。然后获取所有的监听器，并把它们注册到SimpleApplicationEventMulticaster中。</li>
+</ol>
+</li>
+<li>@EventListener(class={})：在普通的业务逻辑的方法上监听事件特定的事件。原理：EventListenerMethodProcessor是一个SmartInitializingSingleton，当所有的单例bean都初始化完以后， 容器会回调该接口的方法afterSingletonsInstantiated(),该方法里会遍历容器中所有的bean，并判断每一个bean里是否带有@EventListener注解的Method，然后创建ApplicationListenerMethodAdapter存储并包装该Method，最后将ApplicationListenerMethodAdapter添加到spring容器中。</li>
+</ol>
+<h2 id="spring源代码分析">Spring源代码分析</h2>
+<p>spring核心逻辑AbstractApplicationContext的refresh()方法如下</p>
+<p>public void refresh() {
+synchronized (this.startupShutdownMonitor) {
+// 刷新前的预准备工作
+prepareRefresh();
+// 提取bean的配置信息并封装成BeanDefinition实例，然后将其添加到注册中心。注册中心是一个ConcurrentHashMap&lt;String,BeanDefinition&gt;类型，key为Bean的名字，value为BeanDefinition实例。
+ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+//对beanFactory进行一些配置，注册一些BeanPostProcessor和一些特殊的Bean。
+prepareBeanFactory(beanFactory);</p>
+<pre><code>        //留给子类在BeanFactory准备工作完成后处理一些工作。
+        postProcessBeanFactory(beanFactory);
+       //调用 BeanFactory的后置处理器。
+       invokeBeanFactoryPostProcessors(beanFactory);
+       //注册Bean的后置处理器。
+        registerBeanPostProcessors(beanFactory);
+        //国际化相关功能
+        initMessageSource();
+        //初始化事件派发器；
+        initApplicationEventMulticaster();
+        // 提供给子容器类，供子容器去实例化其他的特殊的Bean
+        onRefresh();
+        // 处理容器中已有的ApplicationListener
+        registerListeners();
+        //初始化容器中剩余的单实例bean
+        finishBeanFactoryInitialization(beanFactory);
+        //最后一步
+        finishRefresh();
+    
+    }
+}
+</code></pre>
+<h3 id="preparerefresh">prepareRefresh()</h3>
+<ol>
+<li>记录启动时间，设置容器的active和close状态。</li>
+<li>initPropertySources():提供给子容器类，子容器类可覆盖该方法进行一些自定义的属性设置。</li>
+<li>getEnvironment().validateRequiredProperties()：检验属性的合法性</li>
+<li>this.earlyApplicationEvents = new LinkedHashSet<ApplicationEvent>() ：保存容器中的一些早期的事件，待事件多播器创建后执行。</li>
+</ol>
+<h3 id="obtainfreshbeanfactory">obtainFreshBeanFactory()</h3>
+<p>提取bean的配置信息并封装成BeanDefinition实例，然后将其添加到注册中心。注册中心是一个ConcurrentHashMap&lt;String,BeanDefinition&gt;类型，key为Bean的名字，value为BeanDefinition实例。</p>
+<ol>
+<li>refreshBeanFactory：如果当前容器已经有了BeanFactory就销毁原来的BeanFactory。然后创建一个DefaultListableBeanFactory();
+<ul>
+<li>对BeanFactory并进行配置，主要配置是否允许BeanDefinition覆盖，是否允许Bean间的循环引用。</li>
+<li>加载BeanDefinition，解析XML文件和配置文件，将其转换为BeanDefinition，然后保存到DefaultListableBeanFactory的beanDefinitionMap字段中。</li>
+</ul>
+</li>
+<li>getBeanFactory() 简单的返回beanFactory，即DefaultListableBeanFactory。</li>
+</ol>
+<h3 id="preparebeanfactory">prepareBeanFactory（）</h3>
+<ol>
+<li>设置BeanFactory的类加载器、设置支持SPEL表达式的解析器。</li>
+<li>添加ApplicationContextAwareProcessor用于处理XXXAware接口的回调。</li>
+<li>设置忽略一些接口。并注册一些类，这些类可以在bean里直接进行自动装配。</li>
+<li>添加ApplicationListenerDetector用于识别并保存ApplicationListener的子类。</li>
+</ol>
+<h3 id="postprocessbeanfactory">postProcessBeanFactory（）：</h3>
+<p>提供给子容器类，子容器类可以覆盖该方法在BeanFactory准备工作完成后处理一些工作。</p>
+<h3 id="invokebeanfactorypostprocessors">invokeBeanFactoryPostProcessors()</h3>
+<p>执行BeanFactoryPostProcessor类型的监听方法。</p>
+<ul>
+<li>
+<p>BeanFactoryPostProcessor是beanFactory后置处理器，在整个BeanFactory标准初始化完成后进行拦截调用，</p>
+</li>
+<li>
+<p>BeanDefinitionRegistryPostProcessor继承了BeanFactoryPostProcessor，在beanFactory解析完所有的BeanDefinition后拦截调用。</p>
+</li>
+<li>
+<p>BeanFactoryPostProcessor来源</p>
+<ul>
+<li>通过ApplicationContent的addBeanFactoryPostProcessor()方法手动添加自己的拦截器</li>
+<li>系统默认了一些BeanFactoryPostProcessor。例如：ConfigurationClassPostProcessor用来处理@Configuration标注的Spring配置类。</li>
+</ul>
+</li>
+<li>
+<p>调用顺序</p>
+<ol>
+<li>先调用BeanDefinitionRegistryPostProcessor类型的拦截器，</li>
+<li>然后再依次调用实现了PriorityOrdered,Ordered接口的BeanFactoryPostProcessor</li>
+<li>最后调用普通的BeanFactoryPostProcessor</li>
+</ol>
+</li>
+<li>
+<p>BeanFactoryPostProcessor是beanFactory后置处理器，在整个BeanFactory标准初始化完成后进行拦截调用，</p>
+</li>
+<li>
+<p>BeanDefinitionRegistryPostProcessor继承了BeanFactoryPostProcessor，在beanFactory解析完所有的BeanDefinition后拦截调用。</p>
+</li>
+<li>
+<p>BeanFactoryPostProcessor来源</p>
+<ul>
+<li>通过ApplicationContent的addBeanFactoryPostProcessor()方法手动添加自己的拦截器</li>
+<li>系统默认了一些BeanFactoryPostProcessor。例如：ConfigurationClassPostProcessor用来处理@Configuration标注的Spring配置类。</li>
+</ul>
+</li>
+<li>
+<p>调用顺序</p>
+<ol>
+<li>先调用BeanDefinitionRegistryPostProcessor类型的拦截器，</li>
+<li>然后再依次调用实现了PriorityOrdered,Ordered接口的BeanFactoryPostProcessor</li>
+<li>最后调用普通的BeanFactoryPostProcessor</li>
+</ol>
+</li>
+</ul>
+<h3 id="registerbeanpostprocessors">registerBeanPostProcessors()</h3>
+<p>注册Bean的后置处理器。</p>
+<ol>
+<li>
+<p>从beanFactory里获取所有BeanPostProcessor类型的Bean的名称。</p>
+</li>
+<li>
+<p>调用beanFactory的getBean方法并传入每一个BeanPostProcesso类型的Bean名称，从容器中获取该Bean的实例。</p>
+</li>
+<li>
+<ol>
+<li>第一步向beanFactory注册实现了PriorityOrdered的BeanPostProcessor类型的Bean实例。</li>
+<li>第二步向beanFactory注册实现了Ordered的BeanPostProcessor类型的Bean实例。</li>
+<li>第三步向beanFactory注册普通的BeanPostProcessor类型的Bean实例。</li>
+<li>最后一步向beanFactory重新注册实现了MergedBeanDefinitionPostProcessor的BeanPostProcessor类型的Bean实例</li>
+</ol>
+</li>
+<li>
+<p>向beanFactory注册BeanPostProcessor的过程就是简单的将实例保存到beanFactory的beanPostProcessors属性中。</p>
+</li>
+</ol>
+<h3 id="initmessagesource">initMessageSource()</h3>
+<p>国际化相关功能</p>
+<ol>
+<li>看容器中是否有id为messageSource的，类型是MessageSource的Bean实例。如果有赋值给messageSource，如果没有自己创建一个DelegatingMessageSource。</li>
+<li>把创建好的MessageSource注册在容器中，以后获取国际化配置文件的值的时候，可以自动注入MessageSource。</li>
+</ol>
+<h3 id="initapplicationeventmulticaster">initApplicationEventMulticaster()</h3>
+<p>初始化事件派发器；</p>
+<ol>
+<li>看容中是否有名称为applicationEventMulticaster的，类型是ApplicationEventMulticaster的Bean实例。如果没有就创建一个SimpleApplicationEventMulticaster。</li>
+<li>把创建好的ApplicationEventMulticaster添加到BeanFactory中。</li>
+</ol>
+<h3 id="onrefresh">onRefresh()：</h3>
+<p>提供给子容器类，供子容器去实例化其他的特殊的Bean。</p>
+<h3 id="registerlisteners">registerListeners()：</h3>
+<p>处理容器中已有的ApplicationListener。</p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl"><span class="k">1.</span> 从容器中获得所有的ApplicationListener
+</span></span><span class="line"><span class="cl"><span class="k">2.</span> 将每个监听器添加到事件派发器（ApplicationEventMulticaster）中；
+</span></span><span class="line"><span class="cl">3. 处理之前步骤产生的事件；</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="finishbeanfactoryinitialization">finishBeanFactoryInitialization()：</h3>
+<p>初始化容器中剩余的单实例bean：拿到剩余的所有的BeanDefinition，依次调用getBean方法（详看beanFactory.getBean的执行流程）</p>
+<h3 id="finishrefresh">finishRefresh()：</h3>
+<p>最后一步。</p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-markdown" data-lang="markdown"><span class="line"><span class="cl"><span class="k">1.</span> 初始化和生命周期有关的后置处理器；LifecycleProcessor，如果容器中没有指定处理就创建一个DefaultLifecycleProcessor加入到容器。
+</span></span><span class="line"><span class="cl"><span class="k">2.</span> 获取容器中所有的LifecycleProcessor回调onRefresh()方法。
+</span></span><span class="line"><span class="cl">3. 发布容器刷新完成事件ContextRefreshedEvent。</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="configurationclasspostprocessor处理configuration的过程">ConfigurationClassPostProcessor处理@Configuration的过程：</h3>
+<ol>
+<li>先从主从中心取出所有的BeanDefinition。依次判断，若一个BeanDefinition是被@Configuration标注的，spring将其标记为FullMode，否则若一个BeanDefinition没有被@Configuration标注，但有被@Bean标注的方法，spring将其标记为LightMode。筛选出所有候选配置BeanDefinition（FullMode和LightMode）</li>
+<li>创建一个ConfigurationClassParser，调用parse方法解析每一个配置类。
+<ol>
+<li>解析@PropertySources,将解析结果设置到Environment</li>
+<li>利用ComponentScanAnnotationParser，将@ComponentScans标签解析成BeanDefinitionHolder。再迭代解析BeanDefinitionHolder</li>
+<li>解析@Import，@ImportResource</li>
+<li>将@Bean解析为MethodMetadata，将结果保存到ConfigurationClass中。最终ConfigurationClass会被保存到ConfigurationClassParser的configurationClasses中。</li>
+</ol>
+</li>
+<li>调用ConfigurationClassParser的loadBeanDefinitions方法，加载解析结果到注册中。
+<ol>
+<li>从利用ComponentScanAnnotationParser的configurationClasses获取所有的ConfigurationClass，依次调用loadBeanDefinitionsForConfigurationClass方法。</li>
+<li>loadBeanDefinitionsForConfigurationClass会将每一个BeanMethod转为ConfigurationClassBeanDefinition，最后将其添加到spring的注册中心。</li>
+</ol>
+</li>
+</ol>
+<h3 id="beanfactorygetbean方法执行的过程">beanFactory.getBean方法执行的过程</h3>
+<ol>
+<li>首先将方法传入的beanName进行转换：先去除FactoryBean前缀（&amp;符）如果传递的beanName是别名，则通过别名找到bean的原始名称。</li>
+<li>根据名称先从singletonObjects（一个Map类型的容）获取bean实例。如果能获取到就先判断该bean实例是否实现了FactoryBean，如果是FactoryBean类型的bean实例，就通过FactoryBean获取Bean。然后直接返回该bean实例。getBean方法结束。</li>
+<li>如果从singletonObjects没有获取到bean实例就开始创建Bean的过程。
+<ol>
+<li>首先标记该Bean处于创建状态。</li>
+<li>根据Bean的名称找到BeanDefinition。查看该Bean是否有前置依赖的Bean。若有则先创建该Bean前置依赖的Bean。</li>
+<li>spring调用AbstractAutowireCapableBeanFactory的createBean方法并传入BeanDefinition开始创建对象。先调用resolveBeforeInstantiation给BeanPostProcessor一个机会去返回一个代理对象去替代目标Bean的实例。</li>
+<li>如果BeanPostProcessor没有返回Bean的代理就通过doCreateBean方法创建对象。
+<ol>
+<li>首先确定Bean的构造函数，如果有有参构造器，先自动装配有参构造器，默认使用无参数构造器。</li>
+<li>选择一个实例化策略去实例化bean。默认使用CglibSubclassingInstantiationStrategy。该策略模式中,首先判断bean是否有方法被覆盖,如果没有则直接通过反射的方式来创建,如果有的话则通过CGLIB来实例化bean对象. 把创建好的bean对象包裹在BeanWrapper里。</li>
+<li>调用MergedBeanDefinitionPostProcessor的postProcessMergedBeanDefinition</li>
+<li>判断容器是否允许循环依赖，如果允许循环依赖，就创建一个ObjectFactory类并实现ObjectFactory接口的唯一的一个方法getObject（）用于返回Bean。然后将该ObjectFactory添加到singletonFactories中。</li>
+<li>调用populateBean为bean实例赋值。在赋值之前执行InstantiationAwareBeanPostProcessor的postProcessAfterInstantiation和postProcessPropertyValues方法。</li>
+<li>调用initializeBean初始化bean。如果Bean实现了XXXAware，就先处理对应的Aware方法。然后调用beanProcessor的postProcessBeforeInitialization方法。再以反射的方式调用指定的bean指定的init方法。最后调用beanProcessor的postProcessAfterInitialization方法。</li>
+<li>调用registerDisposableBeanIfNecessary，将该bean保存在一个以beanName为key，以包装了bean引用的DisposableBeanAdapter，为value的map中，在spring容器关闭时，遍历这个map来获取需要调用bean来依次调用Bean的destroyMethod指定的方法。</li>
+</ol>
+</li>
+<li>将新创建出来的Bean保存到singletonObjects中</li>
+</ol>
+</li>
+</ol>
+<h2 id="spring原理补充">spring原理补充</h2>
+<h3 id="spring解决循环依赖">spring解决循环依赖</h3>
+<p><strong>以类A，B互相依赖注入为例</strong></p>
+<ol>
+<li>根据类A的名称先从singletonObjects获取Bean实例，发现获取不到，就通过doGetBean方法开始创建Bean的流程。</li>
+<li>根据A的名称找到对应的BeanDefinition，通过doCreateBean（）方法创建对象，先确定类A的构造函数，然后选择一个实例化策略去实例化类A。</li>
+<li>判断容器是否允许循环依赖，如果允许循环依赖，就创建一个ObjectFactory类并实现ObjectFactory接口的唯一的一个方法getObject（）用于返回类A。然后将该ObjectFactory添加到singletonFactories中。</li>
+<li>调用populateBean（）为类A进行属性赋值，发现需要依赖类B，此时类B尚未创建，启动创建类B的流程。
+<ol>
+<li>根据类B的名称先从singletonObjects获取Bean实例，发现获取不到，就开始通过doGetBean方法开始创建Bean的流程</li>
+<li>找到类B对应的BeanDefinition，确认B的构造函数，然后实例化B。</li>
+<li>判断容器是否允许循环依赖，创建一个ObjectFactory并实现getObject（）方法，用于返回类B，并添加到singletonFactories中。</li>
+<li>调用populateBean（）为类B进行属性赋值，发现需要依赖类A，调用getSingleton方法获取A：A现在已存在于singletonFactories中，getSingleton将A从singletonFactories方法中移除并放入earlySingletonObjects中。</li>
+<li>调用getSingleton（）方法获取B：getSingleton将A从singletonFactories方法中移除并放入earlySingletonObjects中。</li>
+<li>调用initializeBean初始化bean，最后将新创建出来的类B保存到singletonObjects中</li>
+</ol>
+</li>
+<li>调用getSingleton（）方法获取A，这时A已在earlySingletonObjects中了，就直接返回A</li>
+<li>调用initializeBean初始化bean，最后将新创建出来的类B保存到singletonObjects中。</li>
+</ol>
+<h3 id="autowire-实现原理">@Autowire 实现原理</h3>
+<p>上面介绍<strong>beanFactory.getBean方法执行的过程</strong>中提到：populateBean为bean实例赋值。在赋值之前执行InstantiationAwareBeanPostProcessor的postProcessAfterInstantiation和postProcessPropertyValues方法。@Autowire由AutowiredAnnotationBeanPostProcessor完成，它实现了InstantiationAwareBeanPostProcessor。
+AutowiredAnnotationBeanPostProcessor执行过程：</p>
+<ol>
+<li>postProcessAfterInstantiation方法执行，直接return null。</li>
+<li>postProcessPropertyValues方法执行，主要逻辑在此处理。待补充。。。。。</li>
+</ol></div></article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.2.18"><img class="fixit-icon" src="/fixit.min.svg" alt="FixIt logo" />&nbsp;FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2021 - 2023</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">xxxx</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/autocomplete/autocomplete.min.js" defer></script><script src="/lib/lunr/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验。"},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"enablePWA":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

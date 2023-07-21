@@ -1,218 +1,1280 @@
-<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>装饰者模式 - 好记性不如烂笔头</title><meta name=author content><meta name=author-link content><meta name=description content="装饰者模式"><meta name=keywords content="设计模式"><meta itemprop=name content="装饰者模式"><meta itemprop=description content="装饰者模式"><meta itemprop=datePublished content="2022-12-26T00:00:00+00:00"><meta itemprop=dateModified content="2022-12-26T00:00:00+00:00"><meta itemprop=wordCount content="4059"><meta itemprop=keywords content="设计模式,"><meta property="og:title" content="装饰者模式"><meta property="og:description" content="装饰者模式"><meta property="og:type" content="article"><meta property="og:url" content="/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-12-26T00:00:00+00:00"><meta property="article:modified_time" content="2022-12-26T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="装饰者模式"><meta name=twitter:description content="装饰者模式"><meta name=application-name content="FixIt"><meta name=apple-mobile-web-app-title content="FixIt"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical href=/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/><link rel=prev href=/post/git%E4%B8%8A%E4%BC%A0%E4%BB%A3%E7%A0%81%E6%8A%A5%E9%94%99ssh-connect-to-host-github.com-port-22-connection-timed-out%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/><link rel=next href=/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"装饰者模式","inLanguage":"zh-cn","mainEntityOfPage":{"@type":"WebPage","@id":"\/post\/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F\/"},"genre":"post","keywords":"设计模式","wordcount":4059,"url":"\/post\/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F\/","datePublished":"2022-12-26T00:00:00+00:00","dateModified":"2022-12-26T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wang"},"description":""}</script></head><body data-header-desktop=sticky data-header-mobile=auto><script>(window.localStorage?.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("data-theme","dark")</script><div class=wrapper data-page-style=normal><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=好记性不如烂笔头 data-alt=好记性不如烂笔头 class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li><li class="menu-item language-switch"><span role=button aria-label=选择语言 title=选择语言><i class="fa-solid fa-language fa-fw" aria-hidden=true></i></span><ul class=sub-menu><li class=menu-item>没有更多翻译</li></ul></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=/fixit.min.svg data-alt=/fixit.min.svg class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item menu-system"><span class="menu-system-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></span><span class="menu-system-item language-switch">
-<span role=button aria-label=选择语言 title=选择语言>中文<i class="dropdown-icon fa-solid fa-chevron-down" aria-hidden=true></i></span>
-<select class=language-select onchange="location=this.value"><option disabled>没有更多翻译</option></select></span></li></ul></nav></div></header><main class=container><article class="page single special"><div class=header><h1 class="single-title animate__animated animate__pulse animate__faster">装饰者模式</h1></div><div class=content id=content><p>装饰者模式</p><h3 id=装饰者模式>装饰者模式</h3><p>​ <strong>装饰者模式的核心思想是通过创建一个装饰对象（即装饰者），动态扩展目标对象的功能，并且不会改变目标对象的结构，提供了一种比继承更灵活的替代方案。</strong></p><p>​ 我们在进行软件开发时要想实现可维护、可扩展，就需要尽量复用代码，并且降低代码的耦合度，而设计模式就是一种可以提高代码可复用性、可维护性、可扩展性以及可读性的解决方案。</p><p>大家熟知的23种设计模式，可以分为创建型模式、结构型模式和行为型模式三大类。其中，结构型模式用于设计类或对象的组合方式，以便实现更加灵活的结构。结构型模式又可划分为类结构型模式和对象结构型模式，前者通过继承来组合接口或类，后者通过组合或聚合来组合对象</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpeg srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpeg, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpeg 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpeg 2x" sizes=auto data-title=设计模式 data-alt=设计模式 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>装饰者模式的核心思想是通过创建一个装饰对象（即装饰者），动态扩展目标对象的功能，并且不会改变目标对象的结构，提供了一种比继承更灵活的替代方案。需要注意的是，装饰对象要与目标对象实现相同的接口，或继承相同的抽象类；另外装饰对象需要持有目标对象的引用作为成员变量，而具体的赋能任务往往通过带参构造方法来完成。</p><h4 id=-结构><strong>▐</strong> 结构</h4><p>装饰者模式包含四种类，分别是抽象构件类、具体构件类、抽象装饰者类、具体装饰者类，它们各自负责完成特定任务，并且相互之间存在紧密联系。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223328253.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223328253.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223328253.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223328253.png 2x" sizes=auto data-title=image-20221226223328253 data-alt=image-20221226223328253 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223407555.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223407555.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223407555.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223407555.png 2x" sizes=auto data-title=image-20221226223407555 data-alt=image-20221226223407555 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>▐ 使用
-有了上述的基本概念，我们将装饰者模式的使用步骤概括为：</p><p>step1：创建抽象构件类，定义目标对象的抽象类、将要扩展的功能定义成抽象方法；</p><p>step2：创建具体构件类，定义目标对象的实现类，实现抽象构件中声明的抽象方法；</p><p>step3：创建抽象装饰者类，维护一个指向抽象构件的引用，并传入构造函数以调用具体构件的实现方法，给具体构件增加功能；</p><p>step4：创建具体装饰者类，可以调用抽象装饰者类中定义的方法，并定义若干个新的方法，扩展目标对象的功能。</p><p>我们在淘宝上购物时，经常会遇到很多平台和商家的优惠活动：满减、聚划算站内的百亿补贴券、店铺折扣等等。那么在商品自身原价的基础上，叠加了多种优惠活动后，后台应该怎样计算最终的下单结算金额呢？下面就以这种优惠叠加结算的场景为例，简单分析装饰者模式如何使用。</p><div class=highlight id=id-1><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#080;font-style:italic>// 定义抽象构件：抽象商品
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>interface</span> <span style=color:#00f>ItemComponent</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>// 商品价格
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>double</span> <span style=color:#00a000>checkoutPrice</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>// 定义具体构件：具体商品
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>ConcreteItemCompoment</span> <span style=color:#a2f;font-weight:700>implements</span> ItemComponent <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>// 原价
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f>@Override</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>double</span> <span style=color:#00a000>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#666>200.0</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>// 定义抽象装饰者：创建传参(抽象构件)构造方法，以便给具体构件增加功能
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>abstract</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>ItemAbsatractDecorator</span> <span style=color:#a2f;font-weight:700>implements</span> ItemComponent <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>protected</span> ItemComponent itemComponent<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>ItemAbsatractDecorator</span><span style=color:#666>(</span>ItemComponent myItem<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>itemComponent</span> <span style=color:#666>=</span> myItem<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#a2f>@Overrid</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>double</span> <span style=color:#00a000>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>itemComponent</span><span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>// 定义具体装饰者A：增加店铺折扣八折
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>ShopDiscountDecorator</span> <span style=color:#a2f;font-weight:700>extends</span> ItemAbsatractDecorator <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>ShopDiscountDecorator</span><span style=color:#666>(</span>ItemComponent myItem<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>(</span>myItem<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>  
-</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>double</span> <span style=color:#00a000>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#666>0.8</span> <span style=color:#666>*</span> <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>// 定义具体装饰者B：增加满200减20功能，此处忽略判断逻辑
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>FullReductionDecorator</span> <span style=color:#a2f;font-weight:700>extends</span> ItemAbsatractDecorator <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>FullReductionDecorator</span><span style=color:#666>(</span>ItemComponent myItem<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>(</span>myItem<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>  
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>double</span> <span style=color:#00a000>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>-</span> <span style=color:#666>20</span><span style=color:#666>;</span>  
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>// 定义具体装饰者C：增加百亿补贴券50
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>BybtCouponDecorator</span> <span style=color:#a2f;font-weight:700>extends</span> ItemAbsatractDecorator <span style=color:#666>{</span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>BybtCouponDecorator</span><span style=color:#666>(</span>ItemComponent myItem<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>(</span>myItem<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>double</span> <span style=color:#00a000>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>-</span> <span style=color:#666>50</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>//客户端调用
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00a000>userPayForItem</span><span style=color:#666>()</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>main</span><span style=color:#666>(</span>String<span style=color:#666>[]</span> args<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        ItemCompoment item <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> ConcreteItemCompoment<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        System<span style=color:#666>.</span><span style=color:#b44>out</span><span style=color:#666>.</span><span style=color:#b44>println</span><span style=color:#666>(</span><span style=color:#b44>&#34;宝贝原价：&#34;</span> <span style=color:#666>+</span> item<span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>+</span> <span style=color:#b44>&#34; 元&#34;</span><span>）</span><span style=color:#666>;</span> 
-</span></span><span style=display:flex><span>        item <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> ShopDiscountDecorator<span style=color:#666>(</span>item<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        System<span style=color:#666>.</span><span style=color:#b44>out</span><span style=color:#666>.</span><span style=color:#b44>println</span><span style=color:#666>(</span><span style=color:#b44>&#34;使用店铺折扣后需支付：&#34;</span> <span style=color:#666>+</span> item<span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>+</span> <span style=color:#b44>&#34; 元&#34;</span><span>）</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>        item <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> FullReductionDecorator<span style=color:#666>(</span>item<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        System<span style=color:#666>.</span><span style=color:#b44>out</span><span style=color:#666>.</span><span style=color:#b44>println</span><span style=color:#666>(</span><span style=color:#b44>&#34;使用满200减20后需支付：&#34;</span> <span style=color:#666>+</span> item<span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>+</span> <span style=color:#b44>&#34; 元&#34;</span><span>）</span><span style=color:#666>;</span>                
-</span></span><span style=display:flex><span>        item <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> BybtCouponDecorator<span style=color:#666>(</span>item<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        System<span style=color:#666>.</span><span style=color:#b44>out</span><span style=color:#666>.</span><span style=color:#b44>println</span><span style=color:#666>(</span><span style=color:#b44>&#34;使用百亿补贴券后需支付：&#34;</span> <span style=color:#666>+</span> item<span style=color:#666>.</span><span style=color:#b44>checkoutPrice</span><span style=color:#666>()</span> <span style=color:#666>+</span> <span style=color:#b44>&#34; 元&#34;</span><span>）</span><span style=color:#666>;</span>      
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span></span></span></code></pre></div><h4 id=-结果输出><strong>▐</strong> <strong>结果输出</strong></h4><div class=highlight id=id-2><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span>宝贝原价：</span><span style=color:green;font-weight:700>200</span>.<span style=color:#00f>0</span> <span>元</span>
-</span></span><span style=display:flex><span><span>使用店铺折扣后需支付：</span><span style=color:green;font-weight:700>160</span>.<span style=color:#00f>0</span> <span>元</span>
-</span></span><span style=display:flex><span><span>使用满</span><span style=color:green;font-weight:700>200</span><span>减</span><span style=color:green;font-weight:700>20</span><span>后需支付：</span><span style=color:green;font-weight:700>140</span>.<span style=color:#00f>0</span> <span>元</span>
-</span></span><span style=display:flex><span><span>使用百亿补贴券后需支付：</span><span style=color:green;font-weight:700>90</span>.<span style=color:#00f>0</span> <span>元</span></span></span></code></pre></div><h4 id=-uml图image-20221226223613999httpsbucket-typora-kwoss-cn-beijingaliyuncscomtypora-imageimage-20221226223613999png><strong>▐</strong> <strong>UML图</strong><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223613999.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223613999.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223613999.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223613999.png 2x" sizes=auto data-title=image-20221226223613999 data-alt=image-20221226223613999 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></h4><p>▐ 比较分析</p><p>VS 继承
-装饰者模式和继承关系都是要对目标类进行功能扩展，但装饰模式可以提供比继承更多的灵活性：继承是静态添加功能，在系统运行前就会确定下来；装饰者模式是动态添加、删除功能。</p><p>比如，一个对象需要具备 10 种功能，但客户端可能要求分阶段使用对象功能：在第一阶段只执行第 1-8 项功能，第二阶段执行第 3-10 项功能，这种场景下只需先定义好第 3-8 项功能方法。在程序运行的第一个阶段，使用具体装饰者 A 添加 1、2 功能；在第二个运行阶段，使用具体装饰者 B 添加 9、10 功能。而继承关系难以实现这种需求，它必须在编译期就定义好要使用的功能。</p><p>VS 代理模式
-装饰者模式常常被拿来和代理模式比较，两者都要实现目标类的相同接口、声明一个目标对象，并且都可以在不修改目标类的前提下进行方法扩展，整体设计思路非常相似。那么两者的区别是什么呢？</p><p>首先，装饰者模式的重点在于增强目标对象功能，而代理模式的重点在于保护和隐藏目标对象。其中，装饰者模式需要客户端明确知道目标类，才能对其功能进行增强；代理模式要求客户端对目标类进行透明访问，借助代理类来完成相关控制功能（如日志记录、缓存设置等），隐藏目标类的具体信息。可见，代理类与目标类的关系往往在编译时就确定下来，而装饰者类在运行时动态构造而成。</p><p>其次，两者获取目标类的方式不同。装饰者模式是将目标对象作为参数传给构造方法，而代理模式是通过在代理类中创建目标对象的一个实例。</p><p>最后，通过上述示例可发现，装饰者模式会使用一系列具体装饰者类来增强目标对象的功能，产生了一种连续、叠加的效应；而代理模式是在代理类中一次性为目标对象添加功能。</p><p>﻿</p><p>VS 适配器模式
-两者都属于包装式行为，即当一个类不能满足需求时，创建辅助类进行包装以满足变化的需求。但是装饰者模式的装饰者类和被装饰类都要实现相同接口，或者装饰类是被装饰类的子类；而适配器模式中，适配器和被适配的类可以有不同接口，并且可能会有部分接口重合。</p><h4 id=-jdk源码赏析><strong>▐</strong> <strong>JDK源码赏析</strong></h4><p>Java I/O标准库是装饰者模式在Java语言中非常经典的应用实例。</p><p>如下图所示，InputStream 相当于抽象构件，FilterInputStream 类似于抽象装饰者，它的四个子类等同于具体装饰者。其中，FilterInputStream 中含有被装饰类 InputStream 的引用，其具体装饰者及各自功能为：PushbackInputStream 能弹出一个字节的缓冲区，可将输入流放到回退流中；DataInputStream 与 DataOutputStream搭配使用，用来装饰其它输入流，允许应用程序以一种与机器无关的方式从底层输入流中读取基本 Java 数据类型；BufferedInputStream 使用缓冲数组提供缓冲输入流功能，在每次调用 read() 方法时优先从缓冲区读取数据，比直接从物理数据源读取数据的速度更快；LineNumberInputStream 提供输入流过滤功能，可以跟踪输入流中的行号（以回车符、换行符标记换行）。</p><p><img loading=lazy src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223808495.png srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223808495.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223808495.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223808495.png 2x" sizes=auto data-title=image-20221226223808495 data-alt=image-20221226223808495 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>FilterInputStream 是所有装饰器类的抽象类，提供特殊的输入流控制。下面源码省略了 skip、available、mark、reset、markSupported 方法，这些方法也都委托给了 InputStream 类。其中， InputStream 提供装饰器类的接口，因而此类并没有对 InputStream 的功能做任何扩展，其扩展主要交给其子类来实现。</p><div class=highlight id=id-3><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>FilterInputStream</span> <span style=color:#a2f;font-weight:700>extends</span> InputStream <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//维护一个 InputStream 对象
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>protected</span> <span style=color:#a2f;font-weight:700>volatile</span> InputStream in<span style=color:#666>;</span>  
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//构造方法参数需要一个 inputStream
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>protected</span> <span style=color:#00a000>FilterInputStream</span><span style=color:#666>(</span>InputStream in<span style=color:#666>)</span> <span style=color:#666>{</span>     
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>in</span> <span style=color:#666>=</span> in<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//委托给 InputStream
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>int</span> <span style=color:#00a000>read</span><span style=color:#666>()</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> in<span style=color:#666>.</span><span style=color:#b44>read</span><span style=color:#666>();</span>                            
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//委托给 InputStream
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>close</span><span style=color:#666>()</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>         
-</span></span><span style=display:flex><span>        in<span style=color:#666>.</span><span style=color:#b44>close</span><span style=color:#666>();</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    
-</span></span><span style=display:flex><span>    <span style=color:#666>.......</span>
-</span></span><span style=display:flex><span>   
-</span></span><span style=display:flex><span><span style=color:#666>}</span></span></span></code></pre></div><p>由于源码太长，这里先以 PushbackInputStream 为例，展示 FilterInputStream 的具体装饰者的底层实现，大家感兴趣的话可以自行查阅其它源码哦。PushbackInputStream 内部维护了一个 pushback buf 缓冲区，可以帮助我们试探性地读取数据流，对于不想要的数据也可以返还回去。</p><div class=highlight id=id-4><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>PushbackInputStream</span> <span style=color:#a2f;font-weight:700>extends</span> FilterInputStream <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//缓冲区
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>protected</span> <span style=color:#0b0;font-weight:700>byte</span><span style=color:#666>[]</span> buf<span style=color:#666>;</span>       
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>protected</span> <span style=color:#0b0;font-weight:700>int</span> pos<span style=color:#666>;</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>ensureOpen</span><span style=color:#666>()</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>in <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>)</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> IOException<span style=color:#666>(</span><span style=color:#b44>&#34;Stream closed&#34;</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//构造函数可以指定返回的字节个数
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>PushbackInputStream</span><span style=color:#666>(</span>InputStream in<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> size<span style=color:#666>)</span> <span style=color:#666>{</span>      
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>(</span>in<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>size <span style=color:#666>&lt;=</span> <span style=color:#666>0</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> IllegalArgumentException<span style=color:#666>(</span><span style=color:#b44>&#34;size &lt;= 0&#34;</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//初始化缓冲区的大小
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>buf</span> <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> <span style=color:#0b0;font-weight:700>byte</span><span style=color:#666>[</span>size<span style=color:#666>];</span>  
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//设置读取的位置
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>pos</span> <span style=color:#666>=</span> size<span style=color:#666>;</span>                                        
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//默认回退一个
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>PushbackInputStream</span><span style=color:#666>(</span>InputStream in<span style=color:#666>)</span> <span style=color:#666>{</span>                
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>(</span>in<span style=color:#666>,</span> <span style=color:#666>1</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>int</span> <span style=color:#00a000>read</span><span style=color:#666>()</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//确保流存在
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        ensureOpen<span style=color:#666>();</span> 
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//如果要读取的位置在缓冲区里面
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>pos <span style=color:#666>&lt;</span> buf<span style=color:#666>.</span><span style=color:#b44>length</span><span style=color:#666>)</span> <span style=color:#666>{</span> 
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//返回缓冲区中的内容
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            <span style=color:#a2f;font-weight:700>return</span> buf<span style=color:#666>[</span>pos<span style=color:#666>++]</span> <span style=color:#666>&amp;</span> <span style=color:#666>0xff</span><span style=color:#666>;</span>                           
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//否则调用超类的读函数
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>.</span><span style=color:#b44>read</span><span style=color:#666>();</span>                                    
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//读取指定的长度
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>int</span> <span style=color:#00a000>read</span><span style=color:#666>(</span><span style=color:#0b0;font-weight:700>byte</span><span style=color:#666>[]</span> b<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> off<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> len<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>    
-</span></span><span style=display:flex><span>         ensureOpen<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>b <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> NullPointerException<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span> <span style=color:#a2f;font-weight:700>else</span> <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>off <span style=color:#666>&lt;</span> <span style=color:#666>0</span> <span style=color:#666>||</span> len <span style=color:#666>&lt;</span> <span style=color:#666>0</span> <span style=color:#666>||</span> len <span style=color:#666>&gt;</span> b<span style=color:#666>.</span><span style=color:#b44>length</span> <span style=color:#666>-</span> off<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> IndexOutOfBoundsException<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span> <span style=color:#a2f;font-weight:700>else</span> <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>len <span style=color:#666>==</span> <span style=color:#666>0</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> <span style=color:#666>0</span><span style=color:#666>;</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span> 
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//缓冲区长度减去读取位置
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#0b0;font-weight:700>int</span> avail <span style=color:#666>=</span> buf<span style=color:#666>.</span><span style=color:#b44>length</span> <span style=color:#666>-</span> pos<span style=color:#666>;</span>  
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//如果大于0，表明部分数据可以从缓冲区读取
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>avail <span style=color:#666>&gt;</span> <span style=color:#666>0</span><span style=color:#666>)</span> <span style=color:#666>{</span>    
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//如果要读取的长度小于可从缓冲区读取的字符
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>len <span style=color:#666>&lt;</span> avail<span style=color:#666>)</span> <span style=color:#666>{</span> 
-</span></span><span style=display:flex><span>                <span style=color:#080;font-style:italic>//修改可读取值为实际要读的长度
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>                avail <span style=color:#666>=</span> len<span style=color:#666>;</span>                    
-</span></span><span style=display:flex><span>            <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//将buf中的数据复制到b中
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            System<span style=color:#666>.</span><span style=color:#b44>arraycopy</span><span style=color:#666>(</span>buf<span style=color:#666>,</span> pos<span style=color:#666>,</span> b<span style=color:#666>,</span> off<span style=color:#666>,</span> avail<span style=color:#666>);</span> 
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//修改pos的值
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            pos <span style=color:#666>+=</span> avail<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//修改off偏移量的值
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            off <span style=color:#666>+=</span> avail<span style=color:#666>;</span>     
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//修改len的值 
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            len <span style=color:#666>-=</span> avail<span style=color:#666>;</span>                               
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//如果从缓冲区读取的数据不够
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>len <span style=color:#666>&gt;</span> <span style=color:#666>0</span><span style=color:#666>)</span> <span style=color:#666>{</span>  
-</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//从流中读取
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            len <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>super</span><span style=color:#666>.</span><span style=color:#b44>read</span><span style=color:#666>(</span>b<span style=color:#666>,</span> off<span style=color:#666>,</span> len<span style=color:#666>);</span>              
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>len <span style=color:#666>==</span> <span style=color:#666>-</span><span style=color:#666>1</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>                <span style=color:#a2f;font-weight:700>return</span> avail <span style=color:#666>==</span> <span style=color:#666>0</span> <span style=color:#666>?</span> <span style=color:#666>-</span><span style=color:#666>1</span> <span style=color:#666>:</span> avail<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>            <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> avail <span style=color:#666>+</span> len<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> avail<span style=color:#666>;</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//不读字符b
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>unread</span><span style=color:#666>(</span><span style=color:#0b0;font-weight:700>int</span> b<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>      
-</span></span><span style=display:flex><span>        ensureOpen<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>pos <span style=color:#666>==</span> <span style=color:#666>0</span><span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> IOException<span style=color:#666>(</span><span style=color:#b44>&#34;Push back buffer is full&#34;</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//实际就是修改缓冲区中的值，同时pos后退
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        buf<span style=color:#666>[--</span>pos<span style=color:#666>]</span> <span style=color:#666>=</span> <span style=color:#666>(</span><span style=color:#0b0;font-weight:700>byte</span><span style=color:#666>)</span>b<span style=color:#666>;</span>                           
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>unread</span><span style=color:#666>(</span><span style=color:#0b0;font-weight:700>byte</span><span style=color:#666>[]</span> b<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> off<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> len<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        ensureOpen<span style=color:#666>();</span>
-</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>len <span style=color:#666>&gt;</span> pos<span style=color:#666>)</span> <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>throw</span> <span style=color:#a2f;font-weight:700>new</span> IOException<span style=color:#666>(</span><span style=color:#b44>&#34;Push back buffer is full&#34;</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
-</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//修改缓冲区中的值，pos后退多个
-</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        pos <span style=color:#666>-=</span> len<span style=color:#666>;</span>         
-</span></span><span style=display:flex><span>        System<span style=color:#666>.</span><span style=color:#b44>arraycopy</span><span style=color:#666>(</span>b<span style=color:#666>,</span> off<span style=color:#666>,</span> buf<span style=color:#666>,</span> pos<span style=color:#666>,</span> len<span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>unread</span><span style=color:#666>(</span><span style=color:#0b0;font-weight:700>byte</span><span style=color:#666>[]</span> b<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> IOException <span style=color:#666>{</span>
-</span></span><span style=display:flex><span>        unread<span style=color:#666>(</span>b<span style=color:#666>,</span> <span style=color:#666>0</span><span style=color:#666>,</span> b<span style=color:#666>.</span><span style=color:#b44>length</span><span style=color:#666>);</span>
-</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
-</span></span><span style=display:flex><span><span style=color:#666>}</span></span></span></code></pre></div><p>▐ 优点</p><p>提供比继承更加灵活的扩展功能，通过叠加不同的具体装饰者的方法，动态地增强目标类的功能。</p><p>装饰者和被装饰者可以独立发展，不会相互耦合，比如说我们想再加一个炒河粉只需创建一个炒河粉类继承FastFood即可，而想要增加火腿肠配料就增加一个类去继承 Garnish 抽象装饰者。</p><p>▐ 缺点</p><p>使用装饰模式，可以比使用继承关系创建更少的类，使设计比较易于进行。然而，多层装饰会产生比继承更多的对象，使查错更加困难，尤其是这些对象都很相似。而且，当目标类被多次动态装饰后，程序的复杂性也会大大提升，难以维护。</p><p>▐ 适用场景</p><p>﻿</p><p>继承关系不利于系统维护，甚至不能使用继承关系的场景。比如，当继承导致类爆炸时、目标类被 final 修饰时，都不宜通过创建目标类的子类来扩展功能。</p><p>要求不影响其他对象，为特定目标对象添加功能。</p><p>要求动态添加、撤销对象的功能。</p><p>▐ 总结</p><p>装饰者模式也是一种比较容易理解和上手的设计模式，它可以对多个装饰者类进行花式排列组合，适应多变的用户需求。同时，装饰者模式也是符合开闭原则的，被装饰的对象和装饰者类互相独立、互不干扰。</p><p>在介绍装饰者模式的适用场景时，我们可以发现上述场景在实际工程中也比较常见，因此装饰者模式同样应用广泛。除了本文提到的 Java I/O，装饰者模式的典型应用实例还有：Spring cache 中的 TransactionAwareCacheDecorator 类、 Spring session 中的 ServletRequestWrapper 类、Mybatis 缓存中的 decorators 包等等。</p></div></article></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.2.18"><img class=fixit-icon src=/fixit.min.svg alt="FixIt logo">&nbsp;FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
-<span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>
-<a href=/></a></span></div><div class="footer-line statistics"></div></div></footer></div><div class=widgets><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i><span class="variant-numeric d-none">0%</span></div></div><div id=mask></div><noscript><div class=noscript-warning>FixIt 主题在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script>window.config={code:{copyTitle:"复制到剪贴板",editLockTitle:"锁定可编辑代码块",editUnLockTitle:"解锁可编辑代码块",editable:!0,maxShownLines:10},comment:{enable:!1},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验。"},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!0,left:"\\begin{equation}",right:"\\end{equation}"},{display:!0,left:"\\begin{equation*}",right:"\\end{equation*}"},{display:!0,left:"\\begin{align}",right:"\\end{align}"},{display:!0,left:"\\begin{align*}",right:"\\end{align*}"},{display:!0,left:"\\begin{alignat}",right:"\\end{alignat}"},{display:!0,left:"\\begin{alignat*}",right:"\\end{alignat*}"},{display:!0,left:"\\begin{gather}",right:"\\end{gather}"},{display:!0,left:"\\begin{CD}",right:"\\end{CD}"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/js/theme.min.js defer></script></body></html>
+<!DOCTYPE HTML>
+<html lang="zh-cn" dir="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <title> 装饰者模式 - 好记性不如烂笔头 </title>
+  
+  <meta name="keywords" content="博客, 程序员, 架构师, 思考, 读书, 笔记, 技术, 分享, 大数据, 产品">
+  
+  
+  <meta name="author" content="极光code">
+  
+  <meta property="og:title" content="装饰者模式"/>
+  <meta property="og:site_name" content="好记性不如烂笔头">
+  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
+  <meta name="title" content="装饰者模式 - 好记性不如烂笔头" />
+  
+  <meta name="description" content="欢迎来到极光code空间站，个人主要专注于程序开发，产品，售前及大数据解决方案。">
+   
+  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  
+  <link href="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css" rel="stylesheet"/>
+  
+  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
+  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
+  
+  
+  
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<div class="container one-collumn sidebar-position-left page-home  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-container">
+<div class="site-nav-toggle">
+  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+  </div>
+</div>
+<div class="site-meta ">
+  
+  
+  
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">好记性不如烂笔头</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">锲而不舍，金石可镂！</p>
+</div>
+
+<div class="site-nav-right">
+    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+    
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item menu-item-active">
+        <a href="/post" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/tags" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/categories" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />目录
+        </a>
+      </li>
+    
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
+      </li>
+    </ul>
+    <div class="site-search">
+      <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon"><i class="fa fa-search"></i> </span>
+    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+    </div>
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+<section id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      
+      <h1 class="post-title" itemprop="name headline">
+        <a class="post-title-link" href="https://codingroam.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" itemprop="url">
+        装饰者模式
+        </a>
+      </h1>
+      
+      <div class="post-meta">
+      <span class="post-pushdate">
+<i class="fa fa-calendar-o fa-fw"></i>
+<span class="post-meta-item-text">时间：</span>
+<time itemprop="dateCreated" datetime="2016-03-22T13:04:35+08:00" content="2022-12-26">
+    2022-12-26
+</time>
+</span> 
+      
+
+  <span class="post-category" >
+  <i class="fa fa-folder-o fa-fw"></i>  
+  <span class="post-meta-item-text">分类：</span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F" itemprop="url" rel="index">
+        <span itemprop="name">设计模式</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+</span>
+
+
+      <span class="post-wordcount">
+<i class="fa fa-file-word-o fa-fw"></i>
+<span class="post-meta-item-text">字数：</span>
+<span class="leancloud-world-count">4272 字</span>
+</span>
+      <span class="post-readtime">
+<i class="fa fa-eye fa-fw"></i>
+<span class="post-meta-item-text">阅读：</span>
+<span class="leancloud-view-count">9分钟</span>
+</span>
+      <span id="/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" class="leancloud_visitors post-visitor" data-flag-title="装饰者模式">
+<i class="fa fa-binoculars fa-fw"></i>
+<span class="post-meta-item-text">阅读次数：</span>
+<span class="leancloud-visitors-count"></span>
+</span>
+      </div>
+     
+    </header>
+  
+    <div class="post-body" itemprop="articleBody">
+    <p>装饰者模式</p>
+<h3 id="装饰者模式">装饰者模式</h3>
+<p>​		<strong>装饰者模式的核心思想是通过创建一个装饰对象（即装饰者），动态扩展目标对象的功能，并且不会改变目标对象的结构，提供了一种比继承更灵活的替代方案。</strong></p>
+<p>​		我们在进行软件开发时要想实现可维护、可扩展，就需要尽量复用代码，并且降低代码的耦合度，而设计模式就是一种可以提高代码可复用性、可维护性、可扩展性以及可读性的解决方案。</p>
+<p>大家熟知的23种设计模式，可以分为创建型模式、结构型模式和行为型模式三大类。其中，结构型模式用于设计类或对象的组合方式，以便实现更加灵活的结构。结构型模式又可划分为类结构型模式和对象结构型模式，前者通过继承来组合接口或类，后者通过组合或聚合来组合对象</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.jpeg" alt="设计模式"></p>
+<p>装饰者模式的核心思想是通过创建一个装饰对象（即装饰者），动态扩展目标对象的功能，并且不会改变目标对象的结构，提供了一种比继承更灵活的替代方案。需要注意的是，装饰对象要与目标对象实现相同的接口，或继承相同的抽象类；另外装饰对象需要持有目标对象的引用作为成员变量，而具体的赋能任务往往通过带参构造方法来完成。</p>
+<h4 id="-结构"><strong>▐</strong> 结构</h4>
+<p>装饰者模式包含四种类，分别是抽象构件类、具体构件类、抽象装饰者类、具体装饰者类，它们各自负责完成特定任务，并且相互之间存在紧密联系。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223328253.png" alt="image-20221226223328253"></p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223407555.png" alt="image-20221226223407555"></p>
+<p>▐  使用
+有了上述的基本概念，我们将装饰者模式的使用步骤概括为：</p>
+<p>step1：创建抽象构件类，定义目标对象的抽象类、将要扩展的功能定义成抽象方法；</p>
+<p>step2：创建具体构件类，定义目标对象的实现类，实现抽象构件中声明的抽象方法；</p>
+<p>step3：创建抽象装饰者类，维护一个指向抽象构件的引用，并传入构造函数以调用具体构件的实现方法，给具体构件增加功能；</p>
+<p>step4：创建具体装饰者类，可以调用抽象装饰者类中定义的方法，并定义若干个新的方法，扩展目标对象的功能。</p>
+<p>我们在淘宝上购物时，经常会遇到很多平台和商家的优惠活动：满减、聚划算站内的百亿补贴券、店铺折扣等等。那么在商品自身原价的基础上，叠加了多种优惠活动后，后台应该怎样计算最终的下单结算金额呢？下面就以这种优惠叠加结算的场景为例，简单分析装饰者模式如何使用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// 定义抽象构件：抽象商品
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ItemComponent</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 商品价格
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">checkoutPrice</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 定义具体构件：具体商品
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ConcreteItemCompoment</span> <span class="kd">implements</span> <span class="n">ItemComponent</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 原价
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">checkoutPrice</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mf">200.0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 定义抽象装饰者：创建传参(抽象构件)构造方法，以便给具体构件增加功能
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">ItemAbsatractDecorator</span> <span class="kd">implements</span> <span class="n">ItemComponent</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">protected</span> <span class="n">ItemComponent</span> <span class="n">itemComponent</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="nf">ItemAbsatractDecorator</span><span class="o">(</span><span class="n">ItemComponent</span> <span class="n">myItem</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">itemComponent</span> <span class="o">=</span> <span class="n">myItem</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nd">@Overrid</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">checkoutPrice</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">itemComponent</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 定义具体装饰者A：增加店铺折扣八折
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ShopDiscountDecorator</span> <span class="kd">extends</span> <span class="n">ItemAbsatractDecorator</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="nf">ShopDiscountDecorator</span><span class="o">(</span><span class="n">ItemComponent</span> <span class="n">myItem</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">super</span><span class="o">(</span><span class="n">myItem</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">checkoutPrice</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="kd">super</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 定义具体装饰者B：增加满200减20功能，此处忽略判断逻辑
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FullReductionDecorator</span> <span class="kd">extends</span> <span class="n">ItemAbsatractDecorator</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="nf">FullReductionDecorator</span><span class="o">(</span><span class="n">ItemComponent</span> <span class="n">myItem</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">super</span><span class="o">(</span><span class="n">myItem</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>  
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">checkoutPrice</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">()</span> <span class="o">-</span> <span class="mi">20</span><span class="o">;</span>  
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">// 定义具体装饰者C：增加百亿补贴券50
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BybtCouponDecorator</span> <span class="kd">extends</span> <span class="n">ItemAbsatractDecorator</span> <span class="o">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="nf">BybtCouponDecorator</span><span class="o">(</span><span class="n">ItemComponent</span> <span class="n">myItem</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">super</span><span class="o">(</span><span class="n">myItem</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">double</span> <span class="nf">checkoutPrice</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">()</span> <span class="o">-</span> <span class="mi">50</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="c1">//客户端调用
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nf">userPayForItem</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ItemCompoment</span> <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ConcreteItemCompoment</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;宝贝原价：&#34;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; 元&#34;</span><span class="err">）</span><span class="o">;</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ShopDiscountDecorator</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;使用店铺折扣后需支付：&#34;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; 元&#34;</span><span class="err">）</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FullReductionDecorator</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;使用满200减20后需支付：&#34;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; 元&#34;</span><span class="err">）</span><span class="o">;</span>                
+</span></span><span class="line"><span class="cl">        <span class="n">item</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BybtCouponDecorator</span><span class="o">(</span><span class="n">item</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;使用百亿补贴券后需支付：&#34;</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="na">checkoutPrice</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; 元&#34;</span><span class="err">）</span><span class="o">;</span>      
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="-结果输出"><strong>▐</strong> <strong>结果输出</strong></h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="err">宝贝原价：</span><span class="nt">200</span><span class="p">.</span><span class="nc">0</span> <span class="err">元</span>
+</span></span><span class="line"><span class="cl"><span class="err">使用店铺折扣后需支付：</span><span class="nt">160</span><span class="p">.</span><span class="nc">0</span> <span class="err">元</span>
+</span></span><span class="line"><span class="cl"><span class="err">使用满</span><span class="nt">200</span><span class="err">减</span><span class="nt">20</span><span class="err">后需支付：</span><span class="nt">140</span><span class="p">.</span><span class="nc">0</span> <span class="err">元</span>
+</span></span><span class="line"><span class="cl"><span class="err">使用百亿补贴券后需支付：</span><span class="nt">90</span><span class="p">.</span><span class="nc">0</span> <span class="err">元</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="-uml图image-20221226223613999httpsbucket-typora-kwoss-cn-beijingaliyuncscomtypora-imageimage-20221226223613999png"><strong>▐</strong> <strong>UML图</strong><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223613999.png" alt="image-20221226223613999"></h4>
+<p>▐  比较分析</p>
+<p>VS 继承
+装饰者模式和继承关系都是要对目标类进行功能扩展，但装饰模式可以提供比继承更多的灵活性：继承是静态添加功能，在系统运行前就会确定下来；装饰者模式是动态添加、删除功能。</p>
+<p>比如，一个对象需要具备 10 种功能，但客户端可能要求分阶段使用对象功能：在第一阶段只执行第 1-8 项功能，第二阶段执行第 3-10 项功能，这种场景下只需先定义好第 3-8 项功能方法。在程序运行的第一个阶段，使用具体装饰者 A 添加 1、2 功能；在第二个运行阶段，使用具体装饰者 B 添加 9、10 功能。而继承关系难以实现这种需求，它必须在编译期就定义好要使用的功能。</p>
+<p>VS 代理模式
+装饰者模式常常被拿来和代理模式比较，两者都要实现目标类的相同接口、声明一个目标对象，并且都可以在不修改目标类的前提下进行方法扩展，整体设计思路非常相似。那么两者的区别是什么呢？</p>
+<p>首先，装饰者模式的重点在于增强目标对象功能，而代理模式的重点在于保护和隐藏目标对象。其中，装饰者模式需要客户端明确知道目标类，才能对其功能进行增强；代理模式要求客户端对目标类进行透明访问，借助代理类来完成相关控制功能（如日志记录、缓存设置等），隐藏目标类的具体信息。可见，代理类与目标类的关系往往在编译时就确定下来，而装饰者类在运行时动态构造而成。</p>
+<p>其次，两者获取目标类的方式不同。装饰者模式是将目标对象作为参数传给构造方法，而代理模式是通过在代理类中创建目标对象的一个实例。</p>
+<p>最后，通过上述示例可发现，装饰者模式会使用一系列具体装饰者类来增强目标对象的功能，产生了一种连续、叠加的效应；而代理模式是在代理类中一次性为目标对象添加功能。</p>
+<p>﻿</p>
+<p>VS 适配器模式
+两者都属于包装式行为，即当一个类不能满足需求时，创建辅助类进行包装以满足变化的需求。但是装饰者模式的装饰者类和被装饰类都要实现相同接口，或者装饰类是被装饰类的子类；而适配器模式中，适配器和被适配的类可以有不同接口，并且可能会有部分接口重合。</p>
+<h4 id="-jdk源码赏析"><strong>▐</strong> <strong>JDK源码赏析</strong></h4>
+<p>Java I/O标准库是装饰者模式在Java语言中非常经典的应用实例。</p>
+<p>如下图所示，InputStream 相当于抽象构件，FilterInputStream 类似于抽象装饰者，它的四个子类等同于具体装饰者。其中，FilterInputStream 中含有被装饰类 InputStream 的引用，其具体装饰者及各自功能为：PushbackInputStream 能弹出一个字节的缓冲区，可将输入流放到回退流中；DataInputStream 与 DataOutputStream搭配使用，用来装饰其它输入流，允许应用程序以一种与机器无关的方式从底层输入流中读取基本 Java 数据类型；BufferedInputStream 使用缓冲数组提供缓冲输入流功能，在每次调用 read() 方法时优先从缓冲区读取数据，比直接从物理数据源读取数据的速度更快；LineNumberInputStream 提供输入流过滤功能，可以跟踪输入流中的行号（以回车符、换行符标记换行）。</p>
+<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20221226223808495.png" alt="image-20221226223808495"></p>
+<p>FilterInputStream 是所有装饰器类的抽象类，提供特殊的输入流控制。下面源码省略了 skip、available、mark、reset、markSupported 方法，这些方法也都委托给了 InputStream 类。其中， InputStream 提供装饰器类的接口，因而此类并没有对 InputStream 的功能做任何扩展，其扩展主要交给其子类来实现。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FilterInputStream</span> <span class="kd">extends</span> <span class="n">InputStream</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//维护一个 InputStream 对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">protected</span> <span class="kd">volatile</span> <span class="n">InputStream</span> <span class="n">in</span><span class="o">;</span>  
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">//构造方法参数需要一个 inputStream
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">protected</span> <span class="nf">FilterInputStream</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">in</span><span class="o">)</span> <span class="o">{</span>     
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">in</span> <span class="o">=</span> <span class="n">in</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="c1">//委托给 InputStream
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">read</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">in</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>                            
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">//委托给 InputStream
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">close</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>         
+</span></span><span class="line"><span class="cl">        <span class="n">in</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="o">.......</span>
+</span></span><span class="line"><span class="cl">   
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>由于源码太长，这里先以 PushbackInputStream 为例，展示 FilterInputStream 的具体装饰者的底层实现，大家感兴趣的话可以自行查阅其它源码哦。PushbackInputStream 内部维护了一个 pushback buf 缓冲区，可以帮助我们试探性地读取数据流，对于不想要的数据也可以返还回去。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">PushbackInputStream</span> <span class="kd">extends</span> <span class="n">FilterInputStream</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//缓冲区
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">protected</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">buf</span><span class="o">;</span>       
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">protected</span> <span class="kt">int</span> <span class="n">pos</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">ensureOpen</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">in</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="n">IOException</span><span class="o">(</span><span class="s">&#34;Stream closed&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//构造函数可以指定返回的字节个数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="nf">PushbackInputStream</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">in</span><span class="o">,</span> <span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>      
+</span></span><span class="line"><span class="cl">        <span class="kd">super</span><span class="o">(</span><span class="n">in</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalArgumentException</span><span class="o">(</span><span class="s">&#34;size &lt;= 0&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//初始化缓冲区的大小
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">this</span><span class="o">.</span><span class="na">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">size</span><span class="o">];</span>  
+</span></span><span class="line"><span class="cl">        <span class="c1">//设置读取的位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">this</span><span class="o">.</span><span class="na">pos</span> <span class="o">=</span> <span class="n">size</span><span class="o">;</span>                                        
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">//默认回退一个
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="nf">PushbackInputStream</span><span class="o">(</span><span class="n">InputStream</span> <span class="n">in</span><span class="o">)</span> <span class="o">{</span>                
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">(</span><span class="n">in</span><span class="o">,</span> <span class="mi">1</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">read</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//确保流存在
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ensureOpen</span><span class="o">();</span> 
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果要读取的位置在缓冲区里面
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">pos</span> <span class="o">&lt;</span> <span class="n">buf</span><span class="o">.</span><span class="na">length</span><span class="o">)</span> <span class="o">{</span> 
+</span></span><span class="line"><span class="cl">            <span class="c1">//返回缓冲区中的内容
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">return</span> <span class="n">buf</span><span class="o">[</span><span class="n">pos</span><span class="o">++]</span> <span class="o">&amp;</span> <span class="mh">0xff</span><span class="o">;</span>                           
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//否则调用超类的读函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>                                    
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="c1">//读取指定的长度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">read</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span><span class="o">,</span> <span class="kt">int</span> <span class="n">off</span><span class="o">,</span> <span class="kt">int</span> <span class="n">len</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>    
+</span></span><span class="line"><span class="cl">         <span class="n">ensureOpen</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">b</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="n">NullPointerException</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">off</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">len</span> <span class="o">&gt;</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">off</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="n">IndexOutOfBoundsException</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> 
+</span></span><span class="line"><span class="cl">        <span class="c1">//缓冲区长度减去读取位置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kt">int</span> <span class="n">avail</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">pos</span><span class="o">;</span>  
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果大于0，表明部分数据可以从缓冲区读取
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">avail</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>    
+</span></span><span class="line"><span class="cl">            <span class="c1">//如果要读取的长度小于可从缓冲区读取的字符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">&lt;</span> <span class="n">avail</span><span class="o">)</span> <span class="o">{</span> 
+</span></span><span class="line"><span class="cl">                <span class="c1">//修改可读取值为实际要读的长度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">avail</span> <span class="o">=</span> <span class="n">len</span><span class="o">;</span>                    
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">//将buf中的数据复制到b中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">buf</span><span class="o">,</span> <span class="n">pos</span><span class="o">,</span> <span class="n">b</span><span class="o">,</span> <span class="n">off</span><span class="o">,</span> <span class="n">avail</span><span class="o">);</span> 
+</span></span><span class="line"><span class="cl">            <span class="c1">//修改pos的值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">pos</span> <span class="o">+=</span> <span class="n">avail</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">//修改off偏移量的值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">off</span> <span class="o">+=</span> <span class="n">avail</span><span class="o">;</span>     
+</span></span><span class="line"><span class="cl">            <span class="c1">//修改len的值 
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">len</span> <span class="o">-=</span> <span class="n">avail</span><span class="o">;</span>                               
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//如果从缓冲区读取的数据不够
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>  
+</span></span><span class="line"><span class="cl">            <span class="c1">//从流中读取
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="n">len</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">off</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>              
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">avail</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="n">avail</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">avail</span> <span class="o">+</span> <span class="n">len</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">avail</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="c1">//不读字符b
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unread</span><span class="o">(</span><span class="kt">int</span> <span class="n">b</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>      
+</span></span><span class="line"><span class="cl">        <span class="n">ensureOpen</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">pos</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="n">IOException</span><span class="o">(</span><span class="s">&#34;Push back buffer is full&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//实际就是修改缓冲区中的值，同时pos后退
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">buf</span><span class="o">[--</span><span class="n">pos</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span><span class="n">b</span><span class="o">;</span>                           
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unread</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span><span class="o">,</span> <span class="kt">int</span> <span class="n">off</span><span class="o">,</span> <span class="kt">int</span> <span class="n">len</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ensureOpen</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="n">pos</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">throw</span> <span class="k">new</span> <span class="n">IOException</span><span class="o">(</span><span class="s">&#34;Push back buffer is full&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">//修改缓冲区中的值，pos后退多个
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">pos</span> <span class="o">-=</span> <span class="n">len</span><span class="o">;</span>         
+</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">off</span><span class="o">,</span> <span class="n">buf</span><span class="o">,</span> <span class="n">pos</span><span class="o">,</span> <span class="n">len</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">unread</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">b</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">unread</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">b</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>▐  优点</p>
+<p>提供比继承更加灵活的扩展功能，通过叠加不同的具体装饰者的方法，动态地增强目标类的功能。</p>
+<p>装饰者和被装饰者可以独立发展，不会相互耦合，比如说我们想再加一个炒河粉只需创建一个炒河粉类继承FastFood即可，而想要增加火腿肠配料就增加一个类去继承 Garnish 抽象装饰者。</p>
+<p>▐  缺点</p>
+<p>使用装饰模式，可以比使用继承关系创建更少的类，使设计比较易于进行。然而，多层装饰会产生比继承更多的对象，使查错更加困难，尤其是这些对象都很相似。而且，当目标类被多次动态装饰后，程序的复杂性也会大大提升，难以维护。</p>
+<p>▐  适用场景</p>
+<p>﻿</p>
+<p>继承关系不利于系统维护，甚至不能使用继承关系的场景。比如，当继承导致类爆炸时、目标类被 final 修饰时，都不宜通过创建目标类的子类来扩展功能。</p>
+<p>要求不影响其他对象，为特定目标对象添加功能。</p>
+<p>要求动态添加、撤销对象的功能。</p>
+<p>▐  总结</p>
+<p>装饰者模式也是一种比较容易理解和上手的设计模式，它可以对多个装饰者类进行花式排列组合，适应多变的用户需求。同时，装饰者模式也是符合开闭原则的，被装饰的对象和装饰者类互相独立、互不干扰。</p>
+<p>在介绍装饰者模式的适用场景时，我们可以发现上述场景在实际工程中也比较常见，因此装饰者模式同样应用广泛。除了本文提到的 Java I/O，装饰者模式的典型应用实例还有：Spring cache 中的 TransactionAwareCacheDecorator 类、 Spring session 中的 ServletRequestWrapper 类、Mybatis 缓存中的 decorators 包等等。</p>
+    </div>
+          
+    <footer class="post-footer">
+     
+ 
+<div class="post-tags">     
+    
+    <a href="/tags/%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f" rel="tag" title="设计模式">#设计模式#</a>
+    
+</div>
+
+
+
+      
+
+
+<div class="addthis_inline_share_toolbox"></div>
+
+
+
+     <div class="post-nav">
+<div class="article-copyright">
+    <div class="article-copyright-img">
+        <img src="/img/qq_qrcode.png" width="129px" height="129px"/>
+        <div style="text-align:center;">QQ扫一扫交流</div>
+    </div>
+    <div class="article-copyright-info">
+        <p> 
+            <span>标题：</span>装饰者模式
+        </p>
+        <p> 
+            <span>链接：</span>https://codingroam.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/
+        </p>
+        <p> 
+            <span>作者：</span>极光code
+        </p>
+        
+        
+        <p> 
+            <span>声明： </span>本博客文章除特别声明外，均采用 <a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank' style='text-decoration: underline;'>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！
+        </p>
+    </div>
+</div>
+<div class="clear"></div>
+</div>
+     <div class="reward-qr-info">
+  <div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">   
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/img/wechat-pay.png" alt="WeChat Pay"/>
+        <p>微信打赏</p>
+      </div>
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/img/ali-pay.png" alt="Alipay"/>
+        <p>支付宝打赏</p>
+      </div>
+  </div>
+</div>
+     <div class="post-nav">
+    <div class="post-nav-next post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/nio%E7%9A%84%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8F%E9%9D%9E%E9%98%BB%E5%A1%9Eio%E6%A8%A1%E5%BC%8Fio%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用">
+        <i class="fa fa-chevron-left"></i> NIO的阻塞IO模式、非阻塞IO模式、IO多路复用模式的使用
+        </a>
+    
+    </div>
+
+    <div class="post-nav-prev post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/git%E4%B8%8A%E4%BC%A0%E4%BB%A3%E7%A0%81%E6%8A%A5%E9%94%99ssh-connect-to-host-github.com-port-22-connection-timed-out%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" rel="prev" title="git上传代码报错ssh: connect to host github.com port 22: Connection timed out解决办法">
+        git上传代码报错ssh: connect to host github.com port 22: Connection timed out解决办法 
+        <i class="fa fa-chevron-right"></i>
+        </a>
+    
+    </div>
+</div>  
+     
+
+
+
+
+<div id="wcomments"></div>
+
+
+
+
+
+
+
+    </footer>
+  </article>
+</section>
+
+          </div>
+        </div>
+        <div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+        src="/img/avatar.png"
+        alt="极光code" />
+    <p class="site-author-name" itemprop="name">极光code</p>
+    <p class="site-description motion-element" itemprop="description"> 
+      
+        以梦为马，不负韶华!
+      
+    </p>
+</div>
+      <nav class="site-state motion-element">
+    <div class="site-state-item site-state-posts">
+      <a href="/post/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">日志</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">    
+        <a href="/categories/">      
+         
+        <span class="site-state-item-count">49</span>
+        
+        <span class="site-state-item-name">分类</span>
+        
+        </a>
+    </div>
+
+    <div class="site-state-item site-state-tags">
+        <a href="/tags/">
+         
+        <span class="site-state-item-count">62</span>
+        
+        <span class="site-state-item-name">标签</span>
+        </a>
+    </div>
+</nav>
+      
+      
+<div class="links-of-author motion-element">
+    
+        <span class="links-of-author-item">
+        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
+            <i class="fa fa-fw fa-github"></i>
+            GitHub
+        </a>
+        </span>
+    
+        <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
+            <i class="fa fa-fw fa-globe"></i>
+            知乎
+        </a>
+        </span>
+    
+</div>
+
+
+      
+    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+    <div class="links-of-blogroll-title">
+        <i class="fa fa-fw fa-globe"></i>
+        友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
+    <div class="tagcloud-of-blogroll-title">
+        <i class="fa fa-fw fa-tags"></i>
+        标签云
+    </div>
+    <ul class="tagcloud-of-blogroll-list">
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/linux">Linux
+            <sup>10</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java">Java
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/mysql">Mysql
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/docker">Docker
+            <sup>6</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/git">Git
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/problem-solving">Problem solving
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java-base">Java base
+            <sup>4</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/spring">Spring
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/threadlocal">Threadlocal
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/command">Command
+            <sup>2</sup>
+            </a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    </section>
+    
+  </div>
+</aside>
+
+      </div>
+    </main>
+   
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  <span class="copyright-year">  
+    &copy; 2010 - 2023
+  </span>
+  <span class="with-love"><i class="fa fa-heart"></i></span>
+  <span class="copyright-author">好记性不如烂笔头</span>
+</div>
+<div class="powered-info">
+  <span class="powered-by">
+    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="theme-info">
+    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
+    </a>
+  </span>
+</div>
+<div class="vistor-info">
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="site-pv">
+    <i class="fa fa-eye"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+
+
+</div>
+<div class="license-info">
+  <span class="storage-info">
+    Storage by 
+    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="license-num"> 
+    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
+  </span>
+</div>
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+      <span id="scrollpercent"><span>0</span>%</span>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
+
+
+<script type="text/javascript">
+
+  function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+    var edge = ua.indexOf('Edge/');
+
+    if (msie>0 || trident>0 || edge>0) {
+      return -1;
+    }
+
+    return 1;
+  }
+
+
+  function getCntViewHeight() {
+    var docHeight = $('#content').height(),
+        winHeight = $(window).height(),
+        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
+    return cntViewHeight;
+  }
+
+  function getScrollbarWidth() {
+    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
+    var div = $div[0];
+    var scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+    $div.remove();
+
+    return scrollbarWidth;
+  }
+
+  function registerBackTop() {
+    var THRESHOLD = 50;
+    var $top = $('.back-to-top');
+
+    $(window).on('scroll', function () {
+      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
+
+      var scrollTop = $(window).scrollTop();
+      var cntViewHeight = getCntViewHeight();
+      var scrollPercent = (scrollTop) / (cntViewHeight);
+      var scrollPercentRounded = Math.round(scrollPercent*100);
+      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
+      $('#scrollpercent>span').html(scrollPercentMaxed);
+    });
+
+    $top.on('click', function () {
+      $("html,body").animate({
+                 scrollTop: 0,
+                 screenLeft: 0,
+                 }, 800);
+    });
+  }
+
+  function initScrollSpy () {
+    var tocSelector = '.post-toc';
+    var $tocElement = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocElement
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+      })
+      .on('clear.bs.scrollspy', removeCurrentActiveClass);
+
+    $('body').scrollspy({ target: tocSelector });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+  }
+
+  function initAffix () {
+    var headerHeight = $('.header-inner').height();
+    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
+    var sidebarTop = headerHeight + 10;
+
+    $('.sidebar-inner').affix({
+      offset: {
+        top: sidebarTop,
+        bottom: footerOffset 
+      }
+    });
+
+    
+
+  }
+
+  function initTOCDimension () {
+    var updateTOCHeightTimer;
+
+    $(window).on('resize', function () {
+      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+
+      updateTOCHeightTimer = setTimeout(function () {
+        var tocWrapperHeight = document.body.clientHeight - 100;
+
+        updateTOCHeight(tocWrapperHeight);
+      }, 0);
+    });
+
+    
+    updateTOCHeight(document.body.clientHeight - 100);
+
+    
+    var scrollbarWidth = getScrollbarWidth();
+    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
+  }
+
+  function updateTOCHeight (height) {
+    height = height || 'auto';
+    $('.post-toc').css('max-height', height);
+  }
+
+$(function() {
+
+  var sidebarTop = $('.header-inner').height() + 10;
+  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
+
+  
+  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
+  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
+  var sideHeight = sidebarMt + sidebarInHeight;
+  var contentHeight = $('.content-wrap').height();
+
+  if (contentHeight < sideHeight) {
+    $('.content-wrap').css('min-height', sideHeight);
+  }
+  
+  
+  $('.site-nav-toggle').on('click', function () {
+    var $siteNav = $('.site-nav');
+    var $toggleLine = $('.toggle');
+    var ON_CLASS_NAME = 'site-nav-on';
+    var CLOSE_CLASS_NAME = 'toggle-close';
+    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
+    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
+    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
+
+    $siteNav.stop()[animateAction]('normal', function () {
+      $siteNav[animateCallback](ON_CLASS_NAME);
+      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
+    });
+
+  });
+
+  registerBackTop();
+  
+   
+  initAffix();
+  initTOCDimension();
+
+  $('.sidebar-nav-toc').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).next().removeClass('sidebar-nav-active');      
+    $('.'+$(this).next().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+
+  $('.sidebar-nav-overview').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).prev().removeClass('sidebar-nav-active');      
+    $('.'+$(this).prev().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+});  
+
+</script>
+
+
+
+
+
+<script src="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js"></script>
+<script type="text/javascript">
+$(function() {
+  $('.post-body').viewer(); 
+});
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+  const locale = {
+    placeholder: '欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^'
+  };
+  $(function(){
+    if (detectIE()>0) {
+      $.getScript(document.location.protocol+'//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js', function(){
+         new Waline({
+          el: '#wcomments', 
+          visitor: true,
+          emoji: [], 
+          wordLimit: '200', 
+          uploadImage: false,
+          locale, 
+          requiredMeta: ['nick', 'mail'], 
+          serverURL: "Your WalineSerURL", 
+          lang: "zh-cn"
+        });
+      });      
+    } else {
+      $('#wcomments').html('抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。');
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+
+
+
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+</body>
+</html>

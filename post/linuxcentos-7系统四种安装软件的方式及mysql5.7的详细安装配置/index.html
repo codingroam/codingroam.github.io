@@ -1,130 +1,1206 @@
-<!doctype html><html itemscope itemtype=http://schema.org/WebPage lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=2"><meta name=robots content="noodp"><title>Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置 - 好记性不如烂笔头</title><meta name=author content><meta name=author-link content><meta name=description content="Linux system install software and install mysql5.7"><meta name=keywords content="Linux,mysql,rpm,yum,CentOS 7"><meta itemprop=name content="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置"><meta itemprop=description content="Linux system install software and install mysql5.7"><meta itemprop=datePublished content="2022-05-27T00:00:00+00:00"><meta itemprop=dateModified content="2022-05-27T00:00:00+00:00"><meta itemprop=wordCount content="3108"><meta itemprop=keywords content="Linux,mysql,rpm,yum,CentOS 7,"><meta property="og:title" content="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置"><meta property="og:description" content="Linux system install software and install mysql5.7"><meta property="og:type" content="article"><meta property="og:url" content="/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-05-27T00:00:00+00:00"><meta property="article:modified_time" content="2022-05-27T00:00:00+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置"><meta name=twitter:description content="Linux system install software and install mysql5.7"><meta name=application-name content="FixIt"><meta name=apple-mobile-web-app-title content="FixIt"><meta name=theme-color data-light=#f8f8f8 data-dark=#252627 content="#f8f8f8"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=canonical href=/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/><link rel=prev href=/post/%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82string%E5%90%97/><link rel=next href=/post/vim%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8F%E5%8F%8A%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置","inLanguage":"zh-cn","mainEntityOfPage":{"@type":"WebPage","@id":"\/post\/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE\/"},"genre":"post","keywords":"Linux, mysql, rpm, yum, CentOS 7","wordcount":3108,"url":"\/post\/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE\/","datePublished":"2022-05-27T00:00:00+00:00","dateModified":"2022-05-27T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"wang"},"description":"Linux system install software and install mysql5.7"}</script></head><body data-header-desktop=sticky data-header-mobile=auto><script>(window.localStorage?.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("data-theme","dark")</script><div class=wrapper data-page-style=normal><header class="desktop animate__faster" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=好记性不如烂笔头 data-alt=好记性不如烂笔头 class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><nav><ul class=menu><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></li><li class="menu-item language-switch"><span role=button aria-label=选择语言 title=选择语言><i class="fa-solid fa-language fa-fw" aria-hidden=true></i></span><ul class=sub-menu><li class=menu-item>没有更多翻译</li></ul></li></ul></nav></div></header><header class="mobile animate__faster" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=好记性不如烂笔头><img loading=lazy src=/fixit.min.svg srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes=auto data-title=/fixit.min.svg data-alt=/fixit.min.svg class=logo style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'><span class=header-title-text>My Hugo FixIt Site</span></a><span class=header-subtitle></span></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><nav><ul class=menu id=menu-mobile><li class=menu-item><a class=menu-link href=/>home 首页</a></li><li class=menu-item><a class=menu-link href=/post>archive 归档</a></li><li class=menu-item><a class=menu-link href=/tags>tags 标签</a></li><li class=menu-item><a class=menu-link href=/categories>categories 目录</a></li><li class="menu-item menu-system"><span class="menu-system-item theme-switch" title=切换主题><i class="fa-solid fa-adjust fa-fw" aria-hidden=true></i></span><span class="menu-system-item language-switch">
-<span role=button aria-label=选择语言 title=选择语言>中文<i class="dropdown-icon fa-solid fa-chevron-down" aria-hidden=true></i></span>
-<select class=language-select onchange="location=this.value"><option disabled>没有更多翻译</option></select></span></li></ul></nav></div></header><main class=container><article class="page single special"><div class=header><h1 class="single-title animate__animated animate__pulse animate__faster">Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置</h1></div><div class=content id=content><p>本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法</p><h1 id=linux安装软件的四种方式介绍>Linux安装软件的四种方式介绍</h1><p>四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装</p><h2 id=四种方式比较>四种方式比较</h2><ol><li><p>rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖</p></li><li><p>带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p></li></ol><h2 id=四种方式操作说明>四种方式操作说明</h2><h3 id=一npm和yum安装>一、npm和yum安装</h3><p>rpm与yum命令对比（yum简单，rpm复杂）</p><blockquote><ul><li><p>RPM 全名 RedHat Package Managerment，是由Red Hat公司提出，被众多Linux发行版本所采用，是一种数据库记录的方式来将所需要的软件安装到到Linux系统的一套软件管理机制</p></li><li><p>rpm在安装时有严格的顺序限制，包与包有依赖关系，且安装过程中可能依赖别的包需要手动安装，而yum安装某个功能（例如mysql的server端）会自动下载安装依赖</p></li><li><p>安装软件：rpm -ivh [软件包名称]
+<!DOCTYPE HTML>
+<html lang="zh-cn" dir="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <title> Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置 - 好记性不如烂笔头 </title>
+  
+  <meta name="keywords" content="博客, 程序员, 架构师, 思考, 读书, 笔记, 技术, 分享, 大数据, 产品">
+  
+  
+  <meta name="author" content="极光code">
+  
+  <meta property="og:title" content="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置"/>
+  <meta property="og:site_name" content="好记性不如烂笔头">
+  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
+  <meta name="title" content="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置 - 好记性不如烂笔头" />
+  
+  <meta name="description" content="Linux system install software and install mysql5.7" />
+   
+  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
+  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
+  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  
+  <link href="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css" rel="stylesheet"/>
+  
+  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
+  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
+  
+  
+  
+</head>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<div class="container one-collumn sidebar-position-left page-home  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-container">
+<div class="site-nav-toggle">
+  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+      <span class="toggle-line"></span>
+  </div>
+</div>
+<div class="site-meta ">
+  
+  
+  
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">好记性不如烂笔头</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">锲而不舍，金石可镂！</p>
+</div>
+
+<div class="site-nav-right">
+    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+    <ul id="menu" class="menu">
+    
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item menu-item-active">
+        <a href="/post" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/tags" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
+        </a>
+      </li>
+        
+    
+    
+    
+      <li class="menu-item ">
+        <a href="/categories" rel="section" >
+            <i class="menu-item-icon fa fa-fw fa-categories"></i> <br />目录
+        </a>
+      </li>
+    
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
+      </li>
+    </ul>
+    <div class="site-search">
+      <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon"><i class="fa fa-search"></i> </span>
+    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+    </div>
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+<section id="posts" class="posts-expand">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+      
+      <h1 class="post-title" itemprop="name headline">
+        <a class="post-title-link" href="https://codingroam.github.io/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" itemprop="url">
+        Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置
+        </a>
+      </h1>
+      
+      <div class="post-meta">
+      <span class="post-pushdate">
+<i class="fa fa-calendar-o fa-fw"></i>
+<span class="post-meta-item-text">时间：</span>
+<time itemprop="dateCreated" datetime="2016-03-22T13:04:35+08:00" content="2022-05-27">
+    2022-05-27
+</time>
+</span> 
+      
+
+  <span class="post-category" >
+  <i class="fa fa-folder-o fa-fw"></i>  
+  <span class="post-meta-item-text">分类：</span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/linux" itemprop="url" rel="index">
+        <span itemprop="name">Linux</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+      <a class="post-category-a" href="/categories/tool" itemprop="url" rel="index">
+        <span itemprop="name">tool</span>
+      </a>
+      &nbsp; 
+    </span>
+  
+</span>
+
+
+      <span class="post-wordcount">
+<i class="fa fa-file-word-o fa-fw"></i>
+<span class="post-meta-item-text">字数：</span>
+<span class="leancloud-world-count">3199 字</span>
+</span>
+      <span class="post-readtime">
+<i class="fa fa-eye fa-fw"></i>
+<span class="post-meta-item-text">阅读：</span>
+<span class="leancloud-view-count">7分钟</span>
+</span>
+      <span id="/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" class="leancloud_visitors post-visitor" data-flag-title="Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置">
+<i class="fa fa-binoculars fa-fw"></i>
+<span class="post-meta-item-text">阅读次数：</span>
+<span class="leancloud-visitors-count"></span>
+</span>
+      </div>
+     
+    </header>
+  
+    <div class="post-body" itemprop="articleBody">
+    <p>本文以安装mysql为例介绍了Linux(CentOS 7)环境下安装软件的四种方式，比较四种方式的难易程度，以及详细介绍了mysql5.7的安装和配置方法</p>
+<h1 id="linux安装软件的四种方式介绍">Linux安装软件的四种方式介绍</h1>
+<p>四种方式：rpm命令、yum命令、带bin目录的tar安装包和source源码编译安装</p>
+<h2 id="四种方式比较">四种方式比较</h2>
+<ol>
+<li>
+<p>rpm与yum为命令安装，不同的是npm在安装时需要手动下载依赖包，而yum会自动下载依赖</p>
+</li>
+<li>
+<p>带bin的tar包和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p>
+</li>
+</ol>
+<h2 id="四种方式操作说明">四种方式操作说明</h2>
+<h3 id="一npm和yum安装">一、npm和yum安装</h3>
+<p>rpm与yum命令对比（yum简单，rpm复杂）</p>
+<blockquote>
+<ul>
+<li>
+<p>RPM 全名 RedHat Package Managerment，是由Red Hat公司提出，被众多Linux发行版本所采用，是一种数据库记录的方式来将所需要的软件安装到到Linux系统的一套软件管理机制</p>
+</li>
+<li>
+<p>rpm在安装时有严格的顺序限制，包与包有依赖关系，且安装过程中可能依赖别的包需要手动安装，而yum安装某个功能（例如mysql的server端）会自动下载安装依赖</p>
+</li>
+<li>
+<p>安装软件：rpm -ivh [软件包名称]
 卸载软件：rpm -e [软件包名称]
-更新软件：rpm -Uvh [软件包名称]</p></li><li><p>yum check-update：列出所有可更新的软件清单命令;</p><p>yum update：更新所有软件或指定软件命令;</p><p>yum install ：仅安装指定的软件命令；</p><p>yum list：列出所有可安装的软件清单命令；</p><p>yum remove ：删除软件包命令；</p><p>yum search ：查找软件包命令：</p></li></ul></blockquote><p>以安装mysql为例，对比yum和rpm的安装过程</p><p>①查看是否安装了mysql/mariadb的服务</p><div class=highlight id=id-1><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>[root@localhost ~]# rpm -qa |grep -i mysql
-</span></span><span style=display:flex><span>MySQL-client-5.6.23-1.sles11.x86_64
-</span></span><span style=display:flex><span>MySQL-server-5.6.23-1.sles11.x86_64
-</span></span><span style=display:flex><span>MySQL-shared-5.6.23-1.sles11.x86_64
-</span></span><span style=display:flex><span>MySQL-devel-5.6.23-1.sles11.x86_64
-</span></span><span style=display:flex><span>...
-</span></span><span style=display:flex><span>[root@localhost ~]# root@# rpm -qa |grep -i mariadb
-</span></span><span style=display:flex><span>...</span></span></code></pre></div><p>②如果安装需要卸载所有服务</p><div class=highlight id=id-2><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>[root@localhost ~]#  rpm -e --nodeps MySQL-client-5.6.23-1.sles11.x86_64
-</span></span><span style=display:flex><span>[root@localhost ~]#  rpm -e --nodeps MySQL-server-5.6.23-1.sles11.x86_64
-</span></span><span style=display:flex><span>...</span></span></code></pre></div><p>③使用命令或者去mysql官网下载rpm包</p><ul><li><div class=highlight id=id-3><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>yum安装mysql需要先下载一个基础包安装
-</span></span><span style=display:flex><span>[root@localhost ~]#  wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm</span></span></code></pre></div></li><li><p>rpm安装需要下载bundle包（rpm文件打包合集）</p><p><img loading=lazy src=/images/image-20220527150223317.png srcset="/images/image-20220527150223317.png, /images/image-20220527150223317.png 1.5x, /images/image-20220527150223317.png 2x" sizes=auto data-title=image-20220527150223317 data-alt=image-20220527150223317 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><p>rpm Bundle表示rpm的打包合集，包含基础包，lib包，client,server 等包如下图</p><p><img loading=lazy src=/images/image-20220527162211385.png srcset="/images/image-20220527162211385.png, /images/image-20220527162211385.png 1.5x, /images/image-20220527162211385.png 2x" sizes=auto data-title=image-20220527162211385 data-alt=image-20220527162211385 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p></li></ul><p>④安装：</p><ul><li><p>yum方式</p><div class=highlight id=id-4><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>先安装基础包：
-</span></span><span style=display:flex><span>[root@localhost ~]# yum install y mysql57-community-release-el7-10.noarch.rpm 
-</span></span><span style=display:flex><span>[root@localhost ~]# yum install mysql-community-server --nogpgcheck
-</span></span><span style=display:flex><span>--安装完毕</span></span></code></pre></div></li><li><p>rpm</p><div class=highlight id=id-5><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>rpm需要依次安装bundle包中的rpm包，包括基础包，库，client和server等
-</span></span><span style=display:flex><span>安装mysql-server服务，只需要安装如下4个软件包即可，使⽤rpm -ivh进⾏安装（按顺序安装，后⾯的
-</span></span><span style=display:flex><span>服务依赖前⾯的服务
-</span></span><span style=display:flex><span>[root@localhost ~]# rpm -ivh mysql-community-common-5.7.23-1.el7.x86_64.rpm
-</span></span><span style=display:flex><span>[root@localhost ~]# rpm -ivh mysql-community-libs-5.7.23-1.el7.x86_64.rpm
-</span></span><span style=display:flex><span>[root@localhost ~]# rpm -ivh mysql-community-client-5.7.23-1.el7.x86_64.rpm
-</span></span><span style=display:flex><span>[root@localhost ~]# rpm -ivh mysql-community-server-5.7.23-1.el7.x86_64.rpm
-</span></span><span style=display:flex><span>安装时如果出现缺少依赖，如少libaio、net-tools还需要yum install [名称]来安装依赖</span></span></code></pre></div></li></ul><p>⑤启动mysql，设置密码</p><div class=highlight id=id-6><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1、[root@localhost ~]# systemctl start  mysqld.service --&gt;启动mysql
-</span></span><span style=display:flex><span>2、[root@localhost ~]# grep &#34;password&#34; /var/log/mysqld.log --&gt;查看密码 CSLQ:F=Um5i1
-</span></span><span style=display:flex><span>    A temporary password is generated for root@localhost: CSLQ:F=Um5i1
-</span></span><span style=display:flex><span>3、[root@localhost ~]# mysql -uroot -p --&gt;登录root用户
-</span></span><span style=display:flex><span>4、[root@localhost ~]# CSLQ:F=Um5i1 --&gt;输入密码
-</span></span><span style=display:flex><span>5、登录进mysql之后设置密码规则(不设置有可能无法修改成简单密码)
-</span></span><span style=display:flex><span>  set global validate_password_policy=0;
-</span></span><span style=display:flex><span>  set global validate_password_length=1;
-</span></span><span style=display:flex><span>6、ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;root&#39;; --&gt;修改密码为root</span></span></code></pre></div><p>⑥查找并修改mysql配置文件</p><div class=highlight id=id-7><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1、[root@localhost ~]# which mysql --&gt;查找mysql命令在什么位置
-</span></span><span style=display:flex><span>   usr/bin/mysql
-</span></span><span style=display:flex><span>2.[root@localhost ~]# /usr/bin/mysql --verbose --help | grep -A 1 &#39;Default options&#39;
-</span></span><span style=display:flex><span>   Default options are read from the following files in the given order:
-</span></span><span style=display:flex><span>   /etc/mysql/my.cnf /etc/my.cnf ~/.my.cnf 
-</span></span><span style=display:flex><span>返回信息表示首先读取的是/etc/mysql/my.cnf文件，如果前一个文件不存在则继续读/etc/my.cnf文件，如若还不存在便会去读~/.my.cnf文件,这三处即是mysql配置文件存放处，找到修改即可
-</span></span><span style=display:flex><span>默认配置文件如下：
-</span></span><span style=display:flex><span># For advice on how to change settings please see
-</span></span><span style=display:flex><span># http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>[mysqld]
-</span></span><span style=display:flex><span>#
-</span></span><span style=display:flex><span># Remove leading # and set to the amount of RAM for the most important data
-</span></span><span style=display:flex><span># cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
-</span></span><span style=display:flex><span># innodb_buffer_pool_size = 128M
-</span></span><span style=display:flex><span>#
-</span></span><span style=display:flex><span># Remove leading # to turn on a very important data integrity option: logging
-</span></span><span style=display:flex><span># changes to the binary log between backups.
-</span></span><span style=display:flex><span># log_bin
-</span></span><span style=display:flex><span>#
-</span></span><span style=display:flex><span># Remove leading # to set options mainly useful for reporting servers.
-</span></span><span style=display:flex><span># The server defaults are faster for transactions and fast SELECTs.
-</span></span><span style=display:flex><span># Adjust sizes as needed, experiment to find the optimal values.
-</span></span><span style=display:flex><span># join_buffer_size = 128M
-</span></span><span style=display:flex><span># sort_buffer_size = 2M
-</span></span><span style=display:flex><span># read_rnd_buffer_size = 2M
-</span></span><span style=display:flex><span>datadir=/var/lib/mysql
-</span></span><span style=display:flex><span>socket=/var/lib/mysql/mysql.sock
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span># Disabling symbolic-links is recommended to prevent assorted security risks
-</span></span><span style=display:flex><span>symbolic-links=0
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>log-error=/var/log/mysqld.log
-</span></span><span style=display:flex><span>pid-file=/var/run/mysqld/mysqld.pid</span></span></code></pre></div><h3 id=二tar包安装和source源码安装>二、tar包安装和source源码安装</h3><blockquote><p>已编译tar包(带bin目录的tar)和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p></blockquote><p>①带bin的tar包安装</p><p><img loading=lazy src=/images/image-20220527172826841.png srcset="/images/image-20220527172826841.png, /images/image-20220527172826841.png 1.5x, /images/image-20220527172826841.png 2x" sizes=auto data-title=image-20220527172826841 data-alt=image-20220527172826841 style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><div class=highlight id=id-8><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1、[root@localhost ~]#  tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar 
-</span></span><span style=display:flex><span>2、[root@localhost ~]#  cp -r mysql-5.7.26-linux-glibc2.12-x86_64 /usr/local/mysql --&gt;拷贝文件夹到/usr/local目录下并重命名为mysql
-</span></span><span style=display:flex><span>3、[root@localhost ~]# mkdir /usr/local/mysql/data /usr/local/mysql/logs --&gt;创建data和logs文件夹
-</span></span><span style=display:flex><span>4、[root@localhost ~]#  groupadd mysql  --&gt;添加mysql用户组
-</span></span><span style=display:flex><span>5、[root@localhost ~]#  useradd -r -g mysql mysql  --&gt;向mysql用户组添加mysql用户，-r &lt;参数表示mysql用户是系统用户，不可用于登录系统，-g 参数表示把mysql用户添加到mysql用户组中
-</span></span><span style=display:flex><span>6、chown -R mysql:mysql /usr/local/mysql/ --&gt;将mysql目录权限分配给mysql用户组下的mysql用户
-</span></span><span style=display:flex><span>已编译tar包安装需要新建mysql用户和用户组，并将mysql目录权限分配给用户，若不进行此操作，在mysql服务启动时会报Starting MySQL. ERROR! The server quit without updating PID file错误
-</span></span><span style=display:flex><span>7、[root@localhost ~]#  vim /etc/my.cnf --&gt;在/etc下新增配置文件
-</span></span><span style=display:flex><span>[mysqld]
-</span></span><span style=display:flex><span>port = 3306
-</span></span><span style=display:flex><span>user = mysql
-</span></span><span style=display:flex><span>basedir = /usr/local/mysql
-</span></span><span style=display:flex><span>datadir = /usr/local/mysql/data
-</span></span><span style=display:flex><span>socket =  /usr/local/mysql/data/mysql.sock
-</span></span><span style=display:flex><span>bind-address = 0.0.0.0
-</span></span><span style=display:flex><span>pid-file =  /usr/local/mysql/data/mysqld.pid
-</span></span><span style=display:flex><span>character-set-server = utf8
-</span></span><span style=display:flex><span>collation-server = utf8_general_ci
-</span></span><span style=display:flex><span>max_connections = 200
-</span></span><span style=display:flex><span>log-error =  /usr/local/mysql/logs/mysqld.log
-</span></span><span style=display:flex><span>8、[root@localhost ~]# cd /usr/local/mysql/bin/ --&gt;进入mysql的bin目录
-</span></span><span style=display:flex><span>9、[root@localhost ~]#./mysqld --defaults-file=/etc/my.cnf --user=mysql --basedir=/usr/local/mysql/ --datadir=/data/mysql/  --initialize --&gt;初始化
-</span></span><span style=display:flex><span>10、[root@localhost ~]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql --&gt;将mysql.server放置到/etc/init.d/mysql中
-</span></span><span style=display:flex><span>11、[root@localhost ~]# service mysql start --&gt;启动服务
-</span></span><span style=display:flex><span>12、[root@localhost ~]# cat /usr/local/mysql/logs/mysqld.log --&gt;日志最后一行有随机生成的初始密码,可登录mysql
-</span></span><span style=display:flex><span>13、[root@localhost ~]# ln -s  /usr/local/mysql/bin/mysql    /usr/bin --&gt;创建软连接到/usr/bin可以全局使用mysql命令(方便登录mysql)
-</span></span><span style=display:flex><span>14、[root@localhost ~]# mysql -uroot -p --&gt;登录mysql
-</span></span><span style=display:flex><span>15、[root@localhost ~]# 输入12步得到的密码，登录mysql
-</span></span><span style=display:flex><span>16、若登录出现Can&#39;t connect to local MySQL server through socket &#39;/tmp/mysql.sock&#39; (2)，需要将mysql.sock软连接到tmp目录即可 [root@localhost ~]# ln -s /usr/local/mysql/data/mysql.sock /tmp</span></span></code></pre></div><p>②source源码安装</p><p><img loading=lazy src=/images/Snipaste_2022-05-27_18-22-03.png srcset="/images/Snipaste_2022-05-27_18-22-03.png, /images/Snipaste_2022-05-27_18-22-03.png 1.5x, /images/Snipaste_2022-05-27_18-22-03.png 2x" sizes=auto data-title=img data-alt=img style="background:url(/svg/loading.min.svg)no-repeat 50%" onload='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e);this.dataset.lazyloaded=""' onerror='this.title=this.dataset.title,this.alt=this.dataset.alt;for(const e of["style","data-title","data-alt","onerror","onload"])this.removeAttribute(e)'></p><div class=highlight id=id-9><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>(1)创建安装目录
-</span></span><span style=display:flex><span> [root@localhost ~]# mkdir /usr/local/mysql/{data,logs,tmp,run} -p
-</span></span><span style=display:flex><span>(2）首先安装源码编译所需要的包
-</span></span><span style=display:flex><span> [root@localhost ~]# yum -y install make gcc-c++ cmake bison-devel  ncurses-devel
-</span></span><span style=display:flex><span>(3)解压
-</span></span><span style=display:flex><span> [root@localhost ~]# tar -zxvf mysql-5.7.27.tar.gz 
-</span></span><span style=display:flex><span> [root@localhost ~]# tar -zxvf mysql-boost-5.7.27.tar.gz  #（不需要安装，在安装mysql时自动安装，）
-</span></span><span style=display:flex><span>两个文件解压以后都会在同一个目录上 mysql-5.7.27 
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>(4)编译安装（编译参数按实际情况制定）
-</span></span><span style=display:flex><span> cd mysql-5.7.27
-</span></span><span style=display:flex><span> cmake . \
-</span></span><span style=display:flex><span>-DCMAKE_INSTALL_PREFIX=/usr/local/mysql/ \
-</span></span><span style=display:flex><span>-DMYSQL_DATADIR=/usr/local/mysql/data \
-</span></span><span style=display:flex><span>-DDOWNLOAD_BOOST=1 \
-</span></span><span style=display:flex><span>-DWITH_BOOST=/opt/software/mysql-5.7.27/boost \
-</span></span><span style=display:flex><span>-DSYSCONFDIR=/etc \
-</span></span><span style=display:flex><span>-DWITH_INNOBASE_STORAGE_ENGINE=1 \
-</span></span><span style=display:flex><span>-DWITH_PARTITION_STORAGE_ENGINE=1 \
-</span></span><span style=display:flex><span>-DWITH_FEDERATED_STORAGE_ENGINE=1 \
-</span></span><span style=display:flex><span>-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
-</span></span><span style=display:flex><span>-DWITH_MYISAM_STORAGE_ENGINE=1 \
-</span></span><span style=display:flex><span>-DENABLED_LOCAL_INFILE=1 \
-</span></span><span style=display:flex><span>-DMYSQL_UNIX_ADDR=/usr/local/mysql/run/mysql.sock \
-</span></span><span style=display:flex><span>-DENABLE_DTRACE=0 \
-</span></span><span style=display:flex><span>-DDEFAULT_CHARSET=utf8 \
-</span></span><span style=display:flex><span>-DDEFAULT_COLLATION=utf8_general_ci \
-</span></span><span style=display:flex><span>-DWITH_EMBEDDED_SERVER=1
-</span></span><span style=display:flex><span> 
-</span></span><span style=display:flex><span>make &amp; make install
-</span></span><span style=display:flex><span>(5)/etc/my.cnf配置mysql
-</span></span><span style=display:flex><span>(6) ./mysqld --defaults-file=/etc/my.cnf --initialize #初始化
-</span></span><span style=display:flex><span>(7) cp support-files/mysql.server /etc/init.d/mysql #启动项设置
-</span></span><span style=display:flex><span>(8) service mysqld start
-</span></span><span style=display:flex><span>(9)登录不在赘述</span></span></code></pre></div><h2 id=mysql常见报错及处理方式>mysql常见报错及处理方式：</h2><ol><li><p>Can&rsquo;t connect to local MySQL server through socket &lsquo;/tmp/mysql.sock&rsquo; (2)</p><p><a href=https://blog.csdn.net/weixin_43464964/article/details/121807241 target=_blank rel="external nofollow noopener noreferrer">https://blog.csdn.net/weixin_43464964/article/details/121807241</a></p></li><li><p>防火墙问题导致mysql连不上：https://www.68idc.com/news/content/582.html</p></li><li><p>连接mysql报错误码1130：https://blog.csdn.net/web_15534274656/article/details/126493936</p></li><li><p>CentOS7查看开放端口命令、查看端口占用情况和开启端口命令、杀掉进程</p><p><a href=https://blog.csdn.net/weixin_48053866/article/details/127715462 target=_blank rel="external nofollow noopener noreferrer">https://blog.csdn.net/weixin_48053866/article/details/127715462</a></p></li><li><p>centos 7 tcp6端口地址不通，导致无法访问：https://www.pianshen.com/article/54202723812/</p></li></ol><p>​</p></div></article></main><footer class=footer><div class=footer-container><div class="footer-line powered">由 <a href=https://gohugo.io/ target=_blank rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/hugo-fixit/FixIt target=_blank rel=external title="FixIt v0.2.18"><img class=fixit-icon src=/fixit.min.svg alt="FixIt logo">&nbsp;FixIt</a></div><div class="footer-line copyright" itemscope itemtype=http://schema.org/CreativeWork><i class="fa-regular fa-copyright fa-fw" aria-hidden=true></i>
-<span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>
-<a href=/></a></span></div><div class="footer-line statistics"></div></div></footer></div><div class=widgets><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role=button aria-label=回到顶部><i class="fa-solid fa-arrow-up fa-fw" aria-hidden=true></i><span class="variant-numeric d-none">0%</span></div></div><div id=mask></div><noscript><div class=noscript-warning>FixIt 主题在启用 JavaScript 的情况下效果最佳。</div></noscript></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script src=/lib/sharer/sharer.min.js async defer></script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/lib/cookieconsent/cookieconsent.min.js defer></script><script>window.config={code:{copyTitle:"复制到剪贴板",editLockTitle:"锁定可编辑代码块",editUnLockTitle:"解锁可编辑代码块",editable:!0,maxShownLines:10},comment:{enable:!1},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验。"},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!0,left:"\\begin{equation}",right:"\\end{equation}"},{display:!0,left:"\\begin{equation*}",right:"\\end{equation*}"},{display:!0,left:"\\begin{align}",right:"\\end{align}"},{display:!0,left:"\\begin{align*}",right:"\\end{align*}"},{display:!0,left:"\\begin{alignat}",right:"\\end{alignat}"},{display:!0,left:"\\begin{alignat*}",right:"\\end{alignat*}"},{display:!0,left:"\\begin{gather}",right:"\\end{gather}"},{display:!0,left:"\\begin{CD}",right:"\\end{CD}"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/js/theme.min.js defer></script></body></html>
+更新软件：rpm -Uvh [软件包名称]</p>
+</li>
+<li>
+<p>yum check-update：列出所有可更新的软件清单命令;</p>
+<p>yum update：更新所有软件或指定软件命令;</p>
+<p>yum install ：仅安装指定的软件命令；</p>
+<p>yum list：列出所有可安装的软件清单命令；</p>
+<p>yum remove ：删除软件包命令；</p>
+<p>yum search ：查找软件包命令：</p>
+</li>
+</ul>
+</blockquote>
+<p>以安装mysql为例，对比yum和rpm的安装过程</p>
+<p>①查看是否安装了mysql/mariadb的服务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@localhost ~]# rpm -qa |grep -i mysql
+</span></span><span class="line"><span class="cl">MySQL-client-5.6.23-1.sles11.x86_64
+</span></span><span class="line"><span class="cl">MySQL-server-5.6.23-1.sles11.x86_64
+</span></span><span class="line"><span class="cl">MySQL-shared-5.6.23-1.sles11.x86_64
+</span></span><span class="line"><span class="cl">MySQL-devel-5.6.23-1.sles11.x86_64
+</span></span><span class="line"><span class="cl">...
+</span></span><span class="line"><span class="cl">[root@localhost ~]# root@# rpm -qa |grep -i mariadb
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>②如果安装需要卸载所有服务</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[root@localhost ~]#  rpm -e --nodeps MySQL-client-5.6.23-1.sles11.x86_64
+</span></span><span class="line"><span class="cl">[root@localhost ~]#  rpm -e --nodeps MySQL-server-5.6.23-1.sles11.x86_64
+</span></span><span class="line"><span class="cl">...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>③使用命令或者去mysql官网下载rpm包</p>
+<ul>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">yum安装mysql需要先下载一个基础包安装
+</span></span><span class="line"><span class="cl">[root@localhost ~]#  wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>rpm安装需要下载bundle包（rpm文件打包合集）</p>
+<p><img src="/images/image-20220527150223317.png" alt="image-20220527150223317"></p>
+<p>rpm Bundle表示rpm的打包合集，包含基础包，lib包，client,server 等包如下图</p>
+<p><img src="/images/image-20220527162211385.png" alt="image-20220527162211385"></p>
+</li>
+</ul>
+<p>④安装：</p>
+<ul>
+<li>
+<p>yum方式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">先安装基础包：
+</span></span><span class="line"><span class="cl">[root@localhost ~]# yum install y mysql57-community-release-el7-10.noarch.rpm 
+</span></span><span class="line"><span class="cl">[root@localhost ~]# yum install mysql-community-server --nogpgcheck
+</span></span><span class="line"><span class="cl">--安装完毕
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>rpm</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">rpm需要依次安装bundle包中的rpm包，包括基础包，库，client和server等
+</span></span><span class="line"><span class="cl">安装mysql-server服务，只需要安装如下4个软件包即可，使⽤rpm -ivh进⾏安装（按顺序安装，后⾯的
+</span></span><span class="line"><span class="cl">服务依赖前⾯的服务
+</span></span><span class="line"><span class="cl">[root@localhost ~]# rpm -ivh mysql-community-common-5.7.23-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">[root@localhost ~]# rpm -ivh mysql-community-libs-5.7.23-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">[root@localhost ~]# rpm -ivh mysql-community-client-5.7.23-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">[root@localhost ~]# rpm -ivh mysql-community-server-5.7.23-1.el7.x86_64.rpm
+</span></span><span class="line"><span class="cl">安装时如果出现缺少依赖，如少libaio、net-tools还需要yum install [名称]来安装依赖
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<p>⑤启动mysql，设置密码</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1、[root@localhost ~]# systemctl start  mysqld.service --&gt;启动mysql
+</span></span><span class="line"><span class="cl">2、[root@localhost ~]# grep &#34;password&#34; /var/log/mysqld.log --&gt;查看密码 CSLQ:F=Um5i1
+</span></span><span class="line"><span class="cl">    A temporary password is generated for root@localhost: CSLQ:F=Um5i1
+</span></span><span class="line"><span class="cl">3、[root@localhost ~]# mysql -uroot -p --&gt;登录root用户
+</span></span><span class="line"><span class="cl">4、[root@localhost ~]# CSLQ:F=Um5i1 --&gt;输入密码
+</span></span><span class="line"><span class="cl">5、登录进mysql之后设置密码规则(不设置有可能无法修改成简单密码)
+</span></span><span class="line"><span class="cl">  set global validate_password_policy=0;
+</span></span><span class="line"><span class="cl">  set global validate_password_length=1;
+</span></span><span class="line"><span class="cl">6、ALTER USER &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;root&#39;; --&gt;修改密码为root
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>⑥查找并修改mysql配置文件</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1、[root@localhost ~]# which mysql --&gt;查找mysql命令在什么位置
+</span></span><span class="line"><span class="cl">   usr/bin/mysql
+</span></span><span class="line"><span class="cl">2.[root@localhost ~]# /usr/bin/mysql --verbose --help | grep -A 1 &#39;Default options&#39;
+</span></span><span class="line"><span class="cl">   Default options are read from the following files in the given order:
+</span></span><span class="line"><span class="cl">   /etc/mysql/my.cnf /etc/my.cnf ~/.my.cnf 
+</span></span><span class="line"><span class="cl">返回信息表示首先读取的是/etc/mysql/my.cnf文件，如果前一个文件不存在则继续读/etc/my.cnf文件，如若还不存在便会去读~/.my.cnf文件,这三处即是mysql配置文件存放处，找到修改即可
+</span></span><span class="line"><span class="cl">默认配置文件如下：
+</span></span><span class="line"><span class="cl"># For advice on how to change settings please see
+</span></span><span class="line"><span class="cl"># http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[mysqld]
+</span></span><span class="line"><span class="cl">#
+</span></span><span class="line"><span class="cl"># Remove leading # and set to the amount of RAM for the most important data
+</span></span><span class="line"><span class="cl"># cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+</span></span><span class="line"><span class="cl"># innodb_buffer_pool_size = 128M
+</span></span><span class="line"><span class="cl">#
+</span></span><span class="line"><span class="cl"># Remove leading # to turn on a very important data integrity option: logging
+</span></span><span class="line"><span class="cl"># changes to the binary log between backups.
+</span></span><span class="line"><span class="cl"># log_bin
+</span></span><span class="line"><span class="cl">#
+</span></span><span class="line"><span class="cl"># Remove leading # to set options mainly useful for reporting servers.
+</span></span><span class="line"><span class="cl"># The server defaults are faster for transactions and fast SELECTs.
+</span></span><span class="line"><span class="cl"># Adjust sizes as needed, experiment to find the optimal values.
+</span></span><span class="line"><span class="cl"># join_buffer_size = 128M
+</span></span><span class="line"><span class="cl"># sort_buffer_size = 2M
+</span></span><span class="line"><span class="cl"># read_rnd_buffer_size = 2M
+</span></span><span class="line"><span class="cl">datadir=/var/lib/mysql
+</span></span><span class="line"><span class="cl">socket=/var/lib/mysql/mysql.sock
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># Disabling symbolic-links is recommended to prevent assorted security risks
+</span></span><span class="line"><span class="cl">symbolic-links=0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">log-error=/var/log/mysqld.log
+</span></span><span class="line"><span class="cl">pid-file=/var/run/mysqld/mysqld.pid
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="二tar包安装和source源码安装">二、tar包安装和source源码安装</h3>
+<blockquote>
+<p>已编译tar包(带bin目录的tar)和source源码安装区别是前者是编译好的，bin文件夹中就是编译之后的二进制可执行文件，后者需要自己手动编译</p>
+</blockquote>
+<p>①带bin的tar包安装</p>
+<p><img src="/images/image-20220527172826841.png" alt="image-20220527172826841"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1、[root@localhost ~]#  tar -xvf mysql-5.7.26-linux-glibc2.12-x86_64.tar 
+</span></span><span class="line"><span class="cl">2、[root@localhost ~]#  cp -r mysql-5.7.26-linux-glibc2.12-x86_64 /usr/local/mysql --&gt;拷贝文件夹到/usr/local目录下并重命名为mysql
+</span></span><span class="line"><span class="cl">3、[root@localhost ~]# mkdir /usr/local/mysql/data /usr/local/mysql/logs --&gt;创建data和logs文件夹
+</span></span><span class="line"><span class="cl">4、[root@localhost ~]#  groupadd mysql  --&gt;添加mysql用户组
+</span></span><span class="line"><span class="cl">5、[root@localhost ~]#  useradd -r -g mysql mysql  --&gt;向mysql用户组添加mysql用户，-r &lt;参数表示mysql用户是系统用户，不可用于登录系统，-g 参数表示把mysql用户添加到mysql用户组中
+</span></span><span class="line"><span class="cl">6、chown -R mysql:mysql /usr/local/mysql/ --&gt;将mysql目录权限分配给mysql用户组下的mysql用户
+</span></span><span class="line"><span class="cl">已编译tar包安装需要新建mysql用户和用户组，并将mysql目录权限分配给用户，若不进行此操作，在mysql服务启动时会报Starting MySQL. ERROR! The server quit without updating PID file错误
+</span></span><span class="line"><span class="cl">7、[root@localhost ~]#  vim /etc/my.cnf --&gt;在/etc下新增配置文件
+</span></span><span class="line"><span class="cl">[mysqld]
+</span></span><span class="line"><span class="cl">port = 3306
+</span></span><span class="line"><span class="cl">user = mysql
+</span></span><span class="line"><span class="cl">basedir = /usr/local/mysql
+</span></span><span class="line"><span class="cl">datadir = /usr/local/mysql/data
+</span></span><span class="line"><span class="cl">socket =  /usr/local/mysql/data/mysql.sock
+</span></span><span class="line"><span class="cl">bind-address = 0.0.0.0
+</span></span><span class="line"><span class="cl">pid-file =  /usr/local/mysql/data/mysqld.pid
+</span></span><span class="line"><span class="cl">character-set-server = utf8
+</span></span><span class="line"><span class="cl">collation-server = utf8_general_ci
+</span></span><span class="line"><span class="cl">max_connections = 200
+</span></span><span class="line"><span class="cl">log-error =  /usr/local/mysql/logs/mysqld.log
+</span></span><span class="line"><span class="cl">8、[root@localhost ~]# cd /usr/local/mysql/bin/ --&gt;进入mysql的bin目录
+</span></span><span class="line"><span class="cl">9、[root@localhost ~]#./mysqld --defaults-file=/etc/my.cnf --user=mysql --basedir=/usr/local/mysql/ --datadir=/data/mysql/  --initialize --&gt;初始化
+</span></span><span class="line"><span class="cl">10、[root@localhost ~]# cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql --&gt;将mysql.server放置到/etc/init.d/mysql中
+</span></span><span class="line"><span class="cl">11、[root@localhost ~]# service mysql start --&gt;启动服务
+</span></span><span class="line"><span class="cl">12、[root@localhost ~]# cat /usr/local/mysql/logs/mysqld.log --&gt;日志最后一行有随机生成的初始密码,可登录mysql
+</span></span><span class="line"><span class="cl">13、[root@localhost ~]# ln -s  /usr/local/mysql/bin/mysql    /usr/bin --&gt;创建软连接到/usr/bin可以全局使用mysql命令(方便登录mysql)
+</span></span><span class="line"><span class="cl">14、[root@localhost ~]# mysql -uroot -p --&gt;登录mysql
+</span></span><span class="line"><span class="cl">15、[root@localhost ~]# 输入12步得到的密码，登录mysql
+</span></span><span class="line"><span class="cl">16、若登录出现Can&#39;t connect to local MySQL server through socket &#39;/tmp/mysql.sock&#39; (2)，需要将mysql.sock软连接到tmp目录即可 [root@localhost ~]# ln -s /usr/local/mysql/data/mysql.sock /tmp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>②source源码安装</p>
+<p><img src="/images/Snipaste_2022-05-27_18-22-03.png" alt="img"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">(1)创建安装目录
+</span></span><span class="line"><span class="cl"> [root@localhost ~]# mkdir /usr/local/mysql/{data,logs,tmp,run} -p
+</span></span><span class="line"><span class="cl">(2）首先安装源码编译所需要的包
+</span></span><span class="line"><span class="cl"> [root@localhost ~]# yum -y install make gcc-c++ cmake bison-devel  ncurses-devel
+</span></span><span class="line"><span class="cl">(3)解压
+</span></span><span class="line"><span class="cl"> [root@localhost ~]# tar -zxvf mysql-5.7.27.tar.gz 
+</span></span><span class="line"><span class="cl"> [root@localhost ~]# tar -zxvf mysql-boost-5.7.27.tar.gz  #（不需要安装，在安装mysql时自动安装，）
+</span></span><span class="line"><span class="cl">两个文件解压以后都会在同一个目录上 mysql-5.7.27 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">(4)编译安装（编译参数按实际情况制定）
+</span></span><span class="line"><span class="cl"> cd mysql-5.7.27
+</span></span><span class="line"><span class="cl"> cmake . \
+</span></span><span class="line"><span class="cl">-DCMAKE_INSTALL_PREFIX=/usr/local/mysql/ \
+</span></span><span class="line"><span class="cl">-DMYSQL_DATADIR=/usr/local/mysql/data \
+</span></span><span class="line"><span class="cl">-DDOWNLOAD_BOOST=1 \
+</span></span><span class="line"><span class="cl">-DWITH_BOOST=/opt/software/mysql-5.7.27/boost \
+</span></span><span class="line"><span class="cl">-DSYSCONFDIR=/etc \
+</span></span><span class="line"><span class="cl">-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+</span></span><span class="line"><span class="cl">-DWITH_PARTITION_STORAGE_ENGINE=1 \
+</span></span><span class="line"><span class="cl">-DWITH_FEDERATED_STORAGE_ENGINE=1 \
+</span></span><span class="line"><span class="cl">-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+</span></span><span class="line"><span class="cl">-DWITH_MYISAM_STORAGE_ENGINE=1 \
+</span></span><span class="line"><span class="cl">-DENABLED_LOCAL_INFILE=1 \
+</span></span><span class="line"><span class="cl">-DMYSQL_UNIX_ADDR=/usr/local/mysql/run/mysql.sock \
+</span></span><span class="line"><span class="cl">-DENABLE_DTRACE=0 \
+</span></span><span class="line"><span class="cl">-DDEFAULT_CHARSET=utf8 \
+</span></span><span class="line"><span class="cl">-DDEFAULT_COLLATION=utf8_general_ci \
+</span></span><span class="line"><span class="cl">-DWITH_EMBEDDED_SERVER=1
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">make &amp; make install
+</span></span><span class="line"><span class="cl">(5)/etc/my.cnf配置mysql
+</span></span><span class="line"><span class="cl">(6) ./mysqld --defaults-file=/etc/my.cnf --initialize #初始化
+</span></span><span class="line"><span class="cl">(7) cp support-files/mysql.server /etc/init.d/mysql #启动项设置
+</span></span><span class="line"><span class="cl">(8) service mysqld start
+</span></span><span class="line"><span class="cl">(9)登录不在赘述
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="mysql常见报错及处理方式">mysql常见报错及处理方式：</h2>
+<ol>
+<li>
+<p>Can&rsquo;t connect to local MySQL server through socket &lsquo;/tmp/mysql.sock&rsquo; (2)</p>
+<p><a href="https://blog.csdn.net/weixin_43464964/article/details/121807241" target="_blank" rel="noopener">https://blog.csdn.net/weixin_43464964/article/details/121807241</a>
+</p>
+</li>
+<li>
+<p>防火墙问题导致mysql连不上：https://www.68idc.com/news/content/582.html</p>
+</li>
+<li>
+<p>连接mysql报错误码1130：https://blog.csdn.net/web_15534274656/article/details/126493936</p>
+</li>
+<li>
+<p>CentOS7查看开放端口命令、查看端口占用情况和开启端口命令、杀掉进程</p>
+<p><a href="https://blog.csdn.net/weixin_48053866/article/details/127715462" target="_blank" rel="noopener">https://blog.csdn.net/weixin_48053866/article/details/127715462</a>
+</p>
+</li>
+<li>
+<p>centos 7 tcp6端口地址不通，导致无法访问：https://www.pianshen.com/article/54202723812/</p>
+</li>
+</ol>
+<p>​</p>
+    </div>
+          
+    <footer class="post-footer">
+     
+ 
+<div class="post-tags">     
+    
+    <a href="/tags/linux" rel="tag" title="Linux">#Linux#</a>
+    
+    <a href="/tags/mysql" rel="tag" title="mysql">#mysql#</a>
+    
+    <a href="/tags/rpm" rel="tag" title="rpm">#rpm#</a>
+    
+    <a href="/tags/yum" rel="tag" title="yum">#yum#</a>
+    
+    <a href="/tags/centos-7" rel="tag" title="CentOS 7">#CentOS 7#</a>
+    
+</div>
+
+
+
+      
+
+
+<div class="addthis_inline_share_toolbox"></div>
+
+
+
+     <div class="post-nav">
+<div class="article-copyright">
+    <div class="article-copyright-img">
+        <img src="/img/qq_qrcode.png" width="129px" height="129px"/>
+        <div style="text-align:center;">QQ扫一扫交流</div>
+    </div>
+    <div class="article-copyright-info">
+        <p> 
+            <span>标题：</span>Linux(CentOS 7)系统四种安装软件的方式及mysql5.7的详细安装配置
+        </p>
+        <p> 
+            <span>链接：</span>https://codingroam.github.io/post/linuxcentos-7%E7%B3%BB%E7%BB%9F%E5%9B%9B%E7%A7%8D%E5%AE%89%E8%A3%85%E8%BD%AF%E4%BB%B6%E7%9A%84%E6%96%B9%E5%BC%8F%E5%8F%8Amysql5.7%E7%9A%84%E8%AF%A6%E7%BB%86%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/
+        </p>
+        <p> 
+            <span>作者：</span>极光code
+        </p>
+        
+        
+        <p> 
+            <span>声明： </span>本博客文章除特别声明外，均采用 <a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank' style='text-decoration: underline;'>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！
+        </p>
+    </div>
+</div>
+<div class="clear"></div>
+</div>
+     <div class="reward-qr-info">
+  <div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>赏</span>
+  </button>
+  <div id="QR" style="display: none;">   
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/img/wechat-pay.png" alt="WeChat Pay"/>
+        <p>微信打赏</p>
+      </div>
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/img/ali-pay.png" alt="Alipay"/>
+        <p>支付宝打赏</p>
+      </div>
+  </div>
+</div>
+     <div class="post-nav">
+    <div class="post-nav-next post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/vim%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8F%E5%8F%8A%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A8/" rel="next" title="Vim的四种模式及操作命令大全">
+        <i class="fa fa-chevron-left"></i> Vim的四种模式及操作命令大全
+        </a>
+    
+    </div>
+
+    <div class="post-nav-prev post-nav-item">
+    
+        <a href="https://codingroam.github.io/post/%E4%BD%A0%E7%9C%9F%E7%9A%84%E6%87%82string%E5%90%97/" rel="prev" title="你真的懂String吗？">
+        你真的懂String吗？ 
+        <i class="fa fa-chevron-right"></i>
+        </a>
+    
+    </div>
+</div>  
+     
+
+
+
+
+<div id="wcomments"></div>
+
+
+
+
+
+
+
+    </footer>
+  </article>
+</section>
+
+          </div>
+        </div>
+        <div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+        src="/img/avatar.png"
+        alt="极光code" />
+    <p class="site-author-name" itemprop="name">极光code</p>
+    <p class="site-description motion-element" itemprop="description"> 
+      
+        以梦为马，不负韶华!
+      
+    </p>
+</div>
+      <nav class="site-state motion-element">
+    <div class="site-state-item site-state-posts">
+      <a href="/post/">
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">日志</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">    
+        <a href="/categories/">      
+         
+        <span class="site-state-item-count">49</span>
+        
+        <span class="site-state-item-name">分类</span>
+        
+        </a>
+    </div>
+
+    <div class="site-state-item site-state-tags">
+        <a href="/tags/">
+         
+        <span class="site-state-item-count">62</span>
+        
+        <span class="site-state-item-name">标签</span>
+        </a>
+    </div>
+</nav>
+      
+      
+<div class="links-of-author motion-element">
+    
+        <span class="links-of-author-item">
+        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
+            <i class="fa fa-fw fa-github"></i>
+            GitHub
+        </a>
+        </span>
+    
+        <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
+            <i class="fa fa-fw fa-globe"></i>
+            知乎
+        </a>
+        </span>
+    
+</div>
+
+
+      
+    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+    <div class="links-of-blogroll-title">
+        <i class="fa fa-fw fa-globe"></i>
+        友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
+        </li>
+        
+        <li class="links-of-blogroll-item">
+            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
+    <div class="tagcloud-of-blogroll-title">
+        <i class="fa fa-fw fa-tags"></i>
+        标签云
+    </div>
+    <ul class="tagcloud-of-blogroll-list">
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/linux">Linux
+            <sup>10</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java">Java
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/mysql">Mysql
+            <sup>8</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/docker">Docker
+            <sup>6</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/git">Git
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/problem-solving">Problem solving
+            <sup>5</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/java-base">Java base
+            <sup>4</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/spring">Spring
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/threadlocal">Threadlocal
+            <sup>3</sup>
+            </a>
+        </li>
+        
+        <li  class="tagcloud-of-blogroll-item">
+            <a href="/tags/command">Command
+            <sup>2</sup>
+            </a>
+        </li>
+        
+    </ul>
+    </div>
+
+
+      
+    </section>
+    
+  </div>
+</aside>
+
+      </div>
+    </main>
+   
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  <span class="copyright-year">  
+    &copy; 2010 - 2023
+  </span>
+  <span class="with-love"><i class="fa fa-heart"></i></span>
+  <span class="copyright-author">好记性不如烂笔头</span>
+</div>
+<div class="powered-info">
+  <span class="powered-by">
+    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="theme-info">
+    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
+    </a>
+  </span>
+</div>
+<div class="vistor-info">
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <span class="site-uv">
+    <i class="fa fa-user"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="site-pv">
+    <i class="fa fa-eye"></i>
+    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+  </span>
+
+
+</div>
+<div class="license-info">
+  <span class="storage-info">
+    Storage by 
+    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
+  </span>
+  <span class="separator-line">/</span>
+  <span class="license-num"> 
+    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
+  </span>
+</div>
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+      <span id="scrollpercent"><span>0</span>%</span>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
+<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
+
+
+<script type="text/javascript">
+
+  function detectIE() {
+    var ua = window.navigator.userAgent;
+
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+    var edge = ua.indexOf('Edge/');
+
+    if (msie>0 || trident>0 || edge>0) {
+      return -1;
+    }
+
+    return 1;
+  }
+
+
+  function getCntViewHeight() {
+    var docHeight = $('#content').height(),
+        winHeight = $(window).height(),
+        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
+    return cntViewHeight;
+  }
+
+  function getScrollbarWidth() {
+    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
+    var div = $div[0];
+    var scrollbarWidth = div.offsetWidth - div.clientWidth;
+
+    $div.remove();
+
+    return scrollbarWidth;
+  }
+
+  function registerBackTop() {
+    var THRESHOLD = 50;
+    var $top = $('.back-to-top');
+
+    $(window).on('scroll', function () {
+      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
+
+      var scrollTop = $(window).scrollTop();
+      var cntViewHeight = getCntViewHeight();
+      var scrollPercent = (scrollTop) / (cntViewHeight);
+      var scrollPercentRounded = Math.round(scrollPercent*100);
+      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
+      $('#scrollpercent>span').html(scrollPercentMaxed);
+    });
+
+    $top.on('click', function () {
+      $("html,body").animate({
+                 scrollTop: 0,
+                 screenLeft: 0,
+                 }, 800);
+    });
+  }
+
+  function initScrollSpy () {
+    var tocSelector = '.post-toc';
+    var $tocElement = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocElement
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+      })
+      .on('clear.bs.scrollspy', removeCurrentActiveClass);
+
+    $('body').scrollspy({ target: tocSelector });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+  }
+
+  function initAffix () {
+    var headerHeight = $('.header-inner').height();
+    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
+    var sidebarTop = headerHeight + 10;
+
+    $('.sidebar-inner').affix({
+      offset: {
+        top: sidebarTop,
+        bottom: footerOffset 
+      }
+    });
+
+    
+
+  }
+
+  function initTOCDimension () {
+    var updateTOCHeightTimer;
+
+    $(window).on('resize', function () {
+      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+
+      updateTOCHeightTimer = setTimeout(function () {
+        var tocWrapperHeight = document.body.clientHeight - 100;
+
+        updateTOCHeight(tocWrapperHeight);
+      }, 0);
+    });
+
+    
+    updateTOCHeight(document.body.clientHeight - 100);
+
+    
+    var scrollbarWidth = getScrollbarWidth();
+    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
+  }
+
+  function updateTOCHeight (height) {
+    height = height || 'auto';
+    $('.post-toc').css('max-height', height);
+  }
+
+$(function() {
+
+  var sidebarTop = $('.header-inner').height() + 10;
+  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
+
+  
+  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
+  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
+  var sideHeight = sidebarMt + sidebarInHeight;
+  var contentHeight = $('.content-wrap').height();
+
+  if (contentHeight < sideHeight) {
+    $('.content-wrap').css('min-height', sideHeight);
+  }
+  
+  
+  $('.site-nav-toggle').on('click', function () {
+    var $siteNav = $('.site-nav');
+    var $toggleLine = $('.toggle');
+    var ON_CLASS_NAME = 'site-nav-on';
+    var CLOSE_CLASS_NAME = 'toggle-close';
+    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
+    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
+    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
+
+    $siteNav.stop()[animateAction]('normal', function () {
+      $siteNav[animateCallback](ON_CLASS_NAME);
+      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
+    });
+
+  });
+
+  registerBackTop();
+  
+   
+  initAffix();
+  initTOCDimension();
+
+  $('.sidebar-nav-toc').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).next().removeClass('sidebar-nav-active');      
+    $('.'+$(this).next().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+
+  $('.sidebar-nav-overview').click(function(){
+    $(this).addClass('sidebar-nav-active');
+    $(this).prev().removeClass('sidebar-nav-active');      
+    $('.'+$(this).prev().attr('data-target')).toggle(500);
+    $('.'+$(this).attr('data-target')).toggle(500);
+  });
+});  
+
+</script>
+
+
+
+
+
+<script src="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js"></script>
+<script type="text/javascript">
+$(function() {
+  $('.post-body').viewer(); 
+});
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+  const locale = {
+    placeholder: '欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^'
+  };
+  $(function(){
+    if (detectIE()>0) {
+      $.getScript(document.location.protocol+'//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js', function(){
+         new Waline({
+          el: '#wcomments', 
+          visitor: true,
+          emoji: [], 
+          wordLimit: '200', 
+          uploadImage: false,
+          locale, 
+          requiredMeta: ['nick', 'mail'], 
+          serverURL: "Your WalineSerURL", 
+          lang: "zh-cn"
+        });
+      });      
+    } else {
+      $('#wcomments').html('抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。');
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+
+
+
+
+
+
+
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https'){
+   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else{
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+
+</body>
+</html>

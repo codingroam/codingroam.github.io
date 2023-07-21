@@ -1,1 +1,22 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>privacy - 标签 - 好记性不如烂笔头</title><link>/tags/privacy/</link><description>privacy - 标签 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 10 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/privacy/" rel="self" type="application/rss+xml"/><item><title>富文本内容测试pp</title><link>/post/rich-content/</link><pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><author>作者</author><guid>/post/rich-content/</guid><description><![CDATA[<p>Hugo 上有几个<a href="https://gohugo.io/content-management/shortcodes/#use-hugos"target="_blank" rel="external nofollow noopener noreferrer"><strong>内置短码</strong></a>，用于丰富内容，以及<a href="https://gohugo.io/about/hugo-and-gdpr/"target="_blank" rel="external nofollow noopener noreferrer"><strong>隐私配置</strong></a>还有一组简单的短代码，支持各种社交媒体嵌入的静态和非 JS 版本。</p>]]></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>privacy on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/tags/privacy/</link>
+    <description>Recent content in privacy on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 10 Mar 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/tags/privacy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>富文本内容测试pp</title>
+      <link>https://codingroam.github.io/post/rich-content/</link>
+      <pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/rich-content/</guid>
+      <description>&lt;p&gt;Hugo 上有几个&lt;a href=&#34;https://gohugo.io/content-management/shortcodes/#use-hugos&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;内置短码&lt;/strong&gt;&lt;/a&gt;
+，用于丰富内容，以及&lt;a href=&#34;https://gohugo.io/about/hugo-and-gdpr/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;隐私配置&lt;/strong&gt;&lt;/a&gt;
+还有一组简单的短代码，支持各种社交媒体嵌入的静态和非 JS 版本。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

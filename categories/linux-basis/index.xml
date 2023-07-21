@@ -1,1 +1,29 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Linux Basis - 分类 - 好记性不如烂笔头</title><link>/categories/linux-basis/</link><description>Linux Basis - 分类 - 好记性不如烂笔头</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 31 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/linux-basis/" rel="self" type="application/rss+xml"/><item><title>VMware虚拟机CentOS 7.5设置静态ip</title><link>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</link><pubDate>Tue, 31 May 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</guid><description>&lt;p>CentOS 7.5设置静态ip,配置网关，DNS等&lt;/p></description></item><item><title>Linux文件详细属性学习</title><link>/post/linux%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E5%B1%9E%E6%80%A7%E5%AD%A6%E4%B9%A0/</link><pubDate>Sun, 29 May 2022 00:00:00 +0000</pubDate><author>作者</author><guid>/post/linux%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E5%B1%9E%E6%80%A7%E5%AD%A6%E4%B9%A0/</guid><description>&lt;p>详细介绍如何查看并分辨Linux文件的详细属性，包括文件的类型，权限信息，所有者，用户等&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux Basis on 好记性不如烂笔头</title>
+    <link>https://codingroam.github.io/categories/linux-basis/</link>
+    <description>Recent content in Linux Basis on 好记性不如烂笔头</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 31 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://codingroam.github.io/categories/linux-basis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>VMware虚拟机CentOS 7.5设置静态ip</title>
+      <link>https://codingroam.github.io/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</link>
+      <pubDate>Tue, 31 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/vmware%E8%99%9A%E6%8B%9F%E6%9C%BAcentos-7.5%E8%AE%BE%E7%BD%AE%E9%9D%99%E6%80%81ip/</guid>
+      <description>&lt;p&gt;CentOS 7.5设置静态ip,配置网关，DNS等&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Linux文件详细属性学习</title>
+      <link>https://codingroam.github.io/post/linux%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E5%B1%9E%E6%80%A7%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Sun, 29 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://codingroam.github.io/post/linux%E6%96%87%E4%BB%B6%E8%AF%A6%E7%BB%86%E5%B1%9E%E6%80%A7%E5%AD%A6%E4%B9%A0/</guid>
+      <description>&lt;p&gt;详细介绍如何查看并分辨Linux文件的详细属性，包括文件的类型，权限信息，所有者，用户等&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

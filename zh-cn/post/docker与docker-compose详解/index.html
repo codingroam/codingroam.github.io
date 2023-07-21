@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Docker与Docker-compose - Loving life and dreams.</title><meta name="author" content="xxxx">
+<meta name="author-link" content="">
+<meta name="description" content="Docker与Docker-compose详解" /><meta name="keywords" content='Docker, Docker-compose' /><meta itemprop="name" content="Docker与Docker-compose">
+<meta itemprop="description" content="Docker与Docker-compose详解"><meta itemprop="datePublished" content="2023-01-29T00:00:00+00:00" />
+<meta itemprop="dateModified" content="2023-01-29T00:00:00+00:00" />
+<meta itemprop="wordCount" content="6219"><meta itemprop="image" content="https://codingroam.github.io/logo.png"/>
+<meta itemprop="keywords" content="Docker,Docker-compose," /><meta property="og:title" content="Docker与Docker-compose" />
+<meta property="og:description" content="Docker与Docker-compose详解" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://codingroam.github.io/zh-cn/post/docker%E4%B8%8Edocker-compose%E8%AF%A6%E8%A7%A3/" /><meta property="og:image" content="https://codingroam.github.io/logo.png"/><meta property="article:section" content="zh-CN" />
+<meta property="article:published_time" content="2023-01-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-01-29T00:00:00+00:00" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://codingroam.github.io/logo.png"/>
+
+<meta name="twitter:title" content="Docker与Docker-compose"/>
+<meta name="twitter:description" content="Docker与Docker-compose详解"/>
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="https://codingroam.github.io/zh-cn/post/docker%E4%B8%8Edocker-compose%E8%AF%A6%E8%A7%A3/" /><link rel="prev" href="https://codingroam.github.io/zh-cn/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/" /><link rel="next" href="https://codingroam.github.io/zh-cn/post/centos%E5%AE%89%E8%A3%85docker/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"><link rel="stylesheet" href="/lib/animate/animate.min.css"><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Docker与Docker-compose",
+    "inLanguage": "zh-CN",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https:\/\/codingroam.github.io\/zh-cn\/post\/docker%E4%B8%8Edocker-compose%E8%AF%A6%E8%A7%A3\/"
+    },"genre": "zh-CN","keywords": "Docker, Docker-compose","wordcount":  6219 ,
+    "url": "https:\/\/codingroam.github.io\/zh-cn\/post\/docker%E4%B8%8Edocker-compose%E8%AF%A6%E8%A7%A3\/","datePublished": "2023-01-29T00:00:00+00:00","dateModified": "2023-01-29T00:00:00+00:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "wang"
+      },"description": ""
+  }
+  </script></head>
+  <body data-header-desktop="sticky" data-header-mobile="auto"><script>(window.localStorage?.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('data-theme', 'dark');</script><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="Loving life and dreams."><img loading="lazy" src="/fixit.min.svg" srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes="auto" data-title="Loving life and dreams." data-alt="Loving life and dreams." class="logo" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/><span class="header-title-text">我的 Hugo FixIt 网站</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a
+                class="menu-link"
+                href="/"
+                
+                
+              ></a></li><li class="menu-item delimiter"></li><li class="menu-item search" id="search-desktop">
+            <input type="text" placeholder="搜索文章标题或内容……" id="search-input-desktop">
+            <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="搜索">
+              <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+            </a>
+            <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="清空">
+              <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+            </a>
+            <span class="search-button search-loading" id="search-loading-desktop">
+              <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+            </span>
+          </li><li class="menu-item theme-switch" title="切换主题">
+          <i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i>
+        </li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="Loving life and dreams."><img loading="lazy" src="/fixit.min.svg" srcset="/fixit.min.svg, /fixit.min.svg 1.5x, /fixit.min.svg 2x" sizes="auto" data-title="/fixit.min.svg" data-alt="/fixit.min.svg" class="logo" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/><span class="header-title-text">我的 Hugo FixIt 网站</span></a><span class="header-subtitle"></span></div>
+      <div class="menu-toggle" id="menu-toggle-mobile">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="search-wrapper">
+            <div class="search mobile" id="search-mobile">
+              <input type="text" placeholder="搜索文章标题或内容……" id="search-input-mobile">
+              <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="搜索">
+                <i class="fa-solid fa-search fa-fw" aria-hidden="true"></i>
+              </a>
+              <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="清空">
+                <i class="fa-solid fa-times-circle fa-fw" aria-hidden="true"></i>
+              </a>
+              <span class="search-button search-loading" id="search-loading-mobile">
+                <i class="fa-solid fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+              </span>
+            </div>
+            <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+              取消
+            </a>
+          </li><li
+              class="menu-item"
+            ><a
+                  class="menu-link"
+                  href="/"
+                  
+                  
+                ></a></li><li class="menu-item menu-system">
+          <span class="menu-system-item theme-switch" title="切换主题"><i class="fa-solid fa-adjust fa-fw" aria-hidden="true"></i></span></li>
+      </ul>
+    </nav>
+  </div>
+</header><div class="search-dropdown desktop">
+    <div id="search-dropdown-desktop"></div>
+  </div>
+  <div class="search-dropdown mobile">
+    <div id="search-dropdown-mobile"></div>
+  </div><main class="container"><article class="page single special">
+    <div class="header"><h1 class="single-title animate__animated animate__pulse animate__faster">Docker与Docker-compose</h1></div><div
+      class="content"
+      id="content"
+      
+      
+    ><p>Docker与Docker-compose详解</p>
+<p>1、Docker是什么？</p>
+<p>在计算机中，虚拟化(英语: Virtualization) 是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源。这些资源的新虚拟部份是不受现有资源的架设方式，地域或物理组态所限制。一般所指的虚拟化资源包括计算能力和资料存储。</p>
+<p>在实际的生产环境中。虚拟化技术主要用来解决高性能的物理硬件产能过利和老的旧的硬件产能过低的重组重用，透明化底层物理硬件，从而最大化的利用物理硬件资源的充分利用。</p>
+<p>虚拟化技术种类很多，例如:软件虚拟化、硬件虚拟化、内存虚拟化、网络虚拟化、桌面虚拟化、服务虚拟化、虚拟机等等。.</p>
+<p><strong>Docker和传统虚拟机的区别</strong></p>
+<p>2、Docker的安装</p>
+<p>2.1、Windows下的安装</p>
+<p>直接在官网下载windows包双击运行即可，对于win10来说需要开启Hype-v，直接百度打开即可。</p>
+<p>2.2、Linux下的安装</p>
+<div class="highlight" id="id-1"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">curl</span> <span class="o">-</span><span class="n">fsSL</span> <span class="n">https</span><span class="o">:</span><span class="c1">//get.docker.com -o get-docker.sh
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">sudo</span> <span class="n">sh</span> <span class="n">get</span><span class="o">-</span><span class="n">docker</span><span class="o">.</span><span class="na">sh</span> <span class="o">--</span><span class="n">mirror</span> <span class="n">Aliyun</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">安装报错</span> <span class="n">Problem</span><span class="o">:</span> <span class="n">problem</span> <span class="n">with</span> <span class="n">installed</span> <span class="kn">package</span> <span class="nn">buildah</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">执行语句</span> <span class="n">yum</span> <span class="n">erase</span> <span class="n">podman</span> <span class="n">buildah</span> 
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">再进行安装</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">systemctl</span> <span class="n">status</span> <span class="n">docker</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">systemctl</span> <span class="n">restart</span> <span class="n">docker</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">info</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">systemctl</span> <span class="n">enable</span> <span class="n">docker</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">建立</span><span class="n">docker</span><span class="err">组</span>
+</span></span><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">groupadd</span> <span class="n">docker</span>
+</span></span><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">usermod</span> <span class="o">-</span><span class="n">aG</span> <span class="n">docker</span> <span class="n">$USER</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">重启服务</span>
+</span></span><span class="line"><span class="cl"><span class="n">systemctl</span> <span class="n">restart</span> <span class="n">docker</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>2.3、核心概念</p>
+<ol>
+<li>仓库</li>
+</ol>
+ <ul> 
+  1. 远程仓库：开发者镜像及官方镜像 
+  1. 本地仓库：只保存当前自己使用过的镜像及自定义镜像 
+  1. 作用：用来存放docker镜像位置 
+ </ul>  
+5. 镜像 
+ <ul> 
+  5. 作用：一个镜像就代表一个软件 
+ </ul>  
+7. 容器 
+ <ul> 
+  7. 作用：一个幢像运行一次就会生成一个实例就是生成一个容器 
+ </ul> 
+<p>2.4、Aliyun服务加速</p>
+<p>docker提供了一个远程仓库，主要是用来存放镜像的，而我们所需要的镜像都需要去远程仓库进行拉取，dockerHub 地址： <a href="https://registry.hub.docker.com/_/mysql?tab=tags"target="_blank" rel="external nofollow noopener noreferrer">https://registry.hub.docker.com/_/mysql?tab=tags</a>，这里以mysql镜像为例，然后直接在虚拟机当中执行命令</p>
+<div class="highlight" id="id-2"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">获取最新版本的</span><span class="n">mysql</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="n">mysql</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">获取指定版本的</span><span class="n">mysql</span> <span class="mf">8.0.18</span><span class="err">版</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这里的dockerhub是为全球服务的，速度难免会有点慢，这里可以配置阿里的镜像来进行获取docker远程仓库的镜像。阿里云服务加速配置 <a href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors"target="_blank" rel="external nofollow noopener noreferrer">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</a>，按照官网进行配置即可：</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/958ddeba6bde480e9f915719f74bab9c.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/958ddeba6bde480e9f915719f74bab9c.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/958ddeba6bde480e9f915719f74bab9c.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/958ddeba6bde480e9f915719f74bab9c.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/> 3、Docker的操作</p>
+<p>3.1、Hello World</p>
+<p>在安装docker之后，直接使用命令：docker run hello-world 表示直接运行hello-world这个镜像。而他的执行基本步骤如下：</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/086988e779294fccbeedfd9570d0b903.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/086988e779294fccbeedfd9570d0b903.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/086988e779294fccbeedfd9570d0b903.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/086988e779294fccbeedfd9570d0b903.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/> 3.2、Docker 的基本命令</p>
+<p><strong>3.2.1、docker引擎及帮助操作：</strong></p>
+<div class="highlight" id="id-3"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看</span><span class="n">docker</span><span class="err">信息</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">info</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看</span><span class="n">docker</span><span class="err">版本</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">version</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">帮助命令</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="o">--</span><span class="n">help</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3.2.2、镜像相关操作：</strong></p>
+<div class="highlight" id="id-4"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">images</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">images</span> <span class="o">-</span><span class="n">a</span> <span class="err">#展示所有镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">images</span> <span class="o">-</span><span class="n">q</span> <span class="err">#只展示镜像的</span><span class="n">ID</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">images</span> <span class="n">mysql</span> <span class="err">#只展示</span><span class="n">mysql</span><span class="err">镜像</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">下载镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本号</span>  <span class="err">#</span> <span class="err">如</span> <span class="n">docker</span> <span class="n">pull</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.27</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="err">镜像名称</span><span class="o">:</span><span class="nd">@DIGEST</span>
+</span></span><span class="line"><span class="cl"><span class="err">#如：</span><span class="n">docker</span> <span class="n">pull</span> <span class="n">mysql</span><span class="o">:</span><span class="n">DIGEST</span><span class="o">:</span><span class="n">sha256</span><span class="o">:</span><span class="mi">975</span><span class="n">b3b1a6df6bf66221d1702b76c4141a4cd09f93f22f70c32edc99a6c256fe8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">搜索镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">search</span> <span class="err">镜像</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="n">docker</span> <span class="n">search</span> <span class="n">mysql</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">搜索</span><span class="n">stars</span><span class="err">数在</span><span class="mi">3000</span><span class="err">以上的</span><span class="n">image</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">search</span> <span class="n">mysql</span> <span class="o">--</span><span class="n">filter</span><span class="o">=</span><span class="n">stars</span><span class="o">=</span><span class="mi">3000</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">删除镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">image</span> <span class="n">rm</span> <span class="err">镜像名</span><span class="o">:</span><span class="err">版本或者</span><span class="n">id</span><span class="err">标识</span> <span class="err">#</span> <span class="n">docker</span> <span class="n">image</span> <span class="n">rm</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.27</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">image</span> <span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="err">镜像名</span><span class="o">:</span><span class="err">版本或者</span><span class="n">id</span><span class="err">标识</span> <span class="err">#</span> <span class="err">强制删除</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">简化删除</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">rmi</span> <span class="err">镜像名</span><span class="o">:</span><span class="err">版本</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">组合运用</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">清空本地仓库所有镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">rmi</span> <span class="o">-</span><span class="n">f</span> <span class="nf">$</span><span class="o">(</span><span class="n">docker</span> <span class="n">images</span> <span class="o">-</span><span class="n">q</span><span class="o">)</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3.2.3、容器相关操作：</strong></p>
+<div class="highlight" id="id-5"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">导入本地镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">load</span> <span class="o">-</span><span class="n">i</span> <span class="err">镜像文件</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">运行一个容器</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本号</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">运行容器与宿主机进行映射</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本号</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">启动容器映射端口，后台启动</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">-</span><span class="n">d</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本号</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">启动容器映射端口，后台启动，指定名称</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">name</span> <span class="err">容器名称</span> <span class="o">-</span><span class="n">d</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本号</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看正在运行的容器</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">ps</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看运行容器的历史记录</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">a</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看最近运行的两个容器</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">a</span> <span class="o">-</span><span class="n">n</span><span class="o">=</span><span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看正在运行的容器</span><span class="n">id</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">q</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看所有容器的</span><span class="n">id</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">aq</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">容器的启动和停止</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">start</span> <span class="err">容器名称或者容器</span><span class="n">id</span> 
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">restart</span> <span class="err">容器名称或者容器</span><span class="n">id</span> 
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">stop</span> <span class="err">容器名称或者容器</span><span class="n">id</span> 
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">kill</span> <span class="err">容器名称或者容器</span><span class="n">id</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">容器的删除</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">rm</span> <span class="err">容器的</span><span class="n">id</span><span class="err">或者名称</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="err">容器的</span><span class="n">id</span><span class="err">或者名称</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">rm</span> <span class="o">-</span><span class="n">f</span> <span class="nf">$</span><span class="o">(</span><span class="n">docker</span> <span class="n">ps</span> <span class="o">-</span><span class="n">aq</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看日志</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">logs</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">实时展示日志</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">logs</span> <span class="o">-</span><span class="n">f</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">加入时间戳展示实时展示日志</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">logs</span> <span class="o">-</span><span class="n">tf</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看最后</span><span class="n">n</span><span class="err">行日志</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">logs</span> <span class="o">--</span><span class="n">tail</span> <span class="mi">5</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看容器的内部进程</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">top</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">与容器内部进行交互</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">exec</span> <span class="o">-</span><span class="n">it</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span> <span class="n">bash</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">从容器复制文件到操作系统</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">cp</span> <span class="err">容器</span><span class="n">id</span><span class="o">:</span><span class="err">路径</span> <span class="err">操作系统下的路径</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">从操作系统复制文件到容器当中</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">cp</span> <span class="err">操作系统下的路径</span> <span class="err">容器</span><span class="n">id</span><span class="o">:</span><span class="err">路径</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这里的文件复制主要还是运用到本地项目打包后的部署，比如说这里一个项目开发完成之后，打成一个jar包或者war包，丢给tomcat进行启动部署，而后直接将这个包给到tomcat镜像下的webapps目录下，重新启动tomcat或者重启容器，最后进行访问项目。</p>
+<div class="highlight" id="id-6"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看容器中的元数据</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">inspect</span> <span class="err">容器</span><span class="n">id</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">数据卷（</span><span class="n">Volume</span><span class="err">）：实现宿主机系统和容器之间的文件共享</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">数据卷的使用：</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">name</span> <span class="err">容器名称</span> <span class="o">-</span><span class="n">v</span> <span class="err">操作系统下路径</span><span class="o">:</span><span class="err">容器下路径</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="n">aa</span><span class="err">代表一个数据卷的名字，名称可以自定义，</span><span class="n">docker</span><span class="err">在不存在时自动创建这个数据卷，并且同时自动映射宿主机当中的某个目录</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">同时在启动容器的时候会将</span><span class="n">aa</span><span class="err">对应容器目录中全部内容复制到</span><span class="n">aa</span><span class="err">映射目录当中</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">name</span> <span class="err">容器名称</span>  <span class="o">-</span><span class="n">v</span> <span class="n">aa</span><span class="o">:</span><span class="err">容器下路径</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">find</span> <span class="o">/</span> <span class="o">-</span><span class="n">name</span> <span class="n">aa</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">将容器打成一个新的镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s">&#34;描述信息&#34;</span> <span class="o">-</span><span class="n">a</span> <span class="s">&#34;作者信息&#34;</span> <span class="err">容器</span><span class="n">id</span><span class="err">或名称</span> <span class="err">打包的镜像名称</span><span class="o">:</span><span class="err">标签版本</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">将镜像备份出来</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">save</span> <span class="err">镜像名称</span><span class="o">:</span><span class="err">版本</span> <span class="o">-</span><span class="n">o</span> <span class="err">文件名</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">重新加载镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">load</span> <span class="o">-</span><span class="n">i</span> <span class="err">镜像文件</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>3.3、Docker 镜像分层原理</p>
+<p>镜像是一种轻量级的，可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时所需的库、环境变量和配置文件。</p>
+<p><strong>Docker当中的镜像为什么这莫大？</strong></p>
+<p>Docker的设计：一个软件镜像不仅仅是原来软件包，镜像当中还包含软件包所需的操作系统依赖软件自身依赖以及自身软件包组成。</p>
+<p><strong>分层原理</strong></p>
+<p>很显然，在这里docker容器的设计简单来说，对于不同的环境都给抽离出来进行分层，就比如说很多的软件服务（比如说：Naocs、ES、Hadoop等等）都需要jdk的环境，那再进行拉取镜像的时候，这些镜像都会先检验jdk的环境，再进行后续的安装，那这里装个Naocs、ES、Hadoop要下载三次JDK，这显然浪费了很多的内存，所以在这里Docker采用了分层的原理，这里每一层的环境依赖都给分开了，再一次安装了jdk环境之后，后续安装的服务也要jdk依赖就不会再去拉取了，回直接使用本地有的jdk环境。</p>
+<p>3.4、Docker 网络</p>
+<p>在docker当中容器和容器之间也是可以进行通信的。就好比Linux中我们使用 ip addr 可以看到当前虚拟机的ip地址，在这里可以查看一下容器中的IP，docker exec -it 容器名 ip addr 会发现有一个对应的映射另一个映射。说明docker容器网络是通过veth-pair技术实现的。</p>
+<p>并且在这里还可以通过docker inspect 容器名称或id 命令查看容器的元数据，这里也有该容器随机分配的ip地址。</p>
+<p>而当我们启动多个容器之后，可以查看多个容器的ip地址，可以看到容器的ip地址都在同一个网段上，这就有点似曾相识的感觉了，在linux当中我们配置多台机器进行互相通信，那这里的容器通信那也是一样的不，直接进入到一台容器之内，使用ping命令，ping另外一个容器的ip。</p>
+<p>再就是在启动容器之后，默认为分配的ip地址都同一个网桥上，而这里容器当中需要对网桥进行分割开又要如何操作呢？我们需要创建一个网桥，而后在启动容器的时候指定对应的网桥即可。</p>
+<div class="highlight" id="id-7"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看网桥</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">network</span> <span class="n">ls</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">创建网桥</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">network</span> <span class="n">create</span> <span class="err">网桥名称</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">容器指定网桥挂载</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">p</span> <span class="o">-</span><span class="n">d</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">network</span> <span class="err">网桥名称</span> <span class="o">--</span><span class="n">name</span> <span class="err">容器名称</span> <span class="err">镜像</span><span class="o">:</span><span class="err">版本</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">在启动容器，生成的</span><span class="n">ip</span><span class="err">地址会和容器名称进行映射，这里除了使用</span><span class="n">ip</span><span class="err">进行访问，还可以使用容器名称进行访问</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">删除</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">network</span> <span class="n">rm</span> <span class="err">网桥名称</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">网桥细节</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">inspect</span> <span class="err">网桥名称</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>3.5、Docker 数据卷</p>
+<p><strong>3.5.1、作用</strong></p>
+<p>是用来实现容器和宿主机之间的数据共享</p>
+<p><strong>3.5.2：特点</strong></p>
+<ul>
+<li>数据卷可以在容器之间进行共享和重用</li>
+<li>对数据卷的修改会立即影响到对应的容器</li>
+<li>对数据卷的修改不会影响镜像</li>
+<li>数据卷默认一直存在，即使容器被删除</li>
+</ul>
+<p><strong>3.5.3、数据卷操作</strong></p>
+<div class="highlight" id="id-8"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">自定义数据卷目录</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">v</span> <span class="err">绝对路径</span><span class="o">:</span><span class="err">容器内路径</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">自动创建数据卷</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">v</span> <span class="err">卷名</span><span class="o">:</span><span class="err">容器内路径</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看数据卷</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">volume</span> <span class="n">ls</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">查看数据卷的细节</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">volume</span> <span class="n">inspect</span> <span class="err">卷名</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">创建数据卷</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">volume</span> <span class="n">create</span> <span class="err">卷名</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">删除数据卷</span><span class="o">(</span><span class="err">没有使用的数据卷</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">volume</span> <span class="n">prune</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">删除指定的数据卷</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">volume</span> <span class="n">rm</span> <span class="err">卷名</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>3.6、Docker 核心架构</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/9e53d301e0c547d39ecb22c04fc13685.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/9e53d301e0c547d39ecb22c04fc13685.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/9e53d301e0c547d39ecb22c04fc13685.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/9e53d301e0c547d39ecb22c04fc13685.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/> 4、Docker安装服务</p>
+<p>4.1、mysql 的安装</p>
+<p>首先我们需要确定服务的版本，拉取镜像到本地： <a href="https://registry.hub.docker.com/_/mysql?tab=description"target="_blank" rel="external nofollow noopener noreferrer">dockerHub 拉取镜像描述文件</a>，在镜像的描述文件当中，会对服务的启动、查看服务日志、服务配置等等都有进行描述。</p>
+<div class="highlight" id="id-9"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">先获取</span><span class="n">mysql</span><span class="err">服务</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>服务的启动：这里需要指定运行的环境</p>
+<div class="highlight" id="id-10"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">基本启动</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">e</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="n">root</span> <span class="o">-</span><span class="n">d</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">启动服务</span> <span class="err">后台运行</span> <span class="err">指定</span><span class="n">root</span><span class="err">用户账号密码</span><span class="o">(</span><span class="err">设置</span><span class="n">root</span><span class="err">账户的密码为</span><span class="n">root</span><span class="o">)</span> <span class="err">指定容器名称</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">3307</span><span class="o">:</span><span class="mi">3306</span> <span class="o">--</span><span class="n">name</span> <span class="n">mysql8</span><span class="mf">.0</span> <span class="o">-</span><span class="n">e</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="n">root</span> <span class="o">-</span><span class="n">d</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">启动服务</span> <span class="err">后台运行</span> <span class="err">指定</span><span class="n">root</span><span class="err">用户账号密码</span> <span class="err">指定容器名称</span> <span class="err">使用数据卷将数据持久化</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="n">mysql</span> <span class="err">容器默认存储位置：</span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">mysql</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">3307</span><span class="o">:</span><span class="mi">3306</span> <span class="o">--</span><span class="n">name</span> <span class="n">mysql8</span><span class="mf">.0</span> <span class="o">-</span><span class="n">e</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="n">root</span> <span class="o">-</span><span class="n">d</span>  <span class="o">-</span><span class="n">v</span> <span class="n">mysqldata</span><span class="o">:/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">mysql</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">启动服务</span> <span class="err">后台运行</span> <span class="err">指定</span><span class="n">root</span><span class="err">用户账号密码</span> <span class="err">指定容器名称</span> <span class="err">使用数据卷将数据持久化</span> <span class="err">已修改之后的配置文件启动</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">3307</span><span class="o">:</span><span class="mi">3306</span> <span class="o">--</span><span class="n">name</span> <span class="n">mysql8</span><span class="mf">.0</span> <span class="o">-</span><span class="n">e</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="n">root</span> <span class="o">-</span><span class="n">d</span>  <span class="o">-</span><span class="n">v</span> <span class="n">mysqldata</span><span class="o">:/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">mysql</span> <span class="o">-</span><span class="n">v</span> <span class="n">mysqlconfig</span><span class="o">:/</span><span class="n">etc</span><span class="o">/</span><span class="n">mysql</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>4.2、Tomcat 的安装</p>
+<div class="highlight" id="id-11"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">先获取镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0</span><span class="o">-</span><span class="n">jdk8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">服务启动</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">--</span><span class="n">name</span> <span class="n">tomcat</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0</span><span class="o">-</span><span class="n">jdk8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">项目的部署目录</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">-</span><span class="n">v</span> <span class="n">apps</span><span class="o">:/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span> <span class="o">--</span><span class="n">name</span> <span class="n">tomcat</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0</span><span class="o">-</span><span class="n">jdk8</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">配置文件目录</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">conf</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">8080</span><span class="o">:</span><span class="mi">8080</span> <span class="o">-</span><span class="n">v</span> <span class="n">apps</span><span class="o">:/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span> <span class="o">-</span><span class="n">v</span> <span class="n">confs</span><span class="o">:/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">conf</span> <span class="o">--</span><span class="n">name</span> <span class="n">tomcat</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0</span><span class="o">-</span><span class="n">jdk8</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>4.3、Redis的安装</p>
+<div class="highlight" id="id-12"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">拉取镜像</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="n">redis</span><span class="o">:</span><span class="mf">6.2.6</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">启动服务</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">p</span> <span class="mi">6379</span><span class="o">:</span><span class="mi">6379</span> <span class="o">--</span><span class="n">name</span> <span class="n">redis6</span> <span class="n">redis</span><span class="o">:</span><span class="mf">6.2.6</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="n">redis</span> <span class="err">持久化</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">--</span><span class="n">name</span> <span class="n">redis6</span> <span class="n">redis</span><span class="o">:</span><span class="mf">6.2.6</span> <span class="n">redis</span><span class="o">-</span><span class="n">server</span> <span class="o">--</span><span class="n">appendonly</span> <span class="n">yes</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>4.4、ElasticSearch 的安装</p>
+<p>5、Dockerfile</p>
+<p>5.1、Dockerfile 概述</p>
+<p><strong>5.1.1、Dockerfile是什么？</strong></p>
+<p>Dockerfile是用来帮助自己构建一个自定义镜像</p>
+<p><strong>5.1.2、为什么会存在Dockerfile？</strong></p>
+<p>日常用户可以将自己应用进行打包成镜像，这样就可以让我们自己的应用在容器当中运行</p>
+<p><strong>5.1.3、Dockerfile构建镜像原理</strong></p>
+<p>5.2、Dockerfile 语法</p>
+<p>FROM：构建一个自定义的镜像</p>
+<div class="highlight" id="id-13"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">新建一个</span><span class="n">dockerfile</span><span class="err">文件</span>
+</span></span><span class="line"><span class="cl"><span class="n">vim</span> <span class="n">Dockerfile</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">写入内容</span>
+</span></span><span class="line"><span class="cl"><span class="n">FROM</span> <span class="n">centos</span><span class="o">:</span><span class="mi">8</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">进行</span><span class="n">build</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">mycentos8</span><span class="o">:</span><span class="mo">01</span> <span class="o">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="n">RUN</span> <span class="o">:</span> <span class="err">对镜像进行扩展</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="n">centos</span><span class="o">:</span><span class="mi">7</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">不支持</span><span class="n">vim</span><span class="err">，对于</span><span class="n">vim</span><span class="err">的扩展，在原本的</span><span class="n">dockerfile</span><span class="err">文件当中加入</span>
+</span></span><span class="line"><span class="cl"><span class="n">RUN</span> <span class="n">yum</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">vim</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">或者使用这种语法</span>
+</span></span><span class="line"><span class="cl"><span class="n">RUN</span> <span class="o">[</span><span class="s">&#34;yum&#34;</span><span class="o">,</span><span class="s">&#34;install&#34;</span><span class="o">,</span><span class="s">&#34;-y&#34;</span><span class="o">,</span><span class="s">&#34;vim&#34;</span><span class="o">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="n">EXPORT</span> <span class="o">:</span> <span class="err">镜像暴露端口</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXPOSE</span> <span class="mi">8888</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#指定工作目录</span>
+</span></span><span class="line"><span class="cl"><span class="n">WORKDIR</span> <span class="o">/</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">复制文件</span>
+</span></span><span class="line"><span class="cl"><span class="n">COPY</span> <span class="n">aa</span><span class="o">.</span><span class="na">txt</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">aa</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">添加内容</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADD</span> <span class="n">bb</span><span class="o">.</span><span class="na">txt</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">bb</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADD</span> <span class="err">下载地址</span> <span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">tomcat</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>5.3、idea对Dockerfile支持</p>
+<p>打开idea的settings，在以来当中找到docker的依赖，进行安装该依赖，安装之后重启idea就可以对Dockerfile文件进行编辑了。</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/0d661e36b5004fcc8ba1c0125e9e0e8e.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/0d661e36b5004fcc8ba1c0125e9e0e8e.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/0d661e36b5004fcc8ba1c0125e9e0e8e.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/0d661e36b5004fcc8ba1c0125e9e0e8e.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/> 第二个就是，Dockerfile文件都在linux上，在idea当中怎么进行编辑呢，可以选择Tools下的deployment的browse remote host 进行连接远程虚拟机，这里直接连接上去之后在右侧就会有虚拟机上的文件目录信息，并且可以直接在idea当中进行打开了。</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/dccbe4f1dec946758f16ab24d2d65d5b.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/dccbe4f1dec946758f16ab24d2d65d5b.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/dccbe4f1dec946758f16ab24d2d65d5b.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/dccbe4f1dec946758f16ab24d2d65d5b.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/></p>
+<p>6、Docker compose</p>
+<p>6.1、Docker compose 概述</p>
+<p><strong>6.1.1、compose的作用</strong></p>
+<p>用来负责对Docker容器集群的快速编排</p>
+<p><strong>6.1.2、compose的定位</strong></p>
+<p>是用来定义和运行多个docker容器的应用 同时可以对多个容器进行编排</p>
+<p><strong>6.1.3、compose的核心概念</strong></p>
+<ul>
+<li>服务：一个应用的容器，服务可以存在多个</li>
+<li>项目：由一组关联的应用容器组成的一个完整业务单元，在docker-compose.yml文件当中进行定义</li>
+</ul>
+<p><strong>6.1.4、compose的安装</strong></p>
+<p>github下载地址： <a href="https://github.com/docker/compose/releases"target="_blank" rel="external nofollow noopener noreferrer">https://github.com/docker/compose/releases</a></p>
+<p>首先在github上面下载对应的版本包，下载之后将包上传到linux服务器上。将文件进行重命名并且复制到/usr/local/bin目录下，并且给该目录赋予权限。最后直接使用docker-compose -v命令查看版本进行校验是否安装成功</p>
+<div class="highlight" id="id-14"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mv</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x86_64</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span>
+</span></span><span class="line"><span class="cl"><span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">v</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>6.1.5、docker和docker-compose直接的版本对应</strong></p>
+<p>docker官网地址： <a href="https://docs.docker.com/compose/compose-file/"target="_blank" rel="external nofollow noopener noreferrer">https://docs.docker.com/compose/compose-file/</a></p>
+<p>使用命令 docker -v 查看docker的版本，可以在官网当中看到compose对docker版本的支持</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/5776b11dbdbb4c37ad862c1eed65b806.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/5776b11dbdbb4c37ad862c1eed65b806.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/5776b11dbdbb4c37ad862c1eed65b806.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/5776b11dbdbb4c37ad862c1eed65b806.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/> 6.2、Docker compose —— HelloWorld</p>
+<p>在前面有说到compose当中的组成部分，分别是服务和项目，这里首先创建一个目录用来表示这第一个helloworld项目，在项目当中添加docker-compose.yml文件用来编写compose。</p>
+<div class="highlight" id="id-15"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">创建目录</span>
+</span></span><span class="line"><span class="cl"><span class="n">mkdir</span> <span class="n">hello</span>
+</span></span><span class="line"><span class="cl"><span class="n">cd</span> <span class="n">hello</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">新建</span><span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="na">yml</span><span class="err">文件</span>
+</span></span><span class="line"><span class="cl"><span class="n">vim</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span><span class="o">.</span><span class="na">yml</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">写入内容（这里在</span><span class="n">vim</span><span class="err">当中编辑</span><span class="n">yml</span><span class="err">文件挺难受的，可以在</span><span class="n">idea</span><span class="err">当中编辑远程主机的文件）</span>
+</span></span><span class="line"><span class="cl"><span class="nl">version:</span> <span class="s">&#34;3.0&#34;</span>    <span class="err">#</span> <span class="err">指定</span><span class="n">compose</span><span class="err">的版本</span>
+</span></span><span class="line"><span class="cl"><span class="nl">services:</span>         <span class="err">#</span> <span class="err">指定服务</span>
+</span></span><span class="line"><span class="cl">  <span class="n">tomcat</span><span class="o">:</span>         <span class="err">#</span> <span class="err">单个服务</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span><span class="o">:</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0.27</span><span class="o">-</span><span class="n">jdk8</span>     <span class="err">#</span> <span class="err">服务镜像</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ports</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="mi">8081</span><span class="o">:</span><span class="mi">8080</span>                 <span class="err">#</span> <span class="err">暴露对应的端口</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">保持文件内容后进行启动</span><span class="n">compose</span>
+</span></span><span class="line"><span class="cl"><span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="n">up</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">服务启动之后，可以直接进行访问</span><span class="mi">8081</span><span class="err">端口</span>
+</span></span><span class="line"><span class="cl"><span class="nl">http:</span><span class="c1">//远程主机ip/8081
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>6.3、Docker compose —— 命令模板</p>
+<div class="highlight" id="id-16"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nl">version:</span> <span class="s">&#34;3.0&#34;</span>		<span class="err">#</span> <span class="n">compose</span><span class="err">版本</span>
+</span></span><span class="line"><span class="cl"><span class="nl">services:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">user</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">build</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">context</span><span class="o">:</span> <span class="n">user</span>					<span class="err">#</span> <span class="n">dockerfile</span><span class="err">的镜像</span>
+</span></span><span class="line"><span class="cl">      <span class="n">dockerfile</span><span class="o">:</span> <span class="n">Dockerfile</span>		<span class="err">#</span> <span class="err">读取</span><span class="n">dockerfile</span><span class="err">文件进行打包获取镜像</span>
+</span></span><span class="line"><span class="cl">    <span class="n">container_name</span><span class="o">:</span> <span class="n">user</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ports</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="s">&#34;8888:8888&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">networks</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">hello</span>
+</span></span><span class="line"><span class="cl">    <span class="n">depends_on</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">tomcat</span>
+</span></span><span class="line"><span class="cl"><span class="nl">
+</span></span></span><span class="line"><span class="cl"><span class="nl">  tomcat:</span>			<span class="err">#</span> <span class="err">单个服务标识</span>
+</span></span><span class="line"><span class="cl">    <span class="n">container_name</span><span class="o">:</span> <span class="n">tomcat</span>			<span class="err">#</span> <span class="err">启动后的容器名称</span> <span class="err">相当于</span> <span class="o">--</span><span class="n">name</span> <span class="err">指定的名称</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span><span class="o">:</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0.27</span><span class="o">-</span><span class="n">jdk8</span>		<span class="err">#</span> <span class="err">镜像</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ports</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="mi">8081</span><span class="o">:</span><span class="mi">8080</span>					<span class="err">#</span> <span class="err">端口映射</span>
+</span></span><span class="line"><span class="cl">    <span class="n">volumes</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">tomcatwebapps</span><span class="o">:/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span>		<span class="err">#</span> <span class="err">指定对应的数据卷</span>
+</span></span><span class="line"><span class="cl">    <span class="n">networks</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">hello</span>										<span class="err">#</span> <span class="err">指定网桥</span>
+</span></span><span class="line"><span class="cl">    <span class="n">depends_on</span><span class="o">:</span>										<span class="err">#</span> <span class="err">服务启动依赖</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">tomcat1</span>										<span class="err">#</span> <span class="err">服务标识</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">mysql</span>
+</span></span><span class="line"><span class="cl">    <span class="n">healthcheck</span><span class="o">:</span>									<span class="err">#</span> <span class="err">健康检查</span>
+</span></span><span class="line"><span class="cl">      <span class="n">test</span><span class="o">:</span> <span class="o">[</span><span class="err">&#39;</span><span class="n">CMD</span><span class="sc">&#39;,&#39;</span><span class="n">curl</span><span class="sc">&#39;,&#39;</span><span class="o">-</span><span class="n">f</span><span class="sc">&#39;,&#39;</span><span class="n">http</span><span class="o">:</span><span class="c1">//localhost&#39;]
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">interval</span><span class="o">:</span> <span class="mi">1</span><span class="n">m30s</span>
+</span></span><span class="line"><span class="cl">      <span class="n">timeout</span><span class="o">:</span> <span class="mi">10</span><span class="n">s</span>
+</span></span><span class="line"><span class="cl">      <span class="n">retries</span><span class="o">:</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sysctls</span><span class="o">:</span>										<span class="err">#</span> <span class="err">修改内核参数</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">net</span><span class="o">.</span><span class="na">core</span><span class="o">.</span><span class="na">somaxconn</span><span class="o">=</span><span class="mi">1024</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">net</span><span class="o">.</span><span class="na">ipv4</span><span class="o">.</span><span class="na">tcp_syncookies</span><span class="o">=</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">	<span class="n">ulimits</span><span class="o">:</span>										<span class="err">#</span> <span class="err">修改最大进程数</span>
+</span></span><span class="line"><span class="cl">      <span class="n">nproc</span><span class="o">:</span> <span class="mi">65335</span>
+</span></span><span class="line"><span class="cl">      <span class="n">nofile</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">soft</span><span class="o">:</span> <span class="mi">20000</span>
+</span></span><span class="line"><span class="cl">        <span class="n">hard</span><span class="o">:</span> <span class="mi">40000</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">  <span class="n">tomcat1</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">container_name</span><span class="o">:</span> <span class="n">tomcat2</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span><span class="o">:</span> <span class="n">tomcat</span><span class="o">:</span><span class="mf">9.0.27</span><span class="o">-</span><span class="n">jdk8</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ports</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="mi">8082</span><span class="o">:</span><span class="mi">8080</span>
+</span></span><span class="line"><span class="cl">    <span class="n">volumes</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">tomcatwebapps1</span><span class="o">:/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">tomcat</span><span class="o">/</span><span class="n">webapps</span>
+</span></span><span class="line"><span class="cl">    <span class="n">networks</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">-</span> <span class="n">hello</span>
+</span></span><span class="line"><span class="cl"><span class="nl">
+</span></span></span><span class="line"><span class="cl"><span class="nl">  mysql:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">container_name</span><span class="o">:</span> <span class="n">mysql8</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span><span class="o">:</span> <span class="n">mysql</span><span class="o">:</span><span class="mf">8.0.18</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ports</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="mi">3307</span><span class="o">:</span><span class="mi">3306</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span>    <span class="n">environment</span><span class="o">:</span>							<span class="err">#</span> <span class="err">指定启动的环境</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span>      <span class="o">-</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="n">root</span>
+</span></span><span class="line"><span class="cl">    <span class="n">env_file</span><span class="o">:</span>								<span class="err">#</span> <span class="err">使用文件进行代替</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="o">./</span><span class="n">mysql</span><span class="o">.</span><span class="na">env</span>							<span class="err">#</span> <span class="n">mysql</span><span class="o">.</span><span class="na">evn</span><span class="err">文件内容就是</span> <span class="n">MYSQL_ROOT_PASSWORD</span><span class="o">=</span><span class="n">root</span>
+</span></span><span class="line"><span class="cl">    <span class="n">volumes</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">mysqldata</span><span class="o">:/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">mysql</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">mysqlconfig</span><span class="o">:/</span><span class="n">etc</span><span class="o">/</span><span class="n">mysql</span>
+</span></span><span class="line"><span class="cl">    <span class="n">networks</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">hello</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">数据卷都要在这统计管理</span>
+</span></span><span class="line"><span class="cl"><span class="nl">volumes:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">tomcatwebapps</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">tomcatwebapps1</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span>    <span class="n">external</span><span class="o">:</span>		<span class="err">#</span> <span class="err">使用自定义数据卷名称</span> <span class="err">默认命名为</span> <span class="err">项目名</span><span class="n">_</span><span class="err">数据卷名</span>  <span class="err">自定义后为</span> <span class="err">数据卷名</span>
+</span></span><span class="line"><span class="cl"><span class="err">#</span>      <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">  <span class="n">mysqldata</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">mysqlconfig</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">统一管理网桥</span>
+</span></span><span class="line"><span class="cl"><span class="nl">networks:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">hello</span><span class="o">:</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>6.4、Docker compose 指令</p>
+<p><strong>6.4.1、模板指令与指令</strong></p>
+<ul>
+<li>模板指令：用来书写在docker-compose.yml文件当中的指令，是用来为服务进行服务的</li>
+<li>指令：用来对整个docker-compose.yml对应的这个项目进行操作</li>
+</ul>
+<p><strong>6.4.2、常用指令</strong></p>
+<p>6.5、Docker 可视化工具 —— portainer</p>
+<p>直接在dockerHub上面拉取镜像启动服务</p>
+<div class="highlight" id="id-17"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">pull</span> <span class="n">portainer</span><span class="o">/</span><span class="n">portainer</span><span class="o">:</span><span class="mf">1.24.2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">-</span><span class="n">p</span> <span class="mi">8000</span><span class="o">:</span><span class="mi">8000</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">-</span><span class="n">p</span> <span class="mi">9000</span><span class="o">:</span><span class="mi">9000</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">--</span><span class="n">name</span><span class="o">=</span><span class="n">portainer</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">--</span><span class="n">restart</span><span class="o">=</span><span class="n">always</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">docker</span><span class="o">.</span><span class="na">sock</span><span class="o">:/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">docker</span><span class="o">.</span><span class="na">sock</span> 
+</span></span><span class="line"><span class="cl">	<span class="o">-</span><span class="n">v</span> <span class="n">portainer_data</span><span class="o">:/</span><span class="n">data</span> 
+</span></span><span class="line"><span class="cl">	<span class="n">portainer</span><span class="o">/</span><span class="n">portainer</span><span class="o">:</span><span class="mf">1.24.2</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>直接访问远程虚拟机的9000端口，注册一个账号，链接到本地虚拟机的服务，就可以看到所提供的web可视化页面了。</p>
+<p><img loading="lazy" src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/19afb828408f4d589efa1ff754c86c88.png" srcset="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/19afb828408f4d589efa1ff754c86c88.png, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/19afb828408f4d589efa1ff754c86c88.png 1.5x, https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/19afb828408f4d589efa1ff754c86c88.png 2x" sizes="auto" data-title="img" data-alt="img" style="background: url(/svg/loading.min.svg) no-repeat center;" onload="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}this.dataset.lazyloaded='';" onerror="this.title=this.dataset.title;this.alt=this.dataset.alt;for(const a of ['style','data-title','data-alt','onerror','onload']){this.removeAttribute(a);}"/> 同样的我们还可以将这个服务的启动加到docker-componse当中进行启动：</p>
+<div class="highlight" id="id-18"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span> <span class="err">加入服务</span>
+</span></span><span class="line"><span class="cl">  <span class="n">portainer</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">container_name</span><span class="o">:</span> <span class="n">portainer</span>
+</span></span><span class="line"><span class="cl">    <span class="n">image</span><span class="o">:</span> <span class="n">portainer</span><span class="o">/</span><span class="n">portainer</span><span class="o">:</span><span class="mf">1.24.2</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ports</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="mi">8000</span><span class="o">:</span><span class="mi">8000</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="mi">9000</span><span class="o">:</span><span class="mi">9000</span>
+</span></span><span class="line"><span class="cl">    <span class="n">volumes</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">docker</span><span class="o">.</span><span class="na">sock</span><span class="o">:/</span><span class="n">var</span><span class="o">/</span><span class="n">run</span><span class="o">/</span><span class="n">docker</span><span class="o">.</span><span class="na">sock</span>
+</span></span><span class="line"><span class="cl">      <span class="o">-</span> <span class="n">portainer_data</span><span class="o">:/</span><span class="n">data</span>
+</span></span><span class="line"><span class="cl">      
+</span></span><span class="line"><span class="cl"><span class="err">#</span> <span class="err">数据卷</span>
+</span></span><span class="line"><span class="cl"><span class="nl">volumes:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">portainer_data</span><span class="o">:</span></span></span></code></pre></td></tr></table>
+</div>
+</div></div></article></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">由 <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.115.4">Hugo</a> 强力驱动 | 主题 - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.2.18"><img class="fixit-icon" src="/fixit.min.svg" alt="FixIt logo" />&nbsp;FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright fa-fw" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2021 - 2023</span><span class="author" itemprop="copyrightHolder">
+              <a href="/">xxxx</a></span><span class="license footer-divider"><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></span></div><div class="footer-line statistics"></div><div class="footer-line visitor">
+          <span id="busuanzi_container_site_uv" title='总访客数'><i class="fa-regular fa-user fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span><span id="busuanzi_container_site_pv" class="footer-divider" title='总访问量'><i class="fa-regular fa-eye fa-fw" aria-hidden="true"></i>&nbsp;<span id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin fa-fw" aria-hidden="true"></i></span></span>
+        </div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons animate__faster d-none"><div class="fixed-button back-to-top" role="button" aria-label="回到顶部"><i class="fa-solid fa-arrow-up fa-fw" aria-hidden="true"></i><span class="variant-numeric d-none">0%</span>
+        </div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">FixIt 主题在启用 JavaScript 的情况下效果最佳。</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/katex/katex.min.css"><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/autocomplete/autocomplete.min.js" defer></script><script src="/lib/lunr/lunr.min.js" defer></script><script src="/lib/lunr/lunr.stemmer.support.min.js" defer></script><script src="/lib/lunr/lunr.zh.min.js" defer></script><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/katex/katex.min.js" defer></script><script src="/lib/katex/auto-render.min.js" defer></script><script src="/lib/katex/copy-tex.min.js" defer></script><script src="/lib/katex/mhchem.min.js" defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async defer></script><script>window.config={"code":{"copyTitle":"复制到剪贴板","editLockTitle":"锁定可编辑代码块","editUnLockTitle":"解锁可编辑代码块","editable":true,"maxShownLines":10},"comment":{"enable":false},"cookieconsent":{"content":{"dismiss":"同意","link":"了解更多","message":"本网站使用 Cookies 来改善您的浏览体验。"},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"enablePWA":true,"math":{"delimiters":[{"display":true,"left":"$$","right":"$$"},{"display":true,"left":"\\[","right":"\\]"},{"display":true,"left":"\\begin{equation}","right":"\\end{equation}"},{"display":true,"left":"\\begin{equation*}","right":"\\end{equation*}"},{"display":true,"left":"\\begin{align}","right":"\\end{align}"},{"display":true,"left":"\\begin{align*}","right":"\\end{align*}"},{"display":true,"left":"\\begin{alignat}","right":"\\end{alignat}"},{"display":true,"left":"\\begin{alignat*}","right":"\\end{alignat*}"},{"display":true,"left":"\\begin{gather}","right":"\\end{gather}"},{"display":true,"left":"\\begin{CD}","right":"\\end{CD}"},{"display":false,"left":"$","right":"$"},{"display":false,"left":"\\(","right":"\\)"}],"strict":false},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","lunrLanguageCode":"zh","lunrSegmentitURL":"/lib/lunr/lunr.segmentit.js","maxResultLength":10,"noResultsFound":"没有找到结果","snippetLength":50,"type":"lunr"}};</script><script src="/js/theme.min.js" defer></script></body>
+</html>

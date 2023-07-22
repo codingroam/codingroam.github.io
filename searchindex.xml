@@ -399,7 +399,7 @@ CAdvisor是一个容器资源监控工具包括容器的内存,CPU,网络IO,磁�
 使用docker-compose部署了dnmp+redis环境，但是php在使用127.0.0.1连接redis时却报Connection refused 的错误，后来在stack overflow上找到了解决方法。
 原贴地址： https://stackoverflow.com/questions/42360356/docker-redis-connection-refused/42361204
 简单来说，容器之间相互隔绝，在进行了端口映射之后，宿主机可以通过127.0.0.1:6379访问redis，但php容器不行。
-不过在php中可以直接使用hostname：redis 来连接redis容器</content></entry><entry><title>Linux命令大全：2W多字，一次实现Linux自由</title><url>https://codingroam.github.io/post/linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A82w%E5%A4%9A%E5%AD%97%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0linux%E8%87%AA%E7%94%B1/</url><categories><category>Java</category><category>Linux</category></categories><tags><tag>Java</tag><tag>Linux</tag></tags><content type="html"> Linux命令大全：2W多字，一次实现Linux自由
+不过在php中可以直接使用hostname：redis 来连接redis容器</content></entry><entry><title>Linux命令大全：2W多字，一次实现Linux自由</title><url>https://codingroam.github.io/post/linux%E5%91%BD%E4%BB%A4%E5%A4%A7%E5%85%A82w%E5%A4%9A%E5%AD%97%E4%B8%80%E6%AC%A1%E5%AE%9E%E7%8E%B0linux%E8%87%AA%E7%94%B1/</url><categories><category>Linux</category></categories><tags><tag>Linux Cammand</tag></tags><content type="html"> Linux命令大全：2W多字，一次实现Linux自由
 Linux 的学习对于一个程序员的重要性是不言而喻的。
 学好它却是程序员必备修养之一。
 同时，也是很多公司的面试题。 比如说，曾有一个网易的面试题是：

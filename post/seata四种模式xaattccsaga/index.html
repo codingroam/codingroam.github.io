@@ -1,1444 +1,288 @@
-<!DOCTYPE HTML>
-<html lang="zh-cn" dir="zh">
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-  <title> Seata四种模式（XA、AT、TCC、SAGA） - 想学啊你 </title>
-  
-  <meta name="keywords" content="博客">
-  
-  
-  <meta name="author" content="roam">
-  
-  <meta property="og:title" content="Seata四种模式（XA、AT、TCC、SAGA）"/>
-  <meta property="og:site_name" content="想学啊你">
-  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
-  <meta name="title" content="Seata四种模式（XA、AT、TCC、SAGA） - 想学啊你" />
-  
-  <meta name="description" content="Seata四种模式（XA、AT、TCC、SAGA）" />
-   
-  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
-  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
-  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
-  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  
-  <link href="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css" rel="stylesheet"/>
-  
-  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
-  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
-  
-  
-  
-</head>
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-<div class="container one-collumn sidebar-position-left page-home  ">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-container">
-<div class="site-nav-toggle">
-  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
-      <span class="toggle-line"></span>
-      <span class="toggle-line"></span>
-      <span class="toggle-line"></span>
-  </div>
-</div>
-<div class="site-meta ">
-  
-  
-  
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">想学啊你</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-  <p class="site-subtitle">三四楼那么高了</p>
-</div>
-
-<div class="site-nav-right">
-    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-<nav class="site-nav">
-    <ul id="menu" class="menu">
-    
-        
-    
-    
-    
-      <li class="menu-item ">
-        <a href="/" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
-        </a>
-      </li>
-        
-    
-    
-    
-      <li class="menu-item menu-item-active">
-        <a href="/post" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
-        </a>
-      </li>
-        
-    
-    
-    
-      <li class="menu-item ">
-        <a href="/tags" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
-        </a>
-      </li>
-        
-    
-    
-    
-      <li class="menu-item ">
-        <a href="/categories" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-book"></i> <br />分类
-        </a>
-      </li>
-    
-      <li class="menu-item menu-item-search">
-        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
-      </li>
-    </ul>
-    <div class="site-search">
-      <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon"><i class="fa fa-search"></i> </span>
-    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
-
-    </div>
-</nav> </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-<section id="posts" class="posts-expand">
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      
-      <h1 class="post-title" itemprop="name headline">
-        <a class="post-title-link" href="https://codingroam.github.io/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/" itemprop="url">
-        Seata四种模式（XA、AT、TCC、SAGA）
-        </a>
-      </h1>
-      
-      <div class="post-meta">
-      <span class="post-pushdate">
-<i class="fa fa-calendar-o fa-fw"></i>
-<span class="post-meta-item-text">时间：</span>
-<time itemprop="dateCreated" datetime="2016-03-22T13:04:35+08:00" content="2023-01-26">
-    2023-01-26
-</time>
-</span> 
-      
-
-  <span class="post-category" >
-  <i class="fa fa-folder-o fa-fw"></i>  
-  <span class="post-meta-item-text">分类：</span>
-  
-    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-      <a class="post-category-a" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1" itemprop="url" rel="index">
-        <span itemprop="name">分布式事务</span>
-      </a>
-      &nbsp; 
-    </span>
-  
-    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-      <a class="post-category-a" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6" itemprop="url" rel="index">
-        <span itemprop="name">中间件</span>
-      </a>
-      &nbsp; 
-    </span>
-  
-    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-      <a class="post-category-a" href="/categories/seata" itemprop="url" rel="index">
-        <span itemprop="name">Seata</span>
-      </a>
-      &nbsp; 
-    </span>
-  
-</span>
-
-
-      <span class="post-wordcount">
-<i class="fa fa-file-word-o fa-fw"></i>
-<span class="post-meta-item-text">字数：</span>
-<span class="leancloud-world-count">4081 字</span>
-</span>
-      <span class="post-readtime">
-<i class="fa fa-eye fa-fw"></i>
-<span class="post-meta-item-text">阅读：</span>
-<span class="leancloud-view-count">9分钟</span>
-</span>
-      <span id="/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/" class="leancloud_visitors post-visitor" data-flag-title="Seata四种模式（XA、AT、TCC、SAGA）">
-<i class="fa fa-binoculars fa-fw"></i>
-<span class="post-meta-item-text">阅读次数：</span>
-<span class="leancloud-visitors-count"></span>
-</span>
-      </div>
-     
-    </header>
-  
-    <div class="post-body" itemprop="articleBody">
-    <p>Seata四种模式（XA、AT、TCC、SAGA）</p>
-<h1 id="seata四种模式xaattccsaga">Seata四种模式（XA、AT、TCC、SAGA）</h1>
-<h3 id="1xa模式">1、XA模式</h3>
-<h4 id="xa模式原理">XA模式原理：</h4>
-<p>XA 规范 是 X/Open 组织定义的分布式事务处理（DTP，Distributed Transaction Processing）标准，XA 规范 描述了全局的TM与局部的RM之间的接口，几乎所有主流的数据库都对 XA 规范 提供了支持。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220152871.png" alt="image-20230126220152871"></p>
-<blockquote>
-<p>如果有失败的就会回滚事务</p>
-</blockquote>
-<h4 id="seata的xa模式">seata的XA模式</h4>
-<p>seata的XA模式做了一些调整，但大体相似：</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220326443.png" alt="image-20230126220326443"></p>
-<p>RM一阶段的工作：</p>
-<ol>
-<li>注册分支事务到TC</li>
-<li>执行分支业务sql但不提交</li>
-<li>报告执行状态到TC</li>
-</ol>
-<p>TC二阶段的工作：</p>
-<ol>
-<li>
-<p>TC检测各分支事务执行状态</p>
-</li>
-<li>
-<p>如果都成功，通知所有RM提交事务</p>
-</li>
-<li>
-<p>如果有失败，通知所有RM回滚事务</p>
-</li>
-</ol>
-<p>RM二阶段的工作：</p>
-<ol>
-<li>接收TC指令，提交或回滚事务</li>
-</ol>
-<p>xa模式的优点：</p>
-<ol>
-<li>
-<p>事务的强一致性，满足ACID原则。</p>
-</li>
-<li>
-<p>常用数据库都支持，实现简单，并且没有代码侵入</p>
-</li>
-</ol>
-<p>xa模式的缺点：</p>
-<ol>
-<li>因为一阶段需要锁定数据库资源，等待二阶段结束才释放，性能较差
-依赖关系型数据库实现事务</li>
-</ol>
-<p>实现XA模式</p>
-<p>Seata的starter已经完成了XA模式的自动装配，实现非常简单，步骤如下：
-修改application.yml文件（每个参与事务的微服务），开启XA模式：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">配置seata的注册中心
-</span></span><span class="line"><span class="cl">seata:
-</span></span><span class="line"><span class="cl">  data-source-proxy-mode: XA # 选择XA模式
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>注意：是每一个微服务都需要</p>
-<p>给发起全局事务的入口方法添加@GlobalTransactional注解，本例中是OrderServiceImpl中的create方法：</p>
-<p>启动所有微服务，postman进行接口测试</p>
-<p>先进行正确的测试，再继续错误的测试</p>
-<blockquote>
-<p>错误设置，购买商品超出原来剩余的商品数就会让数据库报错测试是否可以事务回滚</p>
-</blockquote>
-<p>注意：如果测试接口报错响应时间过长，那么就应该设置响应的时间大一点，如下图，然后重启seata</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220912891.png" alt="image-20230126220912891"></p>
-<p>成功的可以查看seate的控制输出，可以看到事务回滚</p>
-<p>IDEA输出</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220944119.png" alt="image-20230126220944119"></p>
-<p>查看数据库的数据是否有被更新</p>
-<h3 id="2at模式">2、AT模式</h3>
-<h4 id="21-at模式同样是分阶段提交的事务模型不过缺弥补了xa模型中资源锁定周期过长的缺陷">2.1、 AT模式同样是分阶段提交的事务模型，不过缺弥补了XA模型中资源锁定周期过长的缺陷。</h4>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221049428.png" alt="image-20230126221049428"></p>
-<p><strong>阶段一RM的工作</strong>：</p>
-<p>注册分支事务
+<!doctype html><html lang=zh-cn dir=zh><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=content-security-policy content="upgrade-insecure-requests"><title>Seata四种模式（XA、AT、TCC、SAGA） - 想学啊你</title><meta name=keywords content="博客"><meta name=author content="roam"><meta property="og:title" content="Seata四种模式（XA、AT、TCC、SAGA）"><meta property="og:site_name" content="想学啊你"><meta property="og:image" content="https://codingroam.github.io/img/author.jpg"><meta name=title content="Seata四种模式（XA、AT、TCC、SAGA） - 想学啊你"><meta name=description content="Seata四种模式（XA、AT、TCC、SAGA）"><link rel="shortcut icon" href=https://codingroam.github.io/img/favicon.ico><link rel=apple-touch-icon href=https://codingroam.github.io/img/apple-touch-icon.png><link rel=apple-touch-icon-precomposed href=https://codingroam.github.io/img/apple-touch-icon.png><link href=//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css rel=stylesheet type=text/css><link href=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css rel=stylesheet><link href=https://codingroam.github.io/css/main.css rel=stylesheet type=text/css><link href=https://codingroam.github.io/css/syntax.css rel=stylesheet type=text/css></head><body itemscope itemtype=http://schema.org/WebPage lang=zh-Hans><div class="container one-collumn sidebar-position-left page-home"><div class=headband></div><header id=header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle role=button style=opacity:1;top:0><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><div class=custom-logo-site-title><a href=/ class=brand rel=start><span class=logo-line-before><i></i></span>
+<span class=site-title>想学啊你</span>
+<span class=logo-line-after><i></i></span></a></div><p class=site-subtitle>三四楼那么高了</p></div><div class=site-nav-right><div class="toggle popup-trigger" style=opacity:1;top:0><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul id=menu class=menu><li class=menu-item><a href=/ rel=section><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-active"><a href=/post rel=section><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class=menu-item><a href=/tags rel=section><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class=menu-item><a href=/categories rel=section><i class="menu-item-icon fa fa-fw fa-book"></i><br>分类</a></li><li class="menu-item menu-item-search"><a href=javascript:; class=popup-trigger><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class=site-search><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class=search-icon><i class="fa fa-search"></i></span>
+<span class=popup-btn-close><i class="fa fa-times-circle"></i></span><div class=local-search-input-wrapper><input autocomplete=off placeholder=搜索关键字... spellcheck=false type=text id=local-search-input autocapitalize=none autocorrect=off></div></div><div id=local-search-result></div></div></div></nav></div></header><main id=main class=main><div class=main-inner><div class=content-wrap><div id=content class=content><section id=posts class=posts-expand><article class="post post-type-normal" itemscope itemtype=http://schema.org/Article><header class=post-header><h1 class=post-title itemprop="name headline"><a class=post-title-link href=https://codingroam.github.io/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/ itemprop=url>Seata四种模式（XA、AT、TCC、SAGA）</a></h1><div class=post-meta><span class=post-pushdate><i class="fa fa-calendar-o fa-fw"></i>
+<span class=post-meta-item-text>时间：</span>
+<time itemprop=dateCreated datetime=2016-03-22T13:04:35+08:00 content="2023-01-26">2023-01-26</time></span>
+<span class=post-category><i class="fa fa-folder-o fa-fw"></i>
+<span class=post-meta-item-text>分类：</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1 itemprop=url rel=index><span itemprop=name>分布式事务</span></a>
+&nbsp;</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6 itemprop=url rel=index><span itemprop=name>中间件</span></a>
+&nbsp;</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/seata itemprop=url rel=index><span itemprop=name>Seata</span></a>
+&nbsp;</span></span>
+<span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
+<span class=post-meta-item-text>字数：</span>
+<span class=leancloud-world-count>3875 字</span></span>
+<span class=post-readtime><i class="fa fa-eye fa-fw"></i>
+<span class=post-meta-item-text>阅读：</span>
+<span class=leancloud-view-count>8分钟</span></span>
+<span id=/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/ class="leancloud_visitors post-visitor" data-flag-title=Seata四种模式（XA、AT、TCC、SAGA）><i class="fa fa-binoculars fa-fw"></i>
+<span class=post-meta-item-text>阅读次数：</span>
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>Seata四种模式（XA、AT、TCC、SAGA）</p><h1 id=seata四种模式xaattccsaga>Seata四种模式（XA、AT、TCC、SAGA）</h1><h3 id=1xa模式>1、XA模式</h3><h4 id=xa模式原理>XA模式原理：</h4><p>XA 规范 是 X/Open 组织定义的分布式事务处理（DTP，Distributed Transaction Processing）标准，XA 规范 描述了全局的TM与局部的RM之间的接口，几乎所有主流的数据库都对 XA 规范 提供了支持。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220152871.png alt=image-20230126220152871></p><blockquote><p>如果有失败的就会回滚事务</p></blockquote><h4 id=seata的xa模式>seata的XA模式</h4><p>seata的XA模式做了一些调整，但大体相似：</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220326443.png alt=image-20230126220326443></p><p>RM一阶段的工作：</p><ol><li>注册分支事务到TC</li><li>执行分支业务sql但不提交</li><li>报告执行状态到TC</li></ol><p>TC二阶段的工作：</p><ol><li><p>TC检测各分支事务执行状态</p></li><li><p>如果都成功，通知所有RM提交事务</p></li><li><p>如果有失败，通知所有RM回滚事务</p></li></ol><p>RM二阶段的工作：</p><ol><li>接收TC指令，提交或回滚事务</li></ol><p>xa模式的优点：</p><ol><li><p>事务的强一致性，满足ACID原则。</p></li><li><p>常用数据库都支持，实现简单，并且没有代码侵入</p></li></ol><p>xa模式的缺点：</p><ol><li>因为一阶段需要锁定数据库资源，等待二阶段结束才释放，性能较差
+依赖关系型数据库实现事务</li></ol><p>实现XA模式</p><p>Seata的starter已经完成了XA模式的自动装配，实现非常简单，步骤如下：
+修改application.yml文件（每个参与事务的微服务），开启XA模式：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>配置seata的注册中心
+</span></span><span style=display:flex><span>seata:
+</span></span><span style=display:flex><span>  data-source-proxy-mode: XA # 选择XA模式
+</span></span></code></pre></div><p>注意：是每一个微服务都需要</p><p>给发起全局事务的入口方法添加@GlobalTransactional注解，本例中是OrderServiceImpl中的create方法：</p><p>启动所有微服务，postman进行接口测试</p><p>先进行正确的测试，再继续错误的测试</p><blockquote><p>错误设置，购买商品超出原来剩余的商品数就会让数据库报错测试是否可以事务回滚</p></blockquote><p>注意：如果测试接口报错响应时间过长，那么就应该设置响应的时间大一点，如下图，然后重启seata</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220912891.png alt=image-20230126220912891></p><p>成功的可以查看seate的控制输出，可以看到事务回滚</p><p>IDEA输出</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126220944119.png alt=image-20230126220944119></p><p>查看数据库的数据是否有被更新</p><h3 id=2at模式>2、AT模式</h3><h4 id=21-at模式同样是分阶段提交的事务模型不过缺弥补了xa模型中资源锁定周期过长的缺陷>2.1、 AT模式同样是分阶段提交的事务模型，不过缺弥补了XA模型中资源锁定周期过长的缺陷。</h4><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221049428.png alt=image-20230126221049428></p><p><strong>阶段一RM的工作</strong>：</p><p>注册分支事务
 记录undo-log（数据快照，JSON格式）
 执行业务sql并提交
-报告事务状态</p>
-<p><strong>阶段二提交时RM的工作</strong>：</p>
-<p>删除undo-log即可</p>
-<p><strong>阶段二回滚时RM的工作</strong>：</p>
-<p>根据undo-log恢复数据到更新前</p>
-<p>执行示例
-例如，一个分支业务的SQL是这样的：update tb_account set money = money - 10 where id = 1</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221227467.png" alt="image-20230126221227467"></p>
-<p><strong>AT模式与XA模式最大的区别是什么</strong></p>
-<p>XA模式一阶段不提交事务，锁定资源；AT模式一阶段直接提交，不锁定资源。
+报告事务状态</p><p><strong>阶段二提交时RM的工作</strong>：</p><p>删除undo-log即可</p><p><strong>阶段二回滚时RM的工作</strong>：</p><p>根据undo-log恢复数据到更新前</p><p>执行示例
+例如，一个分支业务的SQL是这样的：update tb_account set money = money - 10 where id = 1</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221227467.png alt=image-20230126221227467></p><p><strong>AT模式与XA模式最大的区别是什么</strong></p><p>XA模式一阶段不提交事务，锁定资源；AT模式一阶段直接提交，不锁定资源。
 XA模式依赖数据库机制实现回滚；AT模式利用数据快照实现数据回滚。
-XA模式强一致；AT模式最终一致</p>
-<h4 id="22at模式的脏写问题">2.2、AT模式的脏写问题</h4>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221354825.png" alt="image-20230126221354825"></p>
-<h4 id="23at模式的写隔离">2.3、AT模式的写隔离</h4>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221551524.png" alt="image-20230126221551524"></p>
-<h4 id="24at模式的优缺点">2.4、AT模式的优缺点</h4>
-<p><strong>优点：</strong></p>
-<ol>
-<li>一阶段完成直接提交事务，释放数据库资源，性能比较好</li>
-<li>利用全局锁实现读写隔离</li>
-<li>没有代码侵入，框架自动完成回滚和提交</li>
-</ol>
-<p><strong>缺点：</strong></p>
-<ol>
-<li>两阶段之间属于软状态，属于最终一致</li>
-<li>框架的快照功能会影响性能，但比XA模式要好很多</li>
-</ol>
-<h4 id="25实现at模式">2.5、实现AT模式</h4>
-<p>AT模式中的快照生成、回滚等动作都是由框架自动完成，没有任何代码侵入，因此实现非常简单。</p>
-<p>1、创建相关的数据库文件</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221859755.png" alt="image-20230126221859755"></p>
-<p>lock_table（全局锁）表导入到TC服务关联的数据库</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="n">lock_table</span><span class="o">`</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">lock_table</span><span class="o">`</span><span class="w">  </span><span class="p">(</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">row_key</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">xid</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">96</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">transaction_id</span><span class="o">`</span><span class="w"> </span><span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">branch_id</span><span class="o">`</span><span class="w"> </span><span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">resource_id</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">table_name</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">pk</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">gmt_create</span><span class="o">`</span><span class="w"> </span><span class="kt">datetime</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">gmt_modified</span><span class="o">`</span><span class="w"> </span><span class="kt">datetime</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">row_key</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">BTREE</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">idx_branch_id</span><span class="o">`</span><span class="p">(</span><span class="o">`</span><span class="n">branch_id</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">BTREE</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="kp">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InnoDB</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="n">ROW_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Compact</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>undo_log（记录快照）表导入到微服务关联的数据库</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="n">undo_log</span><span class="o">`</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">undo_log</span><span class="o">`</span><span class="w">  </span><span class="p">(</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">branch_id</span><span class="o">`</span><span class="w"> </span><span class="kt">bigint</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;branch transaction id&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">xid</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;global transaction id&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">context</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;undo_log context,such as serialization&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">rollback_info</span><span class="o">`</span><span class="w"> </span><span class="kt">longblob</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;rollback info&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">log_status</span><span class="o">`</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;0:normal status,1:defense status&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">log_created</span><span class="o">`</span><span class="w"> </span><span class="kt">datetime</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;create datetime&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">log_modified</span><span class="o">`</span><span class="w"> </span><span class="kt">datetime</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;modify datetime&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="o">`</span><span class="n">ux_undo_log</span><span class="o">`</span><span class="p">(</span><span class="o">`</span><span class="n">xid</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">branch_id</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">BTREE</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="kp">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InnoDB</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;AT transaction mode undo table&#39;</span><span class="w"> </span><span class="n">ROW_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Compact</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>2、修改application.yml文件，将事务模式修改为AT模式即可：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#配置seata的注册中心
-</span></span><span class="line"><span class="cl">seata:
-</span></span><span class="line"><span class="cl">  data-source-proxy-mode: AT #选择XA模式
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>3、重启并测试</p>
-<p>查看当前的数据库库存数量继续超库存创建订单进行执行错误回滚测试</p>
-<p>查看IDEA的错误日志</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221956361.png" alt="image-20230126221956361"></p>
-<h3 id="3tcc模式">3、TCC模式</h3>
-<h4 id="31tcc模式原理">3.1、tcc模式原理</h4>
-<p>TCC模式与AT模式非常相似，每阶段都是独立事务，不同的是TCC通过人工编码来实现数据恢复。需要实现三个方法：</p>
-<p><strong>Try：资源的检测和预留；</strong>
+XA模式强一致；AT模式最终一致</p><h4 id=22at模式的脏写问题>2.2、AT模式的脏写问题</h4><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221354825.png alt=image-20230126221354825></p><h4 id=23at模式的写隔离>2.3、AT模式的写隔离</h4><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221551524.png alt=image-20230126221551524></p><h4 id=24at模式的优缺点>2.4、AT模式的优缺点</h4><p><strong>优点：</strong></p><ol><li>一阶段完成直接提交事务，释放数据库资源，性能比较好</li><li>利用全局锁实现读写隔离</li><li>没有代码侵入，框架自动完成回滚和提交</li></ol><p><strong>缺点：</strong></p><ol><li>两阶段之间属于软状态，属于最终一致</li><li>框架的快照功能会影响性能，但比XA模式要好很多</li></ol><h4 id=25实现at模式>2.5、实现AT模式</h4><p>AT模式中的快照生成、回滚等动作都是由框架自动完成，没有任何代码侵入，因此实现非常简单。</p><p>1、创建相关的数据库文件</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221859755.png alt=image-20230126221859755></p><p>lock_table（全局锁）表导入到TC服务关联的数据库</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-mysql data-lang=mysql><span style=display:flex><span><span style=color:#a2f;font-weight:700>DROP</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>TABLE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>IF</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>EXISTS</span><span style=color:#bbb> </span><span style=color:#666>`</span>lock_table<span style=color:#666>`</span>;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>CREATE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>TABLE</span><span style=color:#bbb> </span><span style=color:#666>`</span>lock_table<span style=color:#666>`</span><span style=color:#bbb>  </span>(<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>row_key<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>128</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>xid<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>96</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>transaction_id<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>bigint</span>(<span style=color:#666>20</span>)<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>branch_id<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>bigint</span>(<span style=color:#666>20</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>resource_id<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>256</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>table_name<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>32</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>pk<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>36</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>gmt_create<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>datetime</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>gmt_modified<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>datetime</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#a2f;font-weight:700>PRIMARY</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>KEY</span><span style=color:#bbb> </span>(<span style=color:#666>`</span>row_key<span style=color:#666>`</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>USING</span><span style=color:#bbb> </span>BTREE,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#a2f;font-weight:700>INDEX</span><span style=color:#bbb> </span><span style=color:#666>`</span>idx_branch_id<span style=color:#666>`</span>(<span style=color:#666>`</span>branch_id<span style=color:#666>`</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>USING</span><span style=color:#bbb> </span>BTREE<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>)<span style=color:#bbb> </span><span style=color:#a2f>ENGINE</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>InnoDB<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span>ROW_FORMAT<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>Compact;<span style=color:#bbb>
+</span></span></span></code></pre></div><p>undo_log（记录快照）表导入到微服务关联的数据库</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-mysql data-lang=mysql><span style=display:flex><span><span style=color:#a2f;font-weight:700>DROP</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>TABLE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>IF</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>EXISTS</span><span style=color:#bbb> </span><span style=color:#666>`</span>undo_log<span style=color:#666>`</span>;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>CREATE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>TABLE</span><span style=color:#bbb> </span><span style=color:#666>`</span>undo_log<span style=color:#666>`</span><span style=color:#bbb>  </span>(<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>branch_id<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>bigint</span>(<span style=color:#666>20</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;branch transaction id&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>xid<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>100</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;global transaction id&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>context<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>128</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;undo_log context,such as serialization&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>rollback_info<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>longblob</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;rollback info&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>log_status<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>int</span>(<span style=color:#666>11</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;0:normal status,1:defense status&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>log_created<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>datetime</span>(<span style=color:#666>6</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;create datetime&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>log_modified<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>datetime</span>(<span style=color:#666>6</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;modify datetime&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#a2f;font-weight:700>UNIQUE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>INDEX</span><span style=color:#bbb> </span><span style=color:#666>`</span>ux_undo_log<span style=color:#666>`</span>(<span style=color:#666>`</span>xid<span style=color:#666>`</span>,<span style=color:#bbb> </span><span style=color:#666>`</span>branch_id<span style=color:#666>`</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>USING</span><span style=color:#bbb> </span>BTREE<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>)<span style=color:#bbb> </span><span style=color:#a2f>ENGINE</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>InnoDB<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span><span style=color:#b44>&#39;AT transaction mode undo table&#39;</span><span style=color:#bbb> </span>ROW_FORMAT<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>Compact;<span style=color:#bbb>
+</span></span></span></code></pre></div><p>2、修改application.yml文件，将事务模式修改为AT模式即可：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>#配置seata的注册中心
+</span></span><span style=display:flex><span>seata:
+</span></span><span style=display:flex><span>  data-source-proxy-mode: AT #选择XA模式
+</span></span></code></pre></div><p>3、重启并测试</p><p>查看当前的数据库库存数量继续超库存创建订单进行执行错误回滚测试</p><p>查看IDEA的错误日志</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126221956361.png alt=image-20230126221956361></p><h3 id=3tcc模式>3、TCC模式</h3><h4 id=31tcc模式原理>3.1、tcc模式原理</h4><p>TCC模式与AT模式非常相似，每阶段都是独立事务，不同的是TCC通过人工编码来实现数据恢复。需要实现三个方法：</p><p><strong>Try：资源的检测和预留；</strong>
 <strong>Confirm：完成资源操作业务；要求 Try 成功 Confirm 一定要能成功。</strong>
 <strong>Cancel：预留资源释放，可以理解为try的反向操作。</strong>
-举例，一个扣减用户余额的业务。假设账户A原来余额是100，需要余额扣减30元。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126222108140.png" alt="image-20230126222108140"></p>
-<p>TCC的工作模型图：</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126222214788.png" alt="image-20230126222214788"></p>
-<h4 id="32小结">3.2、小结</h4>
-<p>TCC模式的优点：</p>
-<ol>
-<li>一阶段完成直接提交事务，释放数据库资源，性能好</li>
-<li>相比AT模型，无需生成快照，无需使用全局锁，性能最强</li>
-<li>不依赖数据库事务，而是依赖补偿操作，可以用于非事务型数据库</li>
-</ol>
-<p>TCC模式的缺点：</p>
-<ol>
-<li>有代码侵入，需要人为编写try、Confirm和Cancel接口，太麻烦</li>
-<li>软状态，事务是最终一致</li>
-<li>需要考虑Confirm和Cancel的失败情况，做好幂等处理</li>
-</ol>
-<h4 id="32tcc模式实现案例">3.2、TCC模式实现案例</h4>
-<p>不是所有的业务都适合TCC模式，如库存，金额等就比较适合</p>
-<p>改造account-service服务，利用TCC实现分布式事务</p>
-<p>需求如下：</p>
-<p>修改account-service，编写try、confirm、cancel逻辑：</p>
-<ol>
-<li>try业务：添加冻结金额，扣减可用金额</li>
-<li>confirm业务：删除冻结金额</li>
-<li>cancel业务：删除冻结金额，恢复可用金额</li>
-</ol>
-<p>保证confirm、cancel接口的幂等性允许空回滚拒绝业务悬挂</p>
-<p><strong>TCC的空回滚和业务悬挂</strong></p>
-<p>当某分支事务的try阶段阻塞时，可能导致全局事务超时而触发二阶段的cancel操作。在未执行try操作时先执</p>
-<p>行了cancel操作，这时cancel不能做回滚，就是空回滚。</p>
-<p>对于已经空回滚的业务，如果以后继续执行try，就永远不可能confirm或cancel，这就是业务悬挂。应当阻止</p>
-<p>执行空回滚后的try操作，避免悬挂</p>
-<p><strong>业务分析</strong></p>
-<p>为了实现空回滚、防止业务悬挂，以及幂等性要求。我们必须在数据库记录冻结金额的同时，记录当前事务id和执行状态，为此我们设计了一张表（添加在微服务的数据库seata-demo中）：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">DROP</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="o">`</span><span class="n">account_freeze_tbl</span><span class="o">`</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="o">`</span><span class="n">account_freeze_tbl</span><span class="o">`</span><span class="w">  </span><span class="p">(</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">xid</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">user_id</span><span class="o">`</span><span class="w"> </span><span class="kt">varchar</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">freeze_money</span><span class="o">`</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="w"> </span><span class="k">UNSIGNED</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="o">`</span><span class="n">state</span><span class="o">`</span><span class="w"> </span><span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="no">NULL</span><span class="w"> </span><span class="n">COMMENT</span><span class="w"> </span><span class="s1">&#39;事务状态，0:try，1:confirm，2:cancel&#39;</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">xid</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">BTREE</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">)</span><span class="w"> </span><span class="kp">ENGINE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InnoDB</span><span class="w"> </span><span class="k">CHARACTER</span><span class="w"> </span><span class="kt">SET</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utf8</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">utf8_general_ci</span><span class="w"> </span><span class="n">ROW_FORMAT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">COMPACT</span><span class="p">;</span><span class="w">
-</span></span></span></code></pre></td></tr></table>
-</div>
-</div><p>Try业务：记录冻结金额和事务状态到account_freeze表，扣减account表可用金额</p>
-<p>Confirm业务：根据xid删除account_freeze表的冻结记录</p>
-<p>Cancel业务：修改account_freeze表，冻结金额为0，state为2，修改account表，恢复可用金额</p>
-<p>如何判断是否空回滚：cancel业务中，根据xid查询account_freeze，如果为null则说明try还没做，需要空回</p>
-<p>滚</p>
-<p>如何避免业务悬挂：try业务中，根据xid查询account_freeze ，如果已经存在则证明Cancel已经执行，拒绝执</p>
-<p>行try业务</p>
-<p><strong>业务实现</strong></p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
-</span><span class="lnt">50
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="mi">1</span><span class="err">、声明</span><span class="n">TCC</span><span class="err">接口</span>
-</span></span><span class="line"><span class="cl"><span class="nd">@BusinessActionContextParameter</span><span class="o">()</span><span class="err">注解的参数才可以被</span><span class="n">BusinessActionContext</span><span class="err">获取到</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">cn.itcast.account.service</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.seata.rm.tcc.api.BusinessActionContext</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.seata.rm.tcc.api.BusinessActionContextParameter</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.seata.rm.tcc.api.LocalTCC</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.seata.rm.tcc.api.TwoPhaseBusinessAction</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * 项目名称：seata-demo
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * 描述：TCC实现接口
-</span></span></span><span class="line"><span class="cl"><span class="cm">   *
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author zhong
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * @date 2022-06-08 16:05
-</span></span></span><span class="line"><span class="cl"><span class="cm">   */</span>
-</span></span><span class="line"><span class="cl">   <span class="nd">@LocalTCC</span>
-</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">AccountTCCService</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 定义try,注释里面的值必须是与方法同名
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @param userId
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @param money
-</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
-</span></span><span class="line"><span class="cl">      <span class="nd">@TwoPhaseBusinessAction</span><span class="o">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#34;deduct&#34;</span><span class="o">,</span><span class="n">commitMethod</span> <span class="o">=</span> <span class="s">&#34;confirm&#34;</span><span class="o">,</span><span class="n">rollbackMethod</span> <span class="o">=</span> <span class="s">&#34;cancel&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl">      <span class="kt">void</span> <span class="nf">deduct</span><span class="o">(</span><span class="nd">@BusinessActionContextParameter</span><span class="o">(</span><span class="n">paramName</span> <span class="o">=</span> <span class="s">&#34;userId&#34;</span><span class="o">)</span> <span class="n">String</span> <span class="n">userId</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">              <span class="nd">@BusinessActionContextParameter</span><span class="o">(</span><span class="n">paramName</span> <span class="o">=</span> <span class="s">&#34;money&#34;</span><span class="o">)</span><span class="kt">int</span> <span class="n">money</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 定义Confirm
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @param ctx 获取事务类型参数
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @return
-</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
-</span></span><span class="line"><span class="cl">      <span class="kt">boolean</span> <span class="nf">confirm</span><span class="o">(</span><span class="n">BusinessActionContext</span> <span class="n">ctx</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 定义Cancel
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @param ctx
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @return
-</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
-</span></span><span class="line"><span class="cl">      <span class="kt">boolean</span> <span class="nf">cancel</span><span class="o">(</span><span class="n">BusinessActionContext</span> <span class="n">ctx</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>说明：对于account_freeze_tbl数据库表的操作与其他业务一样的，使用MP的CURD进行快速开发，需要实体类、mapper</p>
-<p>2.、创建接口实现类</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">  1
-</span><span class="lnt">  2
-</span><span class="lnt">  3
-</span><span class="lnt">  4
-</span><span class="lnt">  5
-</span><span class="lnt">  6
-</span><span class="lnt">  7
-</span><span class="lnt">  8
-</span><span class="lnt">  9
-</span><span class="lnt"> 10
-</span><span class="lnt"> 11
-</span><span class="lnt"> 12
-</span><span class="lnt"> 13
-</span><span class="lnt"> 14
-</span><span class="lnt"> 15
-</span><span class="lnt"> 16
-</span><span class="lnt"> 17
-</span><span class="lnt"> 18
-</span><span class="lnt"> 19
-</span><span class="lnt"> 20
-</span><span class="lnt"> 21
-</span><span class="lnt"> 22
-</span><span class="lnt"> 23
-</span><span class="lnt"> 24
-</span><span class="lnt"> 25
-</span><span class="lnt"> 26
-</span><span class="lnt"> 27
-</span><span class="lnt"> 28
-</span><span class="lnt"> 29
-</span><span class="lnt"> 30
-</span><span class="lnt"> 31
-</span><span class="lnt"> 32
-</span><span class="lnt"> 33
-</span><span class="lnt"> 34
-</span><span class="lnt"> 35
-</span><span class="lnt"> 36
-</span><span class="lnt"> 37
-</span><span class="lnt"> 38
-</span><span class="lnt"> 39
-</span><span class="lnt"> 40
-</span><span class="lnt"> 41
-</span><span class="lnt"> 42
-</span><span class="lnt"> 43
-</span><span class="lnt"> 44
-</span><span class="lnt"> 45
-</span><span class="lnt"> 46
-</span><span class="lnt"> 47
-</span><span class="lnt"> 48
-</span><span class="lnt"> 49
-</span><span class="lnt"> 50
-</span><span class="lnt"> 51
-</span><span class="lnt"> 52
-</span><span class="lnt"> 53
-</span><span class="lnt"> 54
-</span><span class="lnt"> 55
-</span><span class="lnt"> 56
-</span><span class="lnt"> 57
-</span><span class="lnt"> 58
-</span><span class="lnt"> 59
-</span><span class="lnt"> 60
-</span><span class="lnt"> 61
-</span><span class="lnt"> 62
-</span><span class="lnt"> 63
-</span><span class="lnt"> 64
-</span><span class="lnt"> 65
-</span><span class="lnt"> 66
-</span><span class="lnt"> 67
-</span><span class="lnt"> 68
-</span><span class="lnt"> 69
-</span><span class="lnt"> 70
-</span><span class="lnt"> 71
-</span><span class="lnt"> 72
-</span><span class="lnt"> 73
-</span><span class="lnt"> 74
-</span><span class="lnt"> 75
-</span><span class="lnt"> 76
-</span><span class="lnt"> 77
-</span><span class="lnt"> 78
-</span><span class="lnt"> 79
-</span><span class="lnt"> 80
-</span><span class="lnt"> 81
-</span><span class="lnt"> 82
-</span><span class="lnt"> 83
-</span><span class="lnt"> 84
-</span><span class="lnt"> 85
-</span><span class="lnt"> 86
-</span><span class="lnt"> 87
-</span><span class="lnt"> 88
-</span><span class="lnt"> 89
-</span><span class="lnt"> 90
-</span><span class="lnt"> 91
-</span><span class="lnt"> 92
-</span><span class="lnt"> 93
-</span><span class="lnt"> 94
-</span><span class="lnt"> 95
-</span><span class="lnt"> 96
-</span><span class="lnt"> 97
-</span><span class="lnt"> 98
-</span><span class="lnt"> 99
-</span><span class="lnt">100
-</span><span class="lnt">101
-</span><span class="lnt">102
-</span><span class="lnt">103
-</span><span class="lnt">104
-</span><span class="lnt">105
-</span><span class="lnt">106
-</span><span class="lnt">107
-</span><span class="lnt">108
-</span><span class="lnt">109
-</span><span class="lnt">110
-</span><span class="lnt">111
-</span><span class="lnt">112
-</span><span class="lnt">113
-</span><span class="lnt">114
-</span><span class="lnt">115
-</span><span class="lnt">116
-</span><span class="lnt">117
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">cn.itcast.account.service.impl</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cn.itcast.account.entity.AccountFreeze</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cn.itcast.account.mapper.AccountFreezeMapper</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cn.itcast.account.mapper.AccountMapper</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cn.itcast.account.service.AccountTCCService</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.seata.core.context.RootContext</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.seata.rm.tcc.api.BusinessActionContext</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">lombok.extern.slf4j.Slf4j</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">org.springframework.stereotype.Service</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">org.springframework.transaction.annotation.Transactional</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * 项目名称：seata-demo
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * 描述：
-</span></span></span><span class="line"><span class="cl"><span class="cm">   *
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author zhong
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * @date 2022-06-08 16:25
-</span></span></span><span class="line"><span class="cl"><span class="cm">   */</span>
-</span></span><span class="line"><span class="cl">   <span class="nd">@Slf4j</span>
-</span></span><span class="line"><span class="cl">   <span class="nd">@Service</span>
-</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="kd">class</span> <span class="nc">AccountTCCServiceImpl</span> <span class="kd">implements</span> <span class="n">AccountTCCService</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 注入可用余额dao
-</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
-</span></span><span class="line"><span class="cl">      <span class="nd">@Autowired</span>
-</span></span><span class="line"><span class="cl">      <span class="kd">private</span> <span class="n">AccountMapper</span> <span class="n">accountMapper</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 注入冻结表dao
-</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
-</span></span><span class="line"><span class="cl">      <span class="nd">@Autowired</span>
-</span></span><span class="line"><span class="cl">      <span class="kd">private</span> <span class="n">AccountFreezeMapper</span> <span class="n">freezeMapper</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 资源检测和预留
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * 在数据库中设置了非负数字段限定，这里可以直接简化一步，如果为负数就会报错
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @param userId
-</span></span></span><span class="line"><span class="cl"><span class="cm">
-</span></span></span><span class="line"><span class="cl"><span class="cm">    * @param money
-</span></span></span><span class="line"><span class="cl"><span class="cm">      */</span>
-</span></span><span class="line"><span class="cl">      <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">      <span class="nd">@Transactional</span>
-</span></span><span class="line"><span class="cl">      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">deduct</span><span class="o">(</span><span class="n">String</span> <span class="n">userId</span><span class="o">,</span> <span class="kt">int</span> <span class="n">money</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">      <span class="c1">// 获取全局事务id
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">String</span> <span class="n">xid</span> <span class="o">=</span> <span class="n">RootContext</span><span class="o">.</span><span class="na">getXID</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">      <span class="c1">// 业务悬挂判断，如果freeze中有冻结记录，一定是CANCEL执行过，我要拒绝业务
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">AccountFreeze</span> <span class="n">accountFreeze</span> <span class="o">=</span> <span class="n">freezeMapper</span><span class="o">.</span><span class="na">selectById</span><span class="o">(</span><span class="n">xid</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="k">if</span><span class="o">(</span><span class="n">accountFreeze</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">          <span class="c1">// 一定是CANCEL执行过，我要拒绝业务
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>          <span class="k">return</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">      <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">      <span class="c1">// 1、扣减可用余额
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">accountMapper</span><span class="o">.</span><span class="na">deduct</span><span class="o">(</span><span class="n">userId</span><span class="o">,</span><span class="n">money</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="c1">// 2、记录冻结金额，事务状态
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">AccountFreeze</span> <span class="n">freeze</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AccountFreeze</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">      <span class="n">freeze</span><span class="o">.</span><span class="na">setXid</span><span class="o">(</span><span class="n">xid</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="n">freeze</span><span class="o">.</span><span class="na">setUserId</span><span class="o">(</span><span class="n">userId</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="n">freeze</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="n">AccountFreeze</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">TRY</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="n">freeze</span><span class="o">.</span><span class="na">setFreezeMoney</span><span class="o">(</span><span class="n">money</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="n">freezeMapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">freeze</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">      <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">confirm</span><span class="o">(</span><span class="n">BusinessActionContext</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">       <span class="c1">// 1、获取事务id
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="n">String</span> <span class="n">xid</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getXid</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">       <span class="c1">// 2、根据事务id删除冻结数据
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">freezeMapper</span><span class="o">.</span><span class="na">deleteById</span><span class="o">(</span><span class="n">xid</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">       <span class="k">return</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">   <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">cancel</span><span class="o">(</span><span class="n">BusinessActionContext</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">       <span class="c1">// 0、查询冻结记录
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="n">String</span> <span class="n">xid</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getXid</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">       <span class="c1">// 获取用户id
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="n">String</span> <span class="n">userId</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">getActionContext</span><span class="o">(</span><span class="s">&#34;userId&#34;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">       <span class="n">AccountFreeze</span> <span class="n">freeze</span> <span class="o">=</span> <span class="n">freezeMapper</span><span class="o">.</span><span class="na">selectById</span><span class="o">(</span><span class="n">xid</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">       <span class="c1">// 空回滚的判断，为null代表没有try没有执行
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="k">if</span><span class="o">(</span><span class="n">freeze</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">           <span class="n">freeze</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AccountFreeze</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">           <span class="n">freeze</span><span class="o">.</span><span class="na">setXid</span><span class="o">(</span><span class="n">xid</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">           <span class="n">freeze</span><span class="o">.</span><span class="na">setUserId</span><span class="o">(</span><span class="n">userId</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">           <span class="n">freeze</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="n">AccountFreeze</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">           <span class="n">freeze</span><span class="o">.</span><span class="na">setFreezeMoney</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">           <span class="n">freezeMapper</span><span class="o">.</span><span class="na">insert</span><span class="o">(</span><span class="n">freeze</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">       <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">       <span class="c1">// 幂等判断
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="k">if</span><span class="o">(</span><span class="n">freeze</span><span class="o">.</span><span class="na">getState</span><span class="o">()</span> <span class="o">==</span> <span class="n">AccountFreeze</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">){</span>
-</span></span><span class="line"><span class="cl">           <span class="c1">// 已经执行过了一次CANCEL，无需重复处理
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>           <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">       <span class="o">}</span>
-</span></span><span class="line"><span class="cl">       
-</span></span><span class="line"><span class="cl">       <span class="c1">// 1、恢复可用余额
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="n">accountMapper</span><span class="o">.</span><span class="na">refund</span><span class="o">(</span><span class="n">freeze</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="n">freeze</span><span class="o">.</span><span class="na">getFreezeMoney</span><span class="o">());</span>
-</span></span><span class="line"><span class="cl">       <span class="c1">// 2、将冻结金额清零，修改状态
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>       <span class="n">freeze</span><span class="o">.</span><span class="na">setFreezeMoney</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">       <span class="n">freeze</span><span class="o">.</span><span class="na">setState</span><span class="o">(</span><span class="n">AccountFreeze</span><span class="o">.</span><span class="na">State</span><span class="o">.</span><span class="na">CANCEL</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">       <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">freezeMapper</span><span class="o">.</span><span class="na">updateById</span><span class="o">(</span><span class="n">freeze</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">       <span class="k">return</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">1</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">   <span class="o">}</span>
-</span></span><span class="line"><span class="cl">   <span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>3、修改业务层连接方式
-改为上面定义的TCCM业务实现</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/93b574a9f6a4408cb371dfd1d3c4a5bc.png" alt="img"></p>
-<p>4、测试数据
-直接测试错误的信息</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223228185.png" alt="image-20230126223228185"></p>
-<p>当出现错误的时候会将会数据保存到数据库，如果是成功的那么就会删除</p>
-<p>IDEA的报错输出</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223248820.png" alt="image-20230126223248820"></p>
-<p>4、SAGA模式</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223308411.png" alt="image-20230126223308411"></p>
-<p>Saga模式是SEATA提供的长事务解决方案。也分为两个阶段：</p>
-<p>一阶段：直接提交本地事务
+举例，一个扣减用户余额的业务。假设账户A原来余额是100，需要余额扣减30元。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126222108140.png alt=image-20230126222108140></p><p>TCC的工作模型图：</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126222214788.png alt=image-20230126222214788></p><h4 id=32小结>3.2、小结</h4><p>TCC模式的优点：</p><ol><li>一阶段完成直接提交事务，释放数据库资源，性能好</li><li>相比AT模型，无需生成快照，无需使用全局锁，性能最强</li><li>不依赖数据库事务，而是依赖补偿操作，可以用于非事务型数据库</li></ol><p>TCC模式的缺点：</p><ol><li>有代码侵入，需要人为编写try、Confirm和Cancel接口，太麻烦</li><li>软状态，事务是最终一致</li><li>需要考虑Confirm和Cancel的失败情况，做好幂等处理</li></ol><h4 id=32tcc模式实现案例>3.2、TCC模式实现案例</h4><p>不是所有的业务都适合TCC模式，如库存，金额等就比较适合</p><p>改造account-service服务，利用TCC实现分布式事务</p><p>需求如下：</p><p>修改account-service，编写try、confirm、cancel逻辑：</p><ol><li>try业务：添加冻结金额，扣减可用金额</li><li>confirm业务：删除冻结金额</li><li>cancel业务：删除冻结金额，恢复可用金额</li></ol><p>保证confirm、cancel接口的幂等性允许空回滚拒绝业务悬挂</p><p><strong>TCC的空回滚和业务悬挂</strong></p><p>当某分支事务的try阶段阻塞时，可能导致全局事务超时而触发二阶段的cancel操作。在未执行try操作时先执</p><p>行了cancel操作，这时cancel不能做回滚，就是空回滚。</p><p>对于已经空回滚的业务，如果以后继续执行try，就永远不可能confirm或cancel，这就是业务悬挂。应当阻止</p><p>执行空回滚后的try操作，避免悬挂</p><p><strong>业务分析</strong></p><p>为了实现空回滚、防止业务悬挂，以及幂等性要求。我们必须在数据库记录冻结金额的同时，记录当前事务id和执行状态，为此我们设计了一张表（添加在微服务的数据库seata-demo中）：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-mysql data-lang=mysql><span style=display:flex><span><span style=color:#a2f;font-weight:700>DROP</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>TABLE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>IF</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>EXISTS</span><span style=color:#bbb> </span><span style=color:#666>`</span>account_freeze_tbl<span style=color:#666>`</span>;<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span><span style=color:#a2f;font-weight:700>CREATE</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>TABLE</span><span style=color:#bbb> </span><span style=color:#666>`</span>account_freeze_tbl<span style=color:#666>`</span><span style=color:#bbb>  </span>(<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>xid<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>128</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>NOT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>user_id<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>varchar</span>(<span style=color:#666>255</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>freeze_money<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>int</span>(<span style=color:#666>11</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>UNSIGNED</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#666>0</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#666>`</span>state<span style=color:#666>`</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>int</span>(<span style=color:#666>1</span>)<span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>DEFAULT</span><span style=color:#bbb> </span><span style=color:#800>NULL</span><span style=color:#bbb> </span>COMMENT<span style=color:#bbb> </span><span style=color:#b44>&#39;事务状态，0:try，1:confirm，2:cancel&#39;</span>,<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb>  </span><span style=color:#a2f;font-weight:700>PRIMARY</span><span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>KEY</span><span style=color:#bbb> </span>(<span style=color:#666>`</span>xid<span style=color:#666>`</span>)<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>USING</span><span style=color:#bbb> </span>BTREE<span style=color:#bbb>
+</span></span></span><span style=display:flex><span><span style=color:#bbb></span>)<span style=color:#bbb> </span><span style=color:#a2f>ENGINE</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>InnoDB<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>CHARACTER</span><span style=color:#bbb> </span><span style=color:#0b0;font-weight:700>SET</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>utf8<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>COLLATE</span><span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>utf8_general_ci<span style=color:#bbb> </span>ROW_FORMAT<span style=color:#bbb> </span><span style=color:#666>=</span><span style=color:#bbb> </span>COMPACT;<span style=color:#bbb>
+</span></span></span></code></pre></div><p>Try业务：记录冻结金额和事务状态到account_freeze表，扣减account表可用金额</p><p>Confirm业务：根据xid删除account_freeze表的冻结记录</p><p>Cancel业务：修改account_freeze表，冻结金额为0，state为2，修改account表，恢复可用金额</p><p>如何判断是否空回滚：cancel业务中，根据xid查询account_freeze，如果为null则说明try还没做，需要空回</p><p>滚</p><p>如何避免业务悬挂：try业务中，根据xid查询account_freeze ，如果已经存在则证明Cancel已经执行，拒绝执</p><p>行try业务</p><p><strong>业务实现</strong></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#666>1</span><span>、声明</span>TCC<span>接口</span>
+</span></span><span style=display:flex><span><span style=color:#a2f>@BusinessActionContextParameter</span><span style=color:#666>()</span><span>注解的参数才可以被</span>BusinessActionContext<span>获取到</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>cn.itcast.account.service</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>io.seata.rm.tcc.api.BusinessActionContext</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>io.seata.rm.tcc.api.BusinessActionContextParameter</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>io.seata.rm.tcc.api.LocalTCC</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>io.seata.rm.tcc.api.TwoPhaseBusinessAction</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 项目名称：seata-demo
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 描述：TCC实现接口
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>   *
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @author zhong
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @date 2022-06-08 16:05
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>   */</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f>@LocalTCC</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>interface</span> <span style=color:#00f>AccountTCCService</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 定义try,注释里面的值必须是与方法同名
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @param userId
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @param money
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>      */</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f>@TwoPhaseBusinessAction</span><span style=color:#666>(</span>name <span style=color:#666>=</span> <span style=color:#b44>&#34;deduct&#34;</span><span style=color:#666>,</span>commitMethod <span style=color:#666>=</span> <span style=color:#b44>&#34;confirm&#34;</span><span style=color:#666>,</span>rollbackMethod <span style=color:#666>=</span> <span style=color:#b44>&#34;cancel&#34;</span><span style=color:#666>)</span>
+</span></span><span style=display:flex><span>      <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>deduct</span><span style=color:#666>(</span><span style=color:#a2f>@BusinessActionContextParameter</span><span style=color:#666>(</span>paramName <span style=color:#666>=</span> <span style=color:#b44>&#34;userId&#34;</span><span style=color:#666>)</span> String userId<span style=color:#666>,</span>
+</span></span><span style=display:flex><span>              <span style=color:#a2f>@BusinessActionContextParameter</span><span style=color:#666>(</span>paramName <span style=color:#666>=</span> <span style=color:#b44>&#34;money&#34;</span><span style=color:#666>)</span><span style=color:#0b0;font-weight:700>int</span> money<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 定义Confirm
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @param ctx 获取事务类型参数
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>      */</span>
+</span></span><span style=display:flex><span>      <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>confirm</span><span style=color:#666>(</span>BusinessActionContext ctx<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 定义Cancel
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @param ctx
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>      */</span>
+</span></span><span style=display:flex><span>      <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>cancel</span><span style=color:#666>(</span>BusinessActionContext ctx<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      <span style=color:#666>}</span>
+</span></span></code></pre></div><p>说明：对于account_freeze_tbl数据库表的操作与其他业务一样的，使用MP的CURD进行快速开发，需要实体类、mapper</p><p>2.、创建接口实现类</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>cn.itcast.account.service.impl</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.itcast.account.entity.AccountFreeze</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.itcast.account.mapper.AccountFreezeMapper</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.itcast.account.mapper.AccountMapper</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.itcast.account.service.AccountTCCService</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>io.seata.core.context.RootContext</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>io.seata.rm.tcc.api.BusinessActionContext</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>lombok.extern.slf4j.Slf4j</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.beans.factory.annotation.Autowired</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.stereotype.Service</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.transaction.annotation.Transactional</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 项目名称：seata-demo
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 描述：
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>   *
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @author zhong
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @date 2022-06-08 16:25
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>   */</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f>@Slf4j</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f>@Service</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>AccountTCCServiceImpl</span> <span style=color:#a2f;font-weight:700>implements</span> AccountTCCService <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 注入可用余额dao
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>      */</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f>@Autowired</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f;font-weight:700>private</span> AccountMapper accountMapper<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 注入冻结表dao
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>      */</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f>@Autowired</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f;font-weight:700>private</span> AccountFreezeMapper freezeMapper<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 资源检测和预留
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * 在数据库中设置了非负数字段限定，这里可以直接简化一步，如果为负数就会报错
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @param userId
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>    * @param money
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>      */</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f>@Transactional</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>deduct</span><span style=color:#666>(</span>String userId<span style=color:#666>,</span> <span style=color:#0b0;font-weight:700>int</span> money<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>      <span style=color:#080;font-style:italic>// 获取全局事务id
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>      String xid <span style=color:#666>=</span> RootContext<span style=color:#666>.</span><span style=color:#b44>getXID</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>      <span style=color:#080;font-style:italic>// 业务悬挂判断，如果freeze中有冻结记录，一定是CANCEL执行过，我要拒绝业务
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>      AccountFreeze accountFreeze <span style=color:#666>=</span> freezeMapper<span style=color:#666>.</span><span style=color:#b44>selectById</span><span style=color:#666>(</span>xid<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      <span style=color:#a2f;font-weight:700>if</span><span style=color:#666>(</span>accountFreeze <span style=color:#666>!=</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>){</span>
+</span></span><span style=display:flex><span>          <span style=color:#080;font-style:italic>// 一定是CANCEL执行过，我要拒绝业务
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>          <span style=color:#a2f;font-weight:700>return</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>      <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#080;font-style:italic>// 1、扣减可用余额
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>      accountMapper<span style=color:#666>.</span><span style=color:#b44>deduct</span><span style=color:#666>(</span>userId<span style=color:#666>,</span>money<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      <span style=color:#080;font-style:italic>// 2、记录冻结金额，事务状态
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>      AccountFreeze freeze <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> AccountFreeze<span style=color:#666>();</span>
+</span></span><span style=display:flex><span>      freeze<span style=color:#666>.</span><span style=color:#b44>setXid</span><span style=color:#666>(</span>xid<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      freeze<span style=color:#666>.</span><span style=color:#b44>setUserId</span><span style=color:#666>(</span>userId<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      freeze<span style=color:#666>.</span><span style=color:#b44>setState</span><span style=color:#666>(</span>AccountFreeze<span style=color:#666>.</span><span style=color:#b44>State</span><span style=color:#666>.</span><span style=color:#b44>TRY</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      freeze<span style=color:#666>.</span><span style=color:#b44>setFreezeMoney</span><span style=color:#666>(</span>money<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      freezeMapper<span style=color:#666>.</span><span style=color:#b44>insert</span><span style=color:#666>(</span>freeze<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>      <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>confirm</span><span style=color:#666>(</span>BusinessActionContext ctx<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 1、获取事务id
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       String xid <span style=color:#666>=</span> ctx<span style=color:#666>.</span><span style=color:#b44>getXid</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 2、根据事务id删除冻结数据
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       <span style=color:#0b0;font-weight:700>int</span> count <span style=color:#666>=</span> freezeMapper<span style=color:#666>.</span><span style=color:#b44>deleteById</span><span style=color:#666>(</span>xid<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>       <span style=color:#a2f;font-weight:700>return</span> count <span style=color:#666>==</span> <span style=color:#666>1</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>   <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>   <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>cancel</span><span style=color:#666>(</span>BusinessActionContext ctx<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 0、查询冻结记录
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       String xid <span style=color:#666>=</span> ctx<span style=color:#666>.</span><span style=color:#b44>getXid</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 获取用户id
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       String userId <span style=color:#666>=</span> ctx<span style=color:#666>.</span><span style=color:#b44>getActionContext</span><span style=color:#666>(</span><span style=color:#b44>&#34;userId&#34;</span><span style=color:#666>).</span><span style=color:#b44>toString</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>       AccountFreeze freeze <span style=color:#666>=</span> freezeMapper<span style=color:#666>.</span><span style=color:#b44>selectById</span><span style=color:#666>(</span>xid<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 空回滚的判断，为null代表没有try没有执行
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       <span style=color:#a2f;font-weight:700>if</span><span style=color:#666>(</span>freeze <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>){</span>
+</span></span><span style=display:flex><span>           freeze <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> AccountFreeze<span style=color:#666>();</span>
+</span></span><span style=display:flex><span>           freeze<span style=color:#666>.</span><span style=color:#b44>setXid</span><span style=color:#666>(</span>xid<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>           freeze<span style=color:#666>.</span><span style=color:#b44>setUserId</span><span style=color:#666>(</span>userId<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>           freeze<span style=color:#666>.</span><span style=color:#b44>setState</span><span style=color:#666>(</span>AccountFreeze<span style=color:#666>.</span><span style=color:#b44>State</span><span style=color:#666>.</span><span style=color:#b44>CANCEL</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>           freeze<span style=color:#666>.</span><span style=color:#b44>setFreezeMoney</span><span style=color:#666>(</span><span style=color:#666>0</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>           freezeMapper<span style=color:#666>.</span><span style=color:#b44>insert</span><span style=color:#666>(</span>freeze<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>       <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 幂等判断
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       <span style=color:#a2f;font-weight:700>if</span><span style=color:#666>(</span>freeze<span style=color:#666>.</span><span style=color:#b44>getState</span><span style=color:#666>()</span> <span style=color:#666>==</span> AccountFreeze<span style=color:#666>.</span><span style=color:#b44>State</span><span style=color:#666>.</span><span style=color:#b44>CANCEL</span><span style=color:#666>){</span>
+</span></span><span style=display:flex><span>           <span style=color:#080;font-style:italic>// 已经执行过了一次CANCEL，无需重复处理
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>           <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>true</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>       <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>       
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 1、恢复可用余额
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       accountMapper<span style=color:#666>.</span><span style=color:#b44>refund</span><span style=color:#666>(</span>freeze<span style=color:#666>.</span><span style=color:#b44>getUserId</span><span style=color:#666>(),</span> freeze<span style=color:#666>.</span><span style=color:#b44>getFreezeMoney</span><span style=color:#666>());</span>
+</span></span><span style=display:flex><span>       <span style=color:#080;font-style:italic>// 2、将冻结金额清零，修改状态
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>       freeze<span style=color:#666>.</span><span style=color:#b44>setFreezeMoney</span><span style=color:#666>(</span><span style=color:#666>0</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>       freeze<span style=color:#666>.</span><span style=color:#b44>setState</span><span style=color:#666>(</span>AccountFreeze<span style=color:#666>.</span><span style=color:#b44>State</span><span style=color:#666>.</span><span style=color:#b44>CANCEL</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>       <span style=color:#0b0;font-weight:700>int</span> count <span style=color:#666>=</span> freezeMapper<span style=color:#666>.</span><span style=color:#b44>updateById</span><span style=color:#666>(</span>freeze<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>       <span style=color:#a2f;font-weight:700>return</span> count <span style=color:#666>==</span> <span style=color:#666>1</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>   <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>   <span style=color:#666>}</span>
+</span></span></code></pre></div><p>3、修改业务层连接方式
+改为上面定义的TCCM业务实现</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/93b574a9f6a4408cb371dfd1d3c4a5bc.png alt=img></p><p>4、测试数据
+直接测试错误的信息</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223228185.png alt=image-20230126223228185></p><p>当出现错误的时候会将会数据保存到数据库，如果是成功的那么就会删除</p><p>IDEA的报错输出</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223248820.png alt=image-20230126223248820></p><p>4、SAGA模式</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223308411.png alt=image-20230126223308411></p><p>Saga模式是SEATA提供的长事务解决方案。也分为两个阶段：</p><p>一阶段：直接提交本地事务
 二阶段：成功则什么都不做；失败则通过编写补偿业务来回滚
-Saga模式优点：</p>
-<ol>
-<li>
-<p>事务参与者可以基于事件驱动实现异步调用，吞吐高</p>
-</li>
-<li>
-<p>一阶段直接提交事务，无锁，性能好</p>
-</li>
-<li>
-<p>不用编写TCC中的三个阶段，实现简单</p>
-</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li>软状态持续时间不确定，时效性差</li>
-<li>没有锁，没有事务隔离，会有脏写</li>
-</ol>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223410575.png" alt="image-20230126223410575"></p>
-    </div>
-          
-    <footer class="post-footer">
-     
- 
-<div class="post-tags">     
-    
-    <a href="/tags/%e5%88%86%e5%b8%83%e5%bc%8f%e4%ba%8b%e5%8a%a1" rel="tag" title="分布式事务">#分布式事务#</a>
-    
-    <a href="/tags/%e4%b8%ad%e9%97%b4%e4%bb%b6" rel="tag" title="中间件">#中间件#</a>
-    
-    <a href="/tags/seata" rel="tag" title="Seata">#Seata#</a>
-    
-</div>
-
-
-
-      
-
-
-<div class="addthis_inline_share_toolbox"></div>
-
-
-
-     <div class="post-nav">
-<div class="article-copyright">
-    <div class="article-copyright-img">
-        <img src="/img/qq_qrcode.png" width="129px" height="129px"/>
-        <div style="text-align:center;">QQ扫一扫交流</div>
-    </div>
-    <div class="article-copyright-info">
-        <p> 
-            <span>标题：</span>Seata四种模式（XA、AT、TCC、SAGA）
-        </p>
-        <p> 
-            <span>链接：</span>https://codingroam.github.io/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/
-        </p>
-        <p> 
-            <span>作者：</span>roam
-        </p>
-        
-        
-        <p> 
-            <span>声明： </span>本博客文章除特别声明外，均采用 <a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank' style='text-decoration: underline;'>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！
-        </p>
-    </div>
-</div>
-<div class="clear"></div>
-</div>
-     <div class="reward-qr-info">
-  <div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>赏</span>
-  </button>
-  <div id="QR" style="display: none;">   
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/img/wechat-pay.png" alt="WeChat Pay"/>
-        <p>微信打赏</p>
-      </div>
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/img/ali-pay.png" alt="Alipay"/>
-        <p>支付宝打赏</p>
-      </div>
-  </div>
-</div>
-     <div class="post-nav">
-    <div class="post-nav-next post-nav-item">
-    
-        <a href="https://codingroam.github.io/post/docker%E4%B8%8Edocker-compose%E8%AF%A6%E8%A7%A3/" rel="next" title="Docker与Docker-compose">
-        <i class="fa fa-chevron-left"></i> Docker与Docker-compose
-        </a>
-    
-    </div>
-
-    <div class="post-nav-prev post-nav-item">
-    
-        <a href="https://codingroam.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E4%B8%8E%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/" rel="prev" title="分布式事务：两阶段提交与三阶段提交">
-        分布式事务：两阶段提交与三阶段提交 
-        <i class="fa fa-chevron-right"></i>
-        </a>
-    
-    </div>
-</div>  
-     
-
-
-
-
-<div id="wcomments"></div>
-
-
-
-
-
-
-
-    </footer>
-  </article>
-</section>
-
-          </div>
-        </div>
-        <div class="sidebar-toggle">
-  <div class="sidebar-toggle-line-wrap">
-    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-  </div>
-</div>
-<aside id="sidebar" class="sidebar">
-  <div class="sidebar-inner">
-
-    <section class="site-overview sidebar-panel  sidebar-panel-active ">
-      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image"
-        src="/img/avatar.png"
-        alt="roam" />
-    <p class="site-author-name" itemprop="name">roam</p>
-    <p class="site-description motion-element" itemprop="description"> 
-      
-        以为打得赢我啊你
-      
-    </p>
-</div>
-      <nav class="site-state motion-element">
-    <div class="site-state-item site-state-posts">
-      <a href="/post/">
-        <span class="site-state-item-count">52</span>
-        <span class="site-state-item-name">日志</span>
-      </a>
-    </div>
-    <div class="site-state-item site-state-categories">    
-        <a href="/categories/">      
-         
-        <span class="site-state-item-count">49</span>
-        
-        <span class="site-state-item-name">分类</span>
-        
-        </a>
-    </div>
-
-    <div class="site-state-item site-state-tags">
-        <a href="/tags/">
-         
-        <span class="site-state-item-count">62</span>
-        
-        <span class="site-state-item-name">标签</span>
-        </a>
-    </div>
-</nav>
-      
-      
-<div class="links-of-author motion-element">
-    
-        <span class="links-of-author-item">
-        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
-            <i class="fa fa-fw fa-github"></i>
-            GitHub
-        </a>
-        </span>
-    
-        <span class="links-of-author-item">
-        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
-            <i class="fa fa-fw fa-globe"></i>
-            知乎
-        </a>
-        </span>
-    
-</div>
-
-
-      
-    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-    <div class="links-of-blogroll-title">
-        <i class="fa fa-fw fa-globe"></i>
-        友情链接
-    </div>
-    <ul class="links-of-blogroll-list">
-        
-        <li class="links-of-blogroll-item">
-            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
-        </li>
-        
-        <li class="links-of-blogroll-item">
-            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
-        </li>
-        
-        <li class="links-of-blogroll-item">
-            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
-        </li>
-        
-        <li class="links-of-blogroll-item">
-            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
-        </li>
-        
-    </ul>
-    </div>
-
-
-      
-    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
-    <div class="tagcloud-of-blogroll-title">
-        <i class="fa fa-fw fa-tags"></i>
-        标签云
-    </div>
-    <ul class="tagcloud-of-blogroll-list">
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/linux">Linux
-            <sup>10</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/java">Java
-            <sup>8</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/mysql">Mysql
-            <sup>8</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/docker">Docker
-            <sup>6</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/git">Git
-            <sup>5</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/problem-solving">Problem solving
-            <sup>5</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/java-base">Java base
-            <sup>4</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/spring">Spring
-            <sup>3</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/threadlocal">Threadlocal
-            <sup>3</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/command">Command
-            <sup>2</sup>
-            </a>
-        </li>
-        
-    </ul>
-    </div>
-
-
-      
-    </section>
-    
-  </div>
-</aside>
-
-      </div>
-    </main>
-   
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright" >
-  <span class="copyright-year">  
-    &copy; 2010 - 2023
-  </span>
-  <span class="with-love"><i class="fa fa-heart"></i></span>
-  <span class="copyright-author">想学啊你</span>
-</div>
-<div class="powered-info">
-  <span class="powered-by">
-    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
-  </span>
-  <span class="separator-line">/</span>
-  <span class="theme-info">
-    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
-    </a>
-  </span>
-</div>
-<div class="vistor-info">
-
-
-
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  <span class="site-uv">
-    <i class="fa fa-user"></i>
-    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-  </span>
-  <span class="separator-line">/</span>
-  <span class="site-pv">
-    <i class="fa fa-eye"></i>
-    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-  </span>
-
-
-</div>
-<div class="license-info">
-  <span class="storage-info">
-    Storage by 
-    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
-  </span>
-  <span class="separator-line">/</span>
-  <span class="license-num"> 
-    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
-  </span>
-</div>
-      </div>
-    </footer>
-
-    <div class="back-to-top">
-      <i class="fa fa-arrow-up"></i>
-      <span id="scrollpercent"><span>0</span>%</span>
-    </div>
-  </div>
-
-  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
-<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
-<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
-
-
-<script type="text/javascript">
-
-  function detectIE() {
-    var ua = window.navigator.userAgent;
-
-    var msie = ua.indexOf('MSIE ');
-    var trident = ua.indexOf('Trident/');
-    var edge = ua.indexOf('Edge/');
-
-    if (msie>0 || trident>0 || edge>0) {
-      return -1;
-    }
-
-    return 1;
-  }
-
-
-  function getCntViewHeight() {
-    var docHeight = $('#content').height(),
-        winHeight = $(window).height(),
-        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
-    return cntViewHeight;
-  }
-
-  function getScrollbarWidth() {
-    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
-    var div = $div[0];
-    var scrollbarWidth = div.offsetWidth - div.clientWidth;
-
-    $div.remove();
-
-    return scrollbarWidth;
-  }
-
-  function registerBackTop() {
-    var THRESHOLD = 50;
-    var $top = $('.back-to-top');
-
-    $(window).on('scroll', function () {
-      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
-
-      var scrollTop = $(window).scrollTop();
-      var cntViewHeight = getCntViewHeight();
-      var scrollPercent = (scrollTop) / (cntViewHeight);
-      var scrollPercentRounded = Math.round(scrollPercent*100);
-      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
-      $('#scrollpercent>span').html(scrollPercentMaxed);
-    });
-
-    $top.on('click', function () {
-      $("html,body").animate({
-                 scrollTop: 0,
-                 screenLeft: 0,
-                 }, 800);
-    });
-  }
-
-  function initScrollSpy () {
-    var tocSelector = '.post-toc';
-    var $tocElement = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocElement
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-      })
-      .on('clear.bs.scrollspy', removeCurrentActiveClass);
-
-    $('body').scrollspy({ target: tocSelector });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-  }
-
-  function initAffix () {
-    var headerHeight = $('.header-inner').height();
-    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
-    var sidebarTop = headerHeight + 10;
-
-    $('.sidebar-inner').affix({
-      offset: {
-        top: sidebarTop,
-        bottom: footerOffset 
-      }
-    });
-
-    
-
-  }
-
-  function initTOCDimension () {
-    var updateTOCHeightTimer;
-
-    $(window).on('resize', function () {
-      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
-
-      updateTOCHeightTimer = setTimeout(function () {
-        var tocWrapperHeight = document.body.clientHeight - 100;
-
-        updateTOCHeight(tocWrapperHeight);
-      }, 0);
-    });
-
-    
-    updateTOCHeight(document.body.clientHeight - 100);
-
-    
-    var scrollbarWidth = getScrollbarWidth();
-    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
-  }
-
-  function updateTOCHeight (height) {
-    height = height || 'auto';
-    $('.post-toc').css('max-height', height);
-  }
-
-$(function() {
-
-  var sidebarTop = $('.header-inner').height() + 10;
-  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
-
-  
-  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
-  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
-  var sideHeight = sidebarMt + sidebarInHeight;
-  var contentHeight = $('.content-wrap').height();
-
-  if (contentHeight < sideHeight) {
-    $('.content-wrap').css('min-height', sideHeight);
-  }
-  
-  
-  $('.site-nav-toggle').on('click', function () {
-    var $siteNav = $('.site-nav');
-    var $toggleLine = $('.toggle');
-    var ON_CLASS_NAME = 'site-nav-on';
-    var CLOSE_CLASS_NAME = 'toggle-close';
-    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
-    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
-    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
-
-    $siteNav.stop()[animateAction]('normal', function () {
-      $siteNav[animateCallback](ON_CLASS_NAME);
-      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
-    });
-
-  });
-
-  registerBackTop();
-  
-   
-  initAffix();
-  initTOCDimension();
-
-  $('.sidebar-nav-toc').click(function(){
-    $(this).addClass('sidebar-nav-active');
-    $(this).next().removeClass('sidebar-nav-active');      
-    $('.'+$(this).next().attr('data-target')).toggle(500);
-    $('.'+$(this).attr('data-target')).toggle(500);
-  });
-
-  $('.sidebar-nav-overview').click(function(){
-    $(this).addClass('sidebar-nav-active');
-    $(this).prev().removeClass('sidebar-nav-active');      
-    $('.'+$(this).prev().attr('data-target')).toggle(500);
-    $('.'+$(this).attr('data-target')).toggle(500);
-  });
-});  
-
-</script>
-
-
-
-
-
-<script src="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js"></script>
-<script type="text/javascript">
-$(function() {
-  $('.post-body').viewer(); 
-});
-</script>
-
-
-
-
-
-
-<script type="text/javascript">
-  const locale = {
-    placeholder: '欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^'
-  };
-  $(function(){
-    if (detectIE()>0) {
-      $.getScript(document.location.protocol+'//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js', function(){
-         new Waline({
-          el: '#wcomments', 
-          visitor: true,
-          emoji: [], 
-          wordLimit: '200', 
-          uploadImage: false,
-          locale, 
-          requiredMeta: ['nick', 'mail'], 
-          serverURL: "Your WalineSerURL", 
-          lang: "zh-cn"
-        });
-      });      
-    } else {
-      $('#wcomments').html('抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。');
-    }
-  });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
-
-
-
-
-
-
-
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https'){
-   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else{
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-
-
-
-</body>
-</html>
+Saga模式优点：</p><ol><li><p>事务参与者可以基于事件驱动实现异步调用，吞吐高</p></li><li><p>一阶段直接提交事务，无锁，性能好</p></li><li><p>不用编写TCC中的三个阶段，实现简单</p></li></ol><p>缺点：</p><ol><li>软状态持续时间不确定，时效性差</li><li>没有锁，没有事务隔离，会有脏写</li></ol><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230126223410575.png alt=image-20230126223410575></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%e5%88%86%e5%b8%83%e5%bc%8f%e4%ba%8b%e5%8a%a1 rel=tag title=分布式事务>#分布式事务#</a>
+<a href=/tags/%e4%b8%ad%e9%97%b4%e4%bb%b6 rel=tag title=中间件>#中间件#</a>
+<a href=/tags/seata rel=tag title=Seata>#Seata#</a></div><div class=addthis_inline_share_toolbox></div><div class=post-nav><div class=article-copyright><div class=article-copyright-img><img src=/img/qq_qrcode.png width=129px height=129px><div style=text-align:center>QQ扫一扫交流</div></div><div class=article-copyright-info><p><span>标题：</span>Seata四种模式（XA、AT、TCC、SAGA）</p><p><span>链接：</span>https://codingroam.github.io/post/seata%E5%9B%9B%E7%A7%8D%E6%A8%A1%E5%BC%8Fxaattccsaga/</p><p><span>作者：</span>roam</p><p><span>声明： </span>本博客文章除特别声明外，均采用 <a href=https://creativecommons.org/licenses/by-nc-sa/3.0/ target=_blank style=text-decoration:underline>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！</p></div></div><div class=clear></div></div><div class=reward-qr-info><div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div><button id=rewardButton disable=enable onclick='var qr=document.getElementById("QR");qr.style.display==="none"?qr.style.display="block":qr.style.display="none"'>
+<span>赏</span></button><div id=QR style=display:none><div id=wechat style=display:inline-block><img id=wechat_qr src=/img/wechat-pay.png alt="WeChat Pay"><p>微信打赏</p></div><div id=alipay style=display:inline-block><img id=alipay_qr src=/img/ali-pay.png alt=Alipay><p>支付宝打赏</p></div></div></div><div class=post-nav><div class="post-nav-next post-nav-item"><a href=https://codingroam.github.io/post/docker%E4%B8%8Edocker-compose%E8%AF%A6%E8%A7%A3/ rel=next title=Docker与Docker-compose><i class="fa fa-chevron-left"></i> Docker与Docker-compose</a></div><div class="post-nav-prev post-nav-item"><a href=https://codingroam.github.io/post/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E4%B8%8E%E4%B8%89%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/ rel=prev title=分布式事务：两阶段提交与三阶段提交>分布式事务：两阶段提交与三阶段提交
+<i class="fa fa-chevron-right"></i></a></div></div><div id=wcomments></div></footer></article></section></div></div><div class=sidebar-toggle><div class=sidebar-toggle-line-wrap><span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id=sidebar class=sidebar><div class=sidebar-inner><section class="site-overview sidebar-panel sidebar-panel-active"><div class="site-author motion-element" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image src=/img/avatar.png alt=roam><p class=site-author-name itemprop=name>roam</p><p class="site-description motion-element" itemprop=description>以为打得赢我啊你</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href=/post/><span class=site-state-item-count>52</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>49</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>62</span>
+<span class=site-state-item-name>标签</span></a></div></nav><div class="links-of-author motion-element"><span class=links-of-author-item><a href=https://github.com/wk123456/ target=_blank title=GitHub><i class="fa fa-fw fa-github"></i>
+GitHub</a></span>
+<span class=links-of-author-item><a href=https://www.zhihu.com/ target=_blank title=知乎><i class="fa fa-fw fa-globe"></i>
+知乎</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-inline"><div class=links-of-blogroll-title><i class="fa fa-fw fa-globe"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://nutzam.com/ title=Nutz target=_blank>Nutz</a></li><li class=links-of-blogroll-item><a href=https://jfinal.com/ title=JFinal target=_blank>JFinal</a></li><li class=links-of-blogroll-item><a href=http://wendal.net/ title=Wendal target=_blank>Wendal</a></li><li class=links-of-blogroll-item><a href=https://www.liaoxuefeng.com/ title=廖雪峰 target=_blank>廖雪峰</a></li></ul></div><div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline"><div class=tagcloud-of-blogroll-title><i class="fa fa-fw fa-tags"></i>
+标签云</div><ul class=tagcloud-of-blogroll-list><li class=tagcloud-of-blogroll-item><a href=/tags/linux>Linux
+<sup>10</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java>Java
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/mysql>Mysql
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/docker>Docker
+<sup>6</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/git>Git
+<sup>5</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/problem-solving>Problem solving
+<sup>5</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java-base>Java base
+<sup>4</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/spring>Spring
+<sup>3</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/threadlocal>Threadlocal
+<sup>3</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/command>Command
+<sup>2</sup></a></li></ul></div></section></div></aside></div></main><footer id=footer class=footer><div class=footer-inner><div class=copyright><span class=copyright-year>&copy; 2010 - 2023</span>
+<span class=with-love><i class="fa fa-heart"></i></span>
+<span class=copyright-author>想学啊你</span></div><div class=powered-info><span class=powered-by>Powered by - <a class=powered-link href=//gohugo.io target=_blank title=hugo>Hugo v0.115.4</a></span>
+<span class=separator-line>/</span>
+<span class=theme-info>Theme by - <a class=powered-link href=//github.com/elkan1788/hugo-theme-next target=_blank>NexT</a></span></div><div class=vistor-info><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<span class=site-uv><i class="fa fa-user"></i>
+<span class=busuanzi-value id=busuanzi_value_site_uv></span></span>
+<span class=separator-line>/</span>
+<span class=site-pv><i class="fa fa-eye"></i>
+<span class=busuanzi-value id=busuanzi_value_site_pv></span></span></div><div class=license-info><span class=storage-info>Storage by
+<a href=https://gitee.com/ style=font-weight:700 target=_blank>Gitee 仓库</a></span>
+<span class=separator-line>/</span>
+<span class=license-num><a href=http://beian.miit.gov.cn target=_blank>粤 ICP 备 18047355 号</a></span></div></div></footer><div class=back-to-top><i class="fa fa-arrow-up"></i>
+<span id=scrollpercent><span>0</span>%</span></div></div><script type=text/javascript src=//unpkg.com/jquery@2.1.4/dist/jquery.min.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/search.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/affix.js></script>
+<script type=text/javascript>function detectIE(){var e=window.navigator.userAgent,t=e.indexOf("MSIE "),n=e.indexOf("Trident/"),s=e.indexOf("Edge/");return t>0||n>0||s>0?-1:1}function getCntViewHeight(){var t=$("#content").height(),e=$(window).height(),n=t>e?t-e:$(document).height()-e;return n}function getScrollbarWidth(){var e=$("<div />").addClass("scrollbar-measure").prependTo("body"),t=e[0],n=t.offsetWidth-t.clientWidth;return e.remove(),n}function registerBackTop(){var t=50,e=$(".back-to-top");$(window).on("scroll",function(){e.toggleClass("back-to-top-on",window.pageYOffset>t);var s=$(window).scrollTop(),o=getCntViewHeight(),i=s/o,n=Math.round(i*100),a=n>100?100:n;$("#scrollpercent>span").html(a)}),e.on("click",function(){$("html,body").animate({scrollTop:0,screenLeft:0},800)})}function initScrollSpy(){var e=".post-toc",s=$(e),t=".active-current";s.on("activate.bs.scrollspy",function(){var t=$(e+" .active").last();n(),t.addClass("active-current")}).on("clear.bs.scrollspy",n),$("body").scrollspy({target:e});function n(){$(e+" "+t).removeClass(t.substring(1))}}function initAffix(){var e=$(".header-inner").height(),t=parseInt($(".footer").outerHeight(!0),10),n=e+10;$(".sidebar-inner").affix({offset:{top:n,bottom:t}})}function initTOCDimension(){$(window).on("resize",function(){e&&clearTimeout(e),e=setTimeout(function(){var e=document.body.clientHeight-100;updateTOCHeight(e)},0)}),updateTOCHeight(document.body.clientHeight-100);var e,t=getScrollbarWidth();$(".post-toc").css("width","calc(100% + "+t+"px)")}function updateTOCHeight(e){e=e||"auto",$(".post-toc").css("max-height",e)}$(function(){var e,t,n,s,o=$(".header-inner").height()+10;$("#sidebar").css({"margin-top":o}).show(),t=parseInt($("#sidebar").css("margin-top")),n=parseInt($(".sidebar-inner").css("height")),e=t+n,s=$(".content-wrap").height(),s<e&&$(".content-wrap").css("min-height",e),$(".site-nav-toggle").on("click",function(){var e=$(".site-nav"),o=$(".toggle"),t="site-nav-on",i="toggle-close",n=e.hasClass(t),a=n?"slideUp":"slideDown",s=n?"removeClass":"addClass";e.stop()[a]("normal",function(){e[s](t),o[s](i)})}),registerBackTop(),initAffix(),initTOCDimension(),$(".sidebar-nav-toc").click(function(){$(this).addClass("sidebar-nav-active"),$(this).next().removeClass("sidebar-nav-active"),$("."+$(this).next().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)}),$(".sidebar-nav-overview").click(function(){$(this).addClass("sidebar-nav-active"),$(this).prev().removeClass("sidebar-nav-active"),$("."+$(this).prev().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)})})</script><script src=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js></script>
+<script type=text/javascript>$(function(){$(".post-body").viewer()})</script><script type=text/javascript>const locale={placeholder:"欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^"};$(function(){detectIE()>0?$.getScript(document.location.protocol+"//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js",function(){new Waline({el:"#wcomments",visitor:!0,emoji:[],wordLimit:"200",uploadImage:!1,locale,requiredMeta:["nick","mail"],serverURL:"Your WalineSerURL",lang:"zh-cn"})}):$("#wcomments").html("抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。")})</script><script type=text/javascript src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+<script>(function(){var t,e=document.createElement("script"),n=window.location.protocol.split(":")[0];n==="https"?e.src="https://zz.bdstatic.com/linksubmit/push.js":e.src="http://push.zhanzhang.baidu.com/push.js",t=document.getElementsByTagName("script")[0],t.parentNode.insertBefore(e,t)})()</script></body></html>

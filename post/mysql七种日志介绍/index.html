@@ -1,1103 +1,132 @@
-<!DOCTYPE HTML>
-<html lang="zh-cn" dir="zh">
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-  <title> MySQL七种日志介绍 - 想学啊你 </title>
-  
-  <meta name="keywords" content="博客">
-  
-  
-  <meta name="author" content="roam">
-  
-  <meta property="og:title" content="MySQL七种日志介绍"/>
-  <meta property="og:site_name" content="想学啊你">
-  <meta property="og:image" content="https://codingroam.github.io/img/author.jpg"> 
-  <meta name="title" content="MySQL七种日志介绍 - 想学啊你" />
-  
-  <meta name="description" content="轻轻的你来了">
-   
-  <link rel="shortcut icon" href="https://codingroam.github.io/img/favicon.ico" />
-  <link rel="apple-touch-icon" href="https://codingroam.github.io/img/apple-touch-icon.png" />
-  <link rel="apple-touch-icon-precomposed" href="https://codingroam.github.io/img/apple-touch-icon.png" />
-  <link href="//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-  
-  <link href="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css" rel="stylesheet"/>
-  
-  <link href="https://codingroam.github.io/css/main.css" rel="stylesheet" type="text/css" />
-  <link href="https://codingroam.github.io/css/syntax.css" rel="stylesheet" type="text/css" />    
-  
-  
-  
-</head>
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-<div class="container one-collumn sidebar-position-left page-home  ">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-container">
-<div class="site-nav-toggle">
-  <div class="toggle" role="button" style="opacity: 1; top: 0px;">
-      <span class="toggle-line"></span>
-      <span class="toggle-line"></span>
-      <span class="toggle-line"></span>
-  </div>
-</div>
-<div class="site-meta ">
-  
-  
-  
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">想学啊你</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-  <p class="site-subtitle">三四楼那么高了</p>
-</div>
-
-<div class="site-nav-right">
-    <div class="toggle popup-trigger" style="opacity: 1; top: 0px;">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-<nav class="site-nav">
-    <ul id="menu" class="menu">
-    
-        
-    
-    
-    
-      <li class="menu-item ">
-        <a href="/" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页
-        </a>
-      </li>
-        
-    
-    
-    
-      <li class="menu-item menu-item-active">
-        <a href="/post" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档
-        </a>
-      </li>
-        
-    
-    
-    
-      <li class="menu-item ">
-        <a href="/tags" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签
-        </a>
-      </li>
-        
-    
-    
-    
-      <li class="menu-item ">
-        <a href="/categories" rel="section" >
-            <i class="menu-item-icon fa fa-fw fa-book"></i> <br />分类
-        </a>
-      </li>
-    
-      <li class="menu-item menu-item-search">
-        <a href="javascript:;" class="popup-trigger"> <i class="menu-item-icon fa fa-search fa-fw"></i> <br /> 搜索</a>
-      </li>
-    </ul>
-    <div class="site-search">
-      <div class="popup search-popup local-search-popup">
-  <div class="local-search-header clearfix">
-    <span class="search-icon"><i class="fa fa-search"></i> </span>
-    <span class="popup-btn-close"><i class="fa fa-times-circle"></i></span>
-    <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="搜索关键字..." spellcheck="false" type="text" id="local-search-input" autocapitalize="none" autocorrect="off">
-    </div>
-  </div>
-  <div id="local-search-result"></div>
-</div>
-
-    </div>
-</nav> </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-<section id="posts" class="posts-expand">
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      
-      <h1 class="post-title" itemprop="name headline">
-        <a class="post-title-link" href="https://codingroam.github.io/post/mysql%E4%B8%83%E7%A7%8D%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D/" itemprop="url">
-        MySQL七种日志介绍
-        </a>
-      </h1>
-      
-      <div class="post-meta">
-      <span class="post-pushdate">
-<i class="fa fa-calendar-o fa-fw"></i>
-<span class="post-meta-item-text">时间：</span>
-<time itemprop="dateCreated" datetime="2016-03-22T13:04:35+08:00" content="2023-02-17">
-    2023-02-17
-</time>
-</span> 
-      
-
-  <span class="post-category" >
-  <i class="fa fa-folder-o fa-fw"></i>  
-  <span class="post-meta-item-text">分类：</span>
-  
-    <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-      <a class="post-category-a" href="/categories/mysql" itemprop="url" rel="index">
-        <span itemprop="name">Mysql</span>
-      </a>
-      &nbsp; 
-    </span>
-  
-</span>
-
-
-      <span class="post-wordcount">
-<i class="fa fa-file-word-o fa-fw"></i>
-<span class="post-meta-item-text">字数：</span>
-<span class="leancloud-world-count">5396 字</span>
-</span>
-      <span class="post-readtime">
-<i class="fa fa-eye fa-fw"></i>
-<span class="post-meta-item-text">阅读：</span>
-<span class="leancloud-view-count">11分钟</span>
-</span>
-      <span id="/post/mysql%E4%B8%83%E7%A7%8D%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D/" class="leancloud_visitors post-visitor" data-flag-title="MySQL七种日志介绍">
-<i class="fa fa-binoculars fa-fw"></i>
-<span class="post-meta-item-text">阅读次数：</span>
-<span class="leancloud-visitors-count"></span>
-</span>
-      </div>
-     
-    </header>
-  
-    <div class="post-body" itemprop="articleBody">
-    <p>MySQL七种日志介绍</p>
-<p>进入正题前先简单看看MySQL的逻辑架构，相信我用的着。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230217212953762.png" alt="image-20230217212953762"></p>
-<p>MySQL逻辑架构</p>
-<p>MySQL的逻辑架构大致可以分为三层：</p>
-<ul>
-<li>第一层：处理客户端连接、授权认证，安全校验等。</li>
-<li>第二层：服务器server层，负责对SQL解释、分析、优化、执行操作引擎等。</li>
-<li>第三层：存储引擎，负责MySQL中数据的存储和提取。</li>
-</ul>
-<blockquote>
-<p>我们要知道MySQL的服务器层是不管理事务的，事务是由存储引擎实现的，而MySQL中支持事务的存储引擎又属<code>InnoDB</code>使用的最为广泛，所以后续文中提到的存储引擎都以<code>InnoDB</code>为主。</p>
-</blockquote>
-<p>MySQL数据更新流程</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230217204335809.png" alt="image-20230217204335809"></p>
-<p><strong>记住！</strong> <strong>记住！</strong> <strong>记住！</strong> 上边这张图，她是MySQL更新数据的基础流程，其中包括redo log、bin log、undo log三种日志间的大致关系，好了闲话少说直奔主题。</p>
-<h1 id="1-redo-log重做日志">1. redo log（重做日志）</h1>
-<p><strong>redo log</strong>属于MySQL存储引擎<strong>InnoDB</strong>的事务日志。</p>
-<p>MySQL的数据是存放在磁盘中的，每次读写数据都需做磁盘IO操作，如果并发场景下性能就会很差。为此MySQL提供了一个优化手段，引入缓存<strong>Buffer Pool</strong>。这个缓存中包含了磁盘中<strong>部分</strong>数据页（<strong>page</strong>）的映射，以此来缓解数据库的磁盘压力。</p>
-<p>当从数据库读数据时，首先从缓存中读取，如果缓存中没有，则从磁盘读取后放入缓存；当向数据库写入数据时，先向缓存写入，此时缓存中的数据页数据变更，这个数据页称为<strong>脏页</strong>，<strong>Buffer Pool</strong>中修改完数据后会按照设定的更新策略，定期刷到磁盘中，这个过程称为<strong>刷脏页</strong>。</p>
-<h2 id="11-mysql宕机">1.1 MySQL宕机</h2>
-<p>如果刷脏页还未完成，可MySQL由于某些原因宕机重启，此时<strong>Buffer Pool</strong>中修改的数据还没有及时的刷到磁盘中，就会导致数据丢失，无法保证事务的持久性。</p>
-<p>为了解决这个问题引入了<strong>redo log</strong>，redo Log如其名侧重于重做！它记录的是数据库中每个页的修改，而不是某一行或某几行修改成怎样，可以用来恢复提交后的物理数据页，且只能恢复到最后一次提交的位置。</p>
-<p><strong>redo log</strong>用到了<strong>WAL</strong>（Write-Ahead Logging）技术，这个技术的核心就在于修改记录前，一定要先写日志，并保证日志先落盘，才能算事务提交完成。</p>
-<p>有了<strong>redo log</strong>再修改数据时，InnoDB引擎会把更新记录先写在redo log中，在修改<strong>Buffer Pool</strong>中的数据，当提交事务时，调用<strong>fsync</strong>把redo log刷入磁盘。至于缓存中更新的数据文件何时刷入磁盘，则由后台线程异步处理。</p>
-<blockquote>
-<p><strong>注意</strong>：此时redo log的事务状态是<strong><code>prepare</code></strong>，还未真正提交成功，要等<strong><code>bin log</code></strong>日志写入磁盘完成才会变更为<strong><code>commit</code></strong>，事务才算真正提交完成。</p>
-</blockquote>
-<p>这样一来即使刷脏页之前MySQL意外宕机也没关系，只要在重启时解析redo log中的更改记录进行重放，重新刷盘即可。</p>
-<h2 id="12-大小固定">1.2 大小固定</h2>
-<p>redo log采用固定大小，循环写入的格式，当redo log写满之后，重新从头开始如此循环写，形成一个环状。</p>
-<p>那为什么要如此设计呢？</p>
-<p>因为redo log记录的是数据页上的修改，如果<strong>Buffer Pool</strong>中数据页已经刷磁盘后，那这些记录就失效了，新日志会将这些失效的记录进行覆盖擦除。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/89be6ff17a541ebcde5922e8853fc7ce.png" alt="img"></p>
-<p>上图中的<strong>write pos</strong>表示redo log当前记录的日志序列号<strong>LSN</strong>(log sequence number)，写入还未刷盘，循环往后递增；<strong>check point</strong>表示redo log中的修改记录已刷入磁盘后的LSN，循环往后递增，这个LSN之前的数据已经全落盘。</p>
-<p><strong>write pos</strong>到<strong>check point</strong>之间的部分是redo log空余的部分（绿色），用来记录新的日志；<strong>check point</strong>到<strong>write pos</strong>之间是redo log已经记录的数据页修改数据，此时数据页还未刷回磁盘的部分。当<strong>write pos</strong>追上<strong>check point</strong>时，会先推动<strong>check point</strong>向前移动，空出位置（刷盘）再记录新的日志。</p>
-<blockquote>
-<p><strong>注意</strong>：redo log日志满了，在擦除之前，需要确保这些要被擦除记录对应在内存中的数据页都已经刷到磁盘中了。擦除旧记录腾出新空间这段期间，是不能再接收新的更新请求的，此刻MySQL的性能会下降。所以在并发量大的情况下，合理调整redo log的文件大小非常重要。</p>
-</blockquote>
-<h2 id="13-crash-safe">1.3 crash-safe</h2>
-<p>因为redo log的存在使得<strong>Innodb</strong>引擎具有了<strong>crash-safe</strong>的能力，即MySQL宕机重启，系统会自动去检查redo log，将修改还未写入磁盘的数据从redo log恢复到MySQL中。</p>
-<p>MySQL启动时，不管上次是正常关闭还是异常关闭，总是会进行恢复操作。会先检查数据页中的<strong>LSN</strong>，如果这个 LSN 小于 redo log 中的LSN，即<strong>write pos</strong>位置，说明在<strong>redo log</strong>上记录着数据页上尚未完成的操作，接着就会从最近的一个<strong>check point</strong>出发，开始同步数据。</p>
-<p>简单理解，比如：redo log的<strong>LSN</strong>是500，数据页的LSN是300，表明重启前有部分数据未完全刷入到磁盘中，那么系统则将redo log中<strong>LSN</strong>序号300到500的记录进行重放刷盘。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/ca9efde0f4ffa038d557bc3a9125fa9e.png" alt="img"></p>
-<h1 id="2-undo-log回滚日志">2. undo log（回滚日志）</h1>
-<p><strong>undo log</strong>也是属于MySQL存储引擎InnoDB的事务日志。</p>
-<p><strong>undo log</strong>属于逻辑日志，如其名主要起到回滚的作用，它是保证事务原子性的关键。记录的是数据修改前的状态，在数据修改的流程中，同时会记录一条与当前操作相反的逻辑日志到<strong>undo log</strong>中。</p>
-<p>我们举个栗子：假如更新ID=1记录的name字段，name原始数据为小富，现改name为程序员内点事</p>
-<p>事务执行<strong>update X set name = 程序员内点事 where id =1</strong>语句时，先会在<strong>undo log</strong>中记录一条相反逻辑的<strong>update X set name = 小富 where id =1</strong>记录，这样当某些原因导致服务异常事务失败，就可以借助<strong>undo log</strong>将数据回滚到事务执行前的状态，保证事务的完整性。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/93baaa0f4679acb48caff3e6cca9eaa4.png" alt="img"></p>
-<p>那可能有人会问：同一个事物内的一条记录被多次修改，那是不是每次都要把数据修改前的状态都写入<strong>undo log</strong>呢？</p>
-<p>答案是不会的！</p>
-<p><strong>undo log</strong>只负责记录事务开始前要修改数据的原始版本，当我们再次对这行数据进行修改，所产生的修改记录会写入到<strong>redo log</strong>，<strong>undo log</strong>负责完成回滚，<strong>redo log</strong>负责完成前滚。</p>
-<h2 id="21-回滚">2.1 回滚</h2>
-<p>未提交的事务，即事务未执行commit。但该事务内修改的脏页中，可能有一部分脏块已经刷盘。如果此时数据库实例宕机重启，就需要用回滚来将先前那部分已经刷盘的脏块从磁盘上撤销。</p>
-<h2 id="22-前滚">2.2 前滚</h2>
-<p>未完全提交的事务，即事务已经执行<strong>commit</strong>，但该事务内修改的脏页中只有一部分数据被刷盘，另外一部分还在<strong>buffer pool</strong>缓存上，如果此时数据库实例宕机重启，就需要用前滚来完成未完全提交的事务。将先前那部分由于宕机在内存上的未来得及刷盘数据，从<strong>redo log</strong>中恢复出来并刷入磁盘。</p>
-<blockquote>
-<p>数据库实例恢复时，先做前滚，后做回滚。</p>
-</blockquote>
-<p>如果你仔细看过了上边的 <strong>MySQL数据更新流程图</strong> 就会发现，<strong>undo log、redo log、bin log</strong>三种日志都是在刷脏页之前就已经刷到磁盘了的，相互协作最大限度保证了用户提交的数据不丢失。</p>
-<h1 id="3-bin-log归档日志">3. bin log（归档日志）</h1>
-<p><strong>bin log</strong>是一种数据库Server层（和什么引擎无关），以二进制形式存储在磁盘中的逻辑日志。<strong>bin log</strong>记录了数据库所有DDL和DML操作（不包含 SELECT 和 SHOW等命令，因为这类操作对数据本身并没有修改）。</p>
-<p>默认情况下，二进制日志功能是关闭的。可以通过以下命令查看二进制日志是否开启：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">VARIABLES</span> <span class="n">LIKE</span> <span class="err">&#39;</span><span class="n">log_bin</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span> <span class="o">|</span> <span class="n">Value</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">log_bin</span>       <span class="o">|</span> <span class="n">OFF</span>   <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+-------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>bin log</strong>也被叫做<strong>归档日志</strong>，因为它不会像<strong>redo log</strong>那样循环写擦除之前的记录，而是会一直记录日志。一个<strong>bin log</strong>日志文件默认最大容量1G（也可以通过<strong>max_binlog_size</strong>参数修改），单个日志超过最大值，则会新创建一个文件继续写。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">binary</span> <span class="n">logs</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+-----------------+-----------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Log_name</span>        <span class="o">|</span> <span class="n">File_size</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+-----------------+-----------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000001</span> <span class="o">|</span>      <span class="mi">8687</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000002</span> <span class="o">|</span>      <span class="mi">1445</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000003</span> <span class="o">|</span>      <span class="mi">3966</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000004</span> <span class="o">|</span>       <span class="mi">177</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000005</span> <span class="o">|</span>      <span class="mi">6405</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000006</span> <span class="o">|</span>       <span class="mi">177</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000007</span> <span class="o">|</span>       <span class="mi">154</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">mysq</span><span class="o">-</span><span class="n">bin</span><span class="mf">.000008</span> <span class="o">|</span>       <span class="mi">154</span> <span class="o">|</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>bin log</strong>日志的内容格式其实就是执行SQL命令的反向逻辑，这点和<strong>undo log</strong>有点类似。一般来说开启<strong>bin log</strong>都会给日志文件设置过期时间（<strong>expire_logs_days</strong>参数，默认永久保存），要不然日志的体量会非常庞大。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">variables</span> <span class="n">like</span> <span class="err">&#39;</span><span class="n">expire_logs_days</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+------------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span>    <span class="o">|</span> <span class="n">Value</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+------------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">expire_logs_days</span> <span class="o">|</span> <span class="mi">0</span>     <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+------------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="mi">1</span> <span class="n">row</span> <span class="n">in</span> <span class="n">set</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SET</span> <span class="n">GLOBAL</span> <span class="n">expire_logs_days</span><span class="o">=</span><span class="mi">30</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">Query</span> <span class="n">OK</span><span class="o">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>bin log</strong>主要应用于MySQL主从模式（<strong>master-slave</strong>）中，主从节点间的数据同步；以及基于时间点的数据还原。</p>
-<h2 id="31-主从同步">3.1 主从同步</h2>
-<p>通过下图MySQL的主从复制过程，来了解下<strong>bin log</strong>在主从模式下的应用。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/827653cfc6cf576f18c97ef11ac64707.png" alt="img"></p>
-<ul>
-<li>用户在主库master执行DDL和DML操作，修改记录顺序写入bin log;</li>
-<li>从库slave的I/O线程连接上Master，并请求读取指定位置position的日志内容;</li>
-<li>Master收到从库slave请求后，将指定位置position之后的日志内容，和主库bin log文件的名称以及在日志中的位置推送给从库;</li>
-<li>slave的I/O线程接收到数据后，将接收到的日志内容依次写入到relay log文件最末端，并将读取到的主库bin log文件名和位置position记录到master-info文件中，以便在下一次读取用;</li>
-<li>slave的SQL线程检测到relay log中内容更新后，读取日志并解析成可执行的SQL语句，这样就实现了主从库的数据一致;</li>
-</ul>
-<h2 id="32-基于时间点还原">3.2 基于时间点还原</h2>
-<p>我们看到<strong>bin log</strong>也可以做数据的恢复，而<strong>redo log</strong>也可以，那它们有什么区别？</p>
-<ul>
-<li>层次不同：redo log 是InnoDB存储引擎实现的，bin log 是MySQL的服务器层实现的，但MySQL数据库中的任何存储引擎对于数据库的更改都会产生bin log。</li>
-<li>作用不同：redo log 用于碰撞恢复（crash recovery），保证MySQL宕机也不会影响持久性；bin log 用于时间点恢复（point-in-time recovery），保证服务器可以基于时间点恢复数据和主从复制。</li>
-<li>内容不同：redo log 是物理日志，内容基于磁盘的页Page；bin log的内容是二进制，可以根据binlog_format参数自行设置。</li>
-<li>写入方式不同：redo log 采用循环写的方式记录；binlog 通过追加的方式记录，当文件大小大于给定值后，后续的日志会记录到新的文件上。</li>
-<li>刷盘时机不同：bin log在事务提交时写入；redo log 在事务开始时即开始写入。</li>
-</ul>
-<p>bin log 与 redo log 功能并不冲突而是起到相辅相成的作用，需要二者同时记录，才能保证当数据库发生宕机重启时，数据不会丢失。</p>
-<h1 id="4-relay-log中继日志">4. relay log（中继日志）</h1>
-<p><strong>relay log</strong>日志文件具有与<strong>bin log</strong>日志文件相同的格式，从上边MySQL主从复制的流程可以看出，<strong>relay log</strong>起到一个中转的作用，<strong>slave</strong>先从主库<strong>master</strong>读取二进制日志数据，写入从库本地，后续再异步由<strong>SQL线程</strong>读取解析<strong>relay log</strong>为对应的SQL命令执行。</p>
-<h1 id="5-slow-query-log">5. slow query log</h1>
-<p>慢查询日志（<strong>slow query log</strong>）: 用来记录在 MySQL 中执行时间超过指定时间的查询语句，在 SQL 优化过程中会经常使用到。通过慢查询日志，我们可以查找出哪些查询语句的执行效率低，耗时严重。</p>
-<p>出于性能方面的考虑，一般只有在排查慢SQL、调试参数时才会开启，默认情况下，慢查询日志功能是关闭的。可以通过以下命令查看是否开启慢查询日志：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">VARIABLES</span> <span class="n">LIKE</span> <span class="err">&#39;</span><span class="n">slow_query</span><span class="o">%</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------------+--------------------------------------------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span>       <span class="o">|</span> <span class="n">Value</span>                                                  <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------------+--------------------------------------------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">slow_query_log</span>      <span class="o">|</span> <span class="n">OFF</span>                                                    <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">slow_query_log_file</span> <span class="o">|</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">iZ2zebfzaequ90bdlz820sZ</span><span class="o">-</span><span class="n">slow</span><span class="o">.</span><span class="na">log</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------------+--------------------------------------------------------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>通过如下命令开启慢查询日志后，我发现<strong>iZ2zebfzaequ90bdlz820sZ-slow.log</strong> 日志文件里并没有内容啊，可能因为我执行的 SQL 都比较简单没有超过指定时间。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span>  <span class="n">SET</span> <span class="n">GLOBAL</span> <span class="n">slow_query_log</span><span class="o">=</span><span class="n">ON</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">Query</span> <span class="n">OK</span><span class="o">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>上边提到超过 <strong>指定时间</strong> 的查询语句才算是慢查询，那么这个时间阈值又是多少嘞？我们通过<strong>long_query_time</strong>参数来查看一下，发现默认是 10 秒。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">VARIABLES</span> <span class="n">LIKE</span> <span class="err">&#39;</span><span class="n">long_query_time</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+-----------------+-----------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span>   <span class="o">|</span> <span class="n">Value</span>     <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+-----------------+-----------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">long_query_time</span> <span class="o">|</span> <span class="mf">10.000000</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+-----------------+-----------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这里我们将<strong>long_query_time</strong> 参数改小为 0.001秒再次执行查询SQL，看看慢查询日志里是否有变化。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SET</span> <span class="n">GLOBAL</span> <span class="n">long_query_time</span><span class="o">=</span><span class="mf">0.001</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">Query</span> <span class="n">OK</span><span class="o">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>果然再执行 SQL 的时，执行时间大于 0.001秒，发现慢查询日志开始记录了。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/07d0194971b418cc1e7cbeecb089ab3e.png" alt="img"></p>
-<h1 id="6-general-query-log">6. general query log</h1>
-<p>一般查询日志（general query log）：用来记录用户的<strong>所有</strong>操作，包括客户端何时连接了服务器、客户端发送的所有SQL以及其他事件，比如 MySQL 服务启动和关闭等等。MySQL服务器会按照它接收到语句的先后顺序写入日志文件。</p>
-<p>由于一般查询日志记录的内容过于详细，开启后 Log 文件的体量会非常庞大，所以出于对性能的考虑，默认情况下，该日志功能是关闭的，通常会在排查故障需获得详细日志的时候才会临时开启。</p>
-<p>我们可以通过以下命令查看一般查询日志是否开启，命令如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">variables</span> <span class="n">like</span> <span class="err">&#39;</span><span class="n">general_log</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span> <span class="o">|</span> <span class="n">Value</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+-------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">general_log</span>   <span class="o">|</span> <span class="n">OFF</span>   <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+-------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>下边开启一般查询日志并查看日志存放的位置。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SET</span> <span class="n">GLOBAL</span> <span class="n">general_log</span><span class="o">=</span><span class="n">on</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="n">Query</span> <span class="n">OK</span><span class="o">,</span> <span class="mi">0</span> <span class="n">rows</span> <span class="n">affected</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">show</span> <span class="n">variables</span> <span class="n">like</span> <span class="err">&#39;</span><span class="n">general_log_file</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+------------------+---------------------------------------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span>    <span class="o">|</span> <span class="n">Value</span>                                             <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+------------------+---------------------------------------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">general_log_file</span> <span class="o">|</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">iZ2zebfzaequ90bdlz820sZ</span><span class="o">.</span><span class="na">log</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+------------------+---------------------------------------------------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>执行一条查询 SQL 看看日志内容的变化。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">t_config</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------------+------------+---------------------+---------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">id</span>                  <span class="o">|</span> <span class="n">remark</span>     <span class="o">|</span> <span class="n">create_time</span>         <span class="o">|</span> <span class="n">last_modify_time</span>    <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------------+------------+---------------------+---------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="mi">1325741604307734530</span> <span class="o">|</span> <span class="err">我是广播表</span> <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">09</span> <span class="mi">18</span><span class="o">:</span><span class="mo">06</span><span class="o">:</span><span class="mi">44</span> <span class="o">|</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">09</span> <span class="mi">18</span><span class="o">:</span><span class="mo">06</span><span class="o">:</span><span class="mi">44</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------------+------------+---------------------+---------------------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>我们看到日志内容详细的记录了所有执行的命令、SQL、SQL的解析过程、数据库设置等等。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/6164113b78671af66813d8bc64133758.png" alt="img"></p>
-<h1 id="7-error-log">7. error log</h1>
-<p>错误日志（<strong>error log</strong>）: 应该是 MySQL 中最好理解的一种日志，主要记录 MySQL 服务器每次启动和停止的时间以及诊断和出错信息。</p>
-<p>默认情况下，该日志功能是开启的，通过如下命令查找错误日志文件的存放路径。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">&gt;</span> <span class="n">SHOW</span> <span class="n">VARIABLES</span> <span class="n">LIKE</span> <span class="err">&#39;</span><span class="n">log_error</span><span class="err">&#39;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+----------------------------------------------------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">Variable_name</span> <span class="o">|</span> <span class="n">Value</span>                                                          <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+----------------------------------------------------------------+</span>
-</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">log_error</span>     <span class="o">|</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">mysql</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">LAPTOP</span><span class="o">-</span><span class="n">UHQ6V8KP</span><span class="o">.</span><span class="na">err</span> <span class="o">|</span>
-</span></span><span class="line"><span class="cl"><span class="o">+---------------+----------------------------------------------------------------+</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>注意</strong>：错误日志中记录的可并非全是错误信息，像 MySQL 如何启动 InnoDB 的表空间文件、如何初始化自己的存储引擎，初始化 buffer pool 等等，这些也记录在错误日志文件中。</p>
-<p><img src="https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/71c8d83aaedfe620056efe21d6341732.png" alt="img"></p>
-    </div>
-          
-    <footer class="post-footer">
-     
- 
-<div class="post-tags">     
-    
-    <a href="/tags/mysql" rel="tag" title="Mysql">#Mysql#</a>
-    
-</div>
-
-
-
-      
-
-
-<div class="addthis_inline_share_toolbox"></div>
-
-
-
-     <div class="post-nav">
-<div class="article-copyright">
-    <div class="article-copyright-img">
-        <img src="/img/qq_qrcode.png" width="129px" height="129px"/>
-        <div style="text-align:center;">QQ扫一扫交流</div>
-    </div>
-    <div class="article-copyright-info">
-        <p> 
-            <span>标题：</span>MySQL七种日志介绍
-        </p>
-        <p> 
-            <span>链接：</span>https://codingroam.github.io/post/mysql%E4%B8%83%E7%A7%8D%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D/
-        </p>
-        <p> 
-            <span>作者：</span>roam
-        </p>
-        
-        
-        <p> 
-            <span>声明： </span>本博客文章除特别声明外，均采用 <a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank' style='text-decoration: underline;'>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！
-        </p>
-    </div>
-</div>
-<div class="clear"></div>
-</div>
-     <div class="reward-qr-info">
-  <div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>赏</span>
-  </button>
-  <div id="QR" style="display: none;">   
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/img/wechat-pay.png" alt="WeChat Pay"/>
-        <p>微信打赏</p>
-      </div>
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/img/ali-pay.png" alt="Alipay"/>
-        <p>支付宝打赏</p>
-      </div>
-  </div>
-</div>
-     <div class="post-nav">
-    <div class="post-nav-next post-nav-item">
-    
-        <a href="https://codingroam.github.io/post/mysql-rr%E7%BA%A7%E5%88%AB%E4%B8%8B%E4%BB%8D%E7%84%B6%E4%BC%9A%E5%8F%91%E7%94%9F%E5%B9%BB%E8%AF%BB%E5%92%8C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/" rel="next" title="MySQL RR级别下仍然会发生幻读和不可重复读">
-        <i class="fa fa-chevron-left"></i> MySQL RR级别下仍然会发生幻读和不可重复读
-        </a>
-    
-    </div>
-
-    <div class="post-nav-prev post-nav-item">
-    
-        <a href="https://codingroam.github.io/post/postgresql%E6%9F%A5%E8%AF%A2%E5%87%BA%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E8%AE%B0%E5%BD%95%E6%95%B0/" rel="prev" title="PostgreSQL查询出所有表的记录数">
-        PostgreSQL查询出所有表的记录数 
-        <i class="fa fa-chevron-right"></i>
-        </a>
-    
-    </div>
-</div>  
-     
-
-
-
-
-<div id="wcomments"></div>
-
-
-
-
-
-
-
-    </footer>
-  </article>
-</section>
-
-          </div>
-        </div>
-        <div class="sidebar-toggle">
-  <div class="sidebar-toggle-line-wrap">
-    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-  </div>
-</div>
-<aside id="sidebar" class="sidebar">
-  <div class="sidebar-inner">
-
-    <section class="site-overview sidebar-panel  sidebar-panel-active ">
-      <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image"
-        src="/img/avatar.png"
-        alt="roam" />
-    <p class="site-author-name" itemprop="name">roam</p>
-    <p class="site-description motion-element" itemprop="description"> 
-      
-        以为打得赢我啊你
-      
-    </p>
-</div>
-      <nav class="site-state motion-element">
-    <div class="site-state-item site-state-posts">
-      <a href="/post/">
-        <span class="site-state-item-count">52</span>
-        <span class="site-state-item-name">日志</span>
-      </a>
-    </div>
-    <div class="site-state-item site-state-categories">    
-        <a href="/categories/">      
-         
-        <span class="site-state-item-count">49</span>
-        
-        <span class="site-state-item-name">分类</span>
-        
-        </a>
-    </div>
-
-    <div class="site-state-item site-state-tags">
-        <a href="/tags/">
-         
-        <span class="site-state-item-count">62</span>
-        
-        <span class="site-state-item-name">标签</span>
-        </a>
-    </div>
-</nav>
-      
-      
-<div class="links-of-author motion-element">
-    
-        <span class="links-of-author-item">
-        <a href="https://github.com/wk123456/" target="_blank" title="GitHub">
-            <i class="fa fa-fw fa-github"></i>
-            GitHub
-        </a>
-        </span>
-    
-        <span class="links-of-author-item">
-        <a href="https://www.zhihu.com/" target="_blank" title="知乎">
-            <i class="fa fa-fw fa-globe"></i>
-            知乎
-        </a>
-        </span>
-    
-</div>
-
-
-      
-    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-    <div class="links-of-blogroll-title">
-        <i class="fa fa-fw fa-globe"></i>
-        友情链接
-    </div>
-    <ul class="links-of-blogroll-list">
-        
-        <li class="links-of-blogroll-item">
-            <a href="https://nutzam.com/" title="Nutz" target="_blank">Nutz</a>
-        </li>
-        
-        <li class="links-of-blogroll-item">
-            <a href="https://jfinal.com/" title="JFinal" target="_blank">JFinal</a>
-        </li>
-        
-        <li class="links-of-blogroll-item">
-            <a href="http://wendal.net/" title="Wendal" target="_blank">Wendal</a>
-        </li>
-        
-        <li class="links-of-blogroll-item">
-            <a href="https://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
-        </li>
-        
-    </ul>
-    </div>
-
-
-      
-    <div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline">
-    <div class="tagcloud-of-blogroll-title">
-        <i class="fa fa-fw fa-tags"></i>
-        标签云
-    </div>
-    <ul class="tagcloud-of-blogroll-list">
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/linux">Linux
-            <sup>10</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/java">Java
-            <sup>8</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/mysql">Mysql
-            <sup>8</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/docker">Docker
-            <sup>6</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/git">Git
-            <sup>5</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/problem-solving">Problem solving
-            <sup>5</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/java-base">Java base
-            <sup>4</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/spring">Spring
-            <sup>3</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/threadlocal">Threadlocal
-            <sup>3</sup>
-            </a>
-        </li>
-        
-        <li  class="tagcloud-of-blogroll-item">
-            <a href="/tags/command">Command
-            <sup>2</sup>
-            </a>
-        </li>
-        
-    </ul>
-    </div>
-
-
-      
-    </section>
-    
-  </div>
-</aside>
-
-      </div>
-    </main>
-   
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright" >
-  <span class="copyright-year">  
-    &copy; 2010 - 2023
-  </span>
-  <span class="with-love"><i class="fa fa-heart"></i></span>
-  <span class="copyright-author">想学啊你</span>
-</div>
-<div class="powered-info">
-  <span class="powered-by">
-    Powered by - <a class="powered-link" href="//gohugo.io" target="_blank" title="hugo" >Hugo v0.115.4</a>
-  </span>
-  <span class="separator-line">/</span>
-  <span class="theme-info">
-    Theme by - <a class="powered-link" href="//github.com/elkan1788/hugo-theme-next" target="_blank"> NexT
-    </a>
-  </span>
-</div>
-<div class="vistor-info">
-
-
-
-  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-  <span class="site-uv">
-    <i class="fa fa-user"></i>
-    <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-  </span>
-  <span class="separator-line">/</span>
-  <span class="site-pv">
-    <i class="fa fa-eye"></i>
-    <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-  </span>
-
-
-</div>
-<div class="license-info">
-  <span class="storage-info">
-    Storage by 
-    <a href="https://gitee.com/" style="font-weight:700" target="_blank">Gitee 仓库</a>
-  </span>
-  <span class="separator-line">/</span>
-  <span class="license-num"> 
-    <a href="http://beian.miit.gov.cn" target="_blank">粤 ICP 备 18047355 号</a>
-  </span>
-</div>
-      </div>
-    </footer>
-
-    <div class="back-to-top">
-      <i class="fa fa-arrow-up"></i>
-      <span id="scrollpercent"><span>0</span>%</span>
-    </div>
-  </div>
-
-  <script type="text/javascript" src="//unpkg.com/jquery@2.1.4/dist/jquery.min.js"></script>
-<script type="text/javascript" src="https://codingroam.github.io/js/search.js"></script>
-<script type="text/javascript" src="https://codingroam.github.io/js/affix.js"></script>
-
-
-<script type="text/javascript">
-
-  function detectIE() {
-    var ua = window.navigator.userAgent;
-
-    var msie = ua.indexOf('MSIE ');
-    var trident = ua.indexOf('Trident/');
-    var edge = ua.indexOf('Edge/');
-
-    if (msie>0 || trident>0 || edge>0) {
-      return -1;
-    }
-
-    return 1;
-  }
-
-
-  function getCntViewHeight() {
-    var docHeight = $('#content').height(),
-        winHeight = $(window).height(),
-        cntViewHeight = (docHeight > winHeight) ? (docHeight - winHeight) : ($(document).height() - winHeight);
-    return cntViewHeight;
-  }
-
-  function getScrollbarWidth() {
-    var $div = $('<div />').addClass('scrollbar-measure').prependTo('body');
-    var div = $div[0];
-    var scrollbarWidth = div.offsetWidth - div.clientWidth;
-
-    $div.remove();
-
-    return scrollbarWidth;
-  }
-
-  function registerBackTop() {
-    var THRESHOLD = 50;
-    var $top = $('.back-to-top');
-
-    $(window).on('scroll', function () {
-      $top.toggleClass('back-to-top-on', window.pageYOffset > THRESHOLD);
-
-      var scrollTop = $(window).scrollTop();
-      var cntViewHeight = getCntViewHeight();
-      var scrollPercent = (scrollTop) / (cntViewHeight);
-      var scrollPercentRounded = Math.round(scrollPercent*100);
-      var scrollPercentMaxed = (scrollPercentRounded > 100) ? 100 : scrollPercentRounded;
-      $('#scrollpercent>span').html(scrollPercentMaxed);
-    });
-
-    $top.on('click', function () {
-      $("html,body").animate({
-                 scrollTop: 0,
-                 screenLeft: 0,
-                 }, 800);
-    });
-  }
-
-  function initScrollSpy () {
-    var tocSelector = '.post-toc';
-    var $tocElement = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocElement
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-      })
-      .on('clear.bs.scrollspy', removeCurrentActiveClass);
-
-    $('body').scrollspy({ target: tocSelector });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-  }
-
-  function initAffix () {
-    var headerHeight = $('.header-inner').height();
-    var footerOffset = parseInt($('.footer').outerHeight(true), 10);
-    var sidebarTop = headerHeight + 10;
-
-    $('.sidebar-inner').affix({
-      offset: {
-        top: sidebarTop,
-        bottom: footerOffset 
-      }
-    });
-
-    
-
-  }
-
-  function initTOCDimension () {
-    var updateTOCHeightTimer;
-
-    $(window).on('resize', function () {
-      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
-
-      updateTOCHeightTimer = setTimeout(function () {
-        var tocWrapperHeight = document.body.clientHeight - 100;
-
-        updateTOCHeight(tocWrapperHeight);
-      }, 0);
-    });
-
-    
-    updateTOCHeight(document.body.clientHeight - 100);
-
-    
-    var scrollbarWidth = getScrollbarWidth();
-    $('.post-toc').css('width', 'calc(100% + ' + scrollbarWidth + 'px)');
-  }
-
-  function updateTOCHeight (height) {
-    height = height || 'auto';
-    $('.post-toc').css('max-height', height);
-  }
-
-$(function() {
-
-  var sidebarTop = $('.header-inner').height() + 10;
-  $('#sidebar').css({ 'margin-top': sidebarTop }).show(); 
-
-  
-  var sidebarMt = parseInt($('#sidebar').css('margin-top'));
-  var sidebarInHeight = parseInt($('.sidebar-inner').css('height'));
-  var sideHeight = sidebarMt + sidebarInHeight;
-  var contentHeight = $('.content-wrap').height();
-
-  if (contentHeight < sideHeight) {
-    $('.content-wrap').css('min-height', sideHeight);
-  }
-  
-  
-  $('.site-nav-toggle').on('click', function () {
-    var $siteNav = $('.site-nav');
-    var $toggleLine = $('.toggle');
-    var ON_CLASS_NAME = 'site-nav-on';
-    var CLOSE_CLASS_NAME = 'toggle-close';
-    var isSiteNavOn = $siteNav.hasClass(ON_CLASS_NAME);
-    var animateAction = isSiteNavOn ? 'slideUp' : 'slideDown';
-    var animateCallback = isSiteNavOn ? 'removeClass' : 'addClass';
-
-    $siteNav.stop()[animateAction]('normal', function () {
-      $siteNav[animateCallback](ON_CLASS_NAME);
-      $toggleLine[animateCallback](CLOSE_CLASS_NAME);
-    });
-
-  });
-
-  registerBackTop();
-  
-   
-  initAffix();
-  initTOCDimension();
-
-  $('.sidebar-nav-toc').click(function(){
-    $(this).addClass('sidebar-nav-active');
-    $(this).next().removeClass('sidebar-nav-active');      
-    $('.'+$(this).next().attr('data-target')).toggle(500);
-    $('.'+$(this).attr('data-target')).toggle(500);
-  });
-
-  $('.sidebar-nav-overview').click(function(){
-    $(this).addClass('sidebar-nav-active');
-    $(this).prev().removeClass('sidebar-nav-active');      
-    $('.'+$(this).prev().attr('data-target')).toggle(500);
-    $('.'+$(this).attr('data-target')).toggle(500);
-  });
-});  
-
-</script>
-
-
-
-
-
-<script src="//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js"></script>
-<script type="text/javascript">
-$(function() {
-  $('.post-body').viewer(); 
-});
-</script>
-
-
-
-
-
-
-<script type="text/javascript">
-  const locale = {
-    placeholder: '欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^'
-  };
-  $(function(){
-    if (detectIE()>0) {
-      $.getScript(document.location.protocol+'//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js', function(){
-         new Waline({
-          el: '#wcomments', 
-          visitor: true,
-          emoji: [], 
-          wordLimit: '200', 
-          uploadImage: false,
-          locale, 
-          requiredMeta: ['nick', 'mail'], 
-          serverURL: "Your WalineSerURL", 
-          lang: "zh-cn"
-        });
-      });      
-    } else {
-      $('#wcomments').html('抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。');
-    }
-  });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
-
-
-
-
-
-
-
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https'){
-   bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else{
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-
-
-
-</body>
-</html>
+<!doctype html><html lang=zh-cn dir=zh><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=content-security-policy content="upgrade-insecure-requests"><title>MySQL七种日志介绍 - 想学啊你</title><meta name=keywords content="博客"><meta name=author content="roam"><meta property="og:title" content="MySQL七种日志介绍"><meta property="og:site_name" content="想学啊你"><meta property="og:image" content="https://codingroam.github.io/img/author.jpg"><meta name=title content="MySQL七种日志介绍 - 想学啊你"><meta name=description content="轻轻的你来了"><link rel="shortcut icon" href=https://codingroam.github.io/img/favicon.ico><link rel=apple-touch-icon href=https://codingroam.github.io/img/apple-touch-icon.png><link rel=apple-touch-icon-precomposed href=https://codingroam.github.io/img/apple-touch-icon.png><link href=//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css rel=stylesheet type=text/css><link href=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css rel=stylesheet><link href=https://codingroam.github.io/css/main.css rel=stylesheet type=text/css><link href=https://codingroam.github.io/css/syntax.css rel=stylesheet type=text/css></head><body itemscope itemtype=http://schema.org/WebPage lang=zh-Hans><div class="container one-collumn sidebar-position-left page-home"><div class=headband></div><header id=header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle role=button style=opacity:1;top:0><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><div class=custom-logo-site-title><a href=/ class=brand rel=start><span class=logo-line-before><i></i></span>
+<span class=site-title>想学啊你</span>
+<span class=logo-line-after><i></i></span></a></div><p class=site-subtitle>三四楼那么高了</p></div><div class=site-nav-right><div class="toggle popup-trigger" style=opacity:1;top:0><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul id=menu class=menu><li class=menu-item><a href=/ rel=section><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-active"><a href=/post rel=section><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class=menu-item><a href=/tags rel=section><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class=menu-item><a href=/categories rel=section><i class="menu-item-icon fa fa-fw fa-book"></i><br>分类</a></li><li class="menu-item menu-item-search"><a href=javascript:; class=popup-trigger><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class=site-search><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class=search-icon><i class="fa fa-search"></i></span>
+<span class=popup-btn-close><i class="fa fa-times-circle"></i></span><div class=local-search-input-wrapper><input autocomplete=off placeholder=搜索关键字... spellcheck=false type=text id=local-search-input autocapitalize=none autocorrect=off></div></div><div id=local-search-result></div></div></div></nav></div></header><main id=main class=main><div class=main-inner><div class=content-wrap><div id=content class=content><section id=posts class=posts-expand><article class="post post-type-normal" itemscope itemtype=http://schema.org/Article><header class=post-header><h1 class=post-title itemprop="name headline"><a class=post-title-link href=https://codingroam.github.io/post/mysql%E4%B8%83%E7%A7%8D%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D/ itemprop=url>MySQL七种日志介绍</a></h1><div class=post-meta><span class=post-pushdate><i class="fa fa-calendar-o fa-fw"></i>
+<span class=post-meta-item-text>时间：</span>
+<time itemprop=dateCreated datetime=2016-03-22T13:04:35+08:00 content="2023-02-17">2023-02-17</time></span>
+<span class=post-category><i class="fa fa-folder-o fa-fw"></i>
+<span class=post-meta-item-text>分类：</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/mysql itemprop=url rel=index><span itemprop=name>Mysql</span></a>
+&nbsp;</span></span>
+<span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
+<span class=post-meta-item-text>字数：</span>
+<span class=leancloud-world-count>5325 字</span></span>
+<span class=post-readtime><i class="fa fa-eye fa-fw"></i>
+<span class=post-meta-item-text>阅读：</span>
+<span class=leancloud-view-count>11分钟</span></span>
+<span id=/post/mysql%E4%B8%83%E7%A7%8D%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D/ class="leancloud_visitors post-visitor" data-flag-title=MySQL七种日志介绍><i class="fa fa-binoculars fa-fw"></i>
+<span class=post-meta-item-text>阅读次数：</span>
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>MySQL七种日志介绍</p><p>进入正题前先简单看看MySQL的逻辑架构，相信我用的着。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230217212953762.png alt=image-20230217212953762></p><p>MySQL逻辑架构</p><p>MySQL的逻辑架构大致可以分为三层：</p><ul><li>第一层：处理客户端连接、授权认证，安全校验等。</li><li>第二层：服务器server层，负责对SQL解释、分析、优化、执行操作引擎等。</li><li>第三层：存储引擎，负责MySQL中数据的存储和提取。</li></ul><blockquote><p>我们要知道MySQL的服务器层是不管理事务的，事务是由存储引擎实现的，而MySQL中支持事务的存储引擎又属<code>InnoDB</code>使用的最为广泛，所以后续文中提到的存储引擎都以<code>InnoDB</code>为主。</p></blockquote><p>MySQL数据更新流程</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/image-20230217204335809.png alt=image-20230217204335809></p><p><strong>记住！</strong> <strong>记住！</strong> <strong>记住！</strong> 上边这张图，她是MySQL更新数据的基础流程，其中包括redo log、bin log、undo log三种日志间的大致关系，好了闲话少说直奔主题。</p><h1 id=1-redo-log重做日志>1. redo log（重做日志）</h1><p><strong>redo log</strong>属于MySQL存储引擎<strong>InnoDB</strong>的事务日志。</p><p>MySQL的数据是存放在磁盘中的，每次读写数据都需做磁盘IO操作，如果并发场景下性能就会很差。为此MySQL提供了一个优化手段，引入缓存<strong>Buffer Pool</strong>。这个缓存中包含了磁盘中<strong>部分</strong>数据页（<strong>page</strong>）的映射，以此来缓解数据库的磁盘压力。</p><p>当从数据库读数据时，首先从缓存中读取，如果缓存中没有，则从磁盘读取后放入缓存；当向数据库写入数据时，先向缓存写入，此时缓存中的数据页数据变更，这个数据页称为<strong>脏页</strong>，<strong>Buffer Pool</strong>中修改完数据后会按照设定的更新策略，定期刷到磁盘中，这个过程称为<strong>刷脏页</strong>。</p><h2 id=11-mysql宕机>1.1 MySQL宕机</h2><p>如果刷脏页还未完成，可MySQL由于某些原因宕机重启，此时<strong>Buffer Pool</strong>中修改的数据还没有及时的刷到磁盘中，就会导致数据丢失，无法保证事务的持久性。</p><p>为了解决这个问题引入了<strong>redo log</strong>，redo Log如其名侧重于重做！它记录的是数据库中每个页的修改，而不是某一行或某几行修改成怎样，可以用来恢复提交后的物理数据页，且只能恢复到最后一次提交的位置。</p><p><strong>redo log</strong>用到了<strong>WAL</strong>（Write-Ahead Logging）技术，这个技术的核心就在于修改记录前，一定要先写日志，并保证日志先落盘，才能算事务提交完成。</p><p>有了<strong>redo log</strong>再修改数据时，InnoDB引擎会把更新记录先写在redo log中，在修改<strong>Buffer Pool</strong>中的数据，当提交事务时，调用<strong>fsync</strong>把redo log刷入磁盘。至于缓存中更新的数据文件何时刷入磁盘，则由后台线程异步处理。</p><blockquote><p><strong>注意</strong>：此时redo log的事务状态是<strong><code>prepare</code></strong>，还未真正提交成功，要等<strong><code>bin log</code></strong>日志写入磁盘完成才会变更为<strong><code>commit</code></strong>，事务才算真正提交完成。</p></blockquote><p>这样一来即使刷脏页之前MySQL意外宕机也没关系，只要在重启时解析redo log中的更改记录进行重放，重新刷盘即可。</p><h2 id=12-大小固定>1.2 大小固定</h2><p>redo log采用固定大小，循环写入的格式，当redo log写满之后，重新从头开始如此循环写，形成一个环状。</p><p>那为什么要如此设计呢？</p><p>因为redo log记录的是数据页上的修改，如果<strong>Buffer Pool</strong>中数据页已经刷磁盘后，那这些记录就失效了，新日志会将这些失效的记录进行覆盖擦除。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/89be6ff17a541ebcde5922e8853fc7ce.png alt=img></p><p>上图中的<strong>write pos</strong>表示redo log当前记录的日志序列号<strong>LSN</strong>(log sequence number)，写入还未刷盘，循环往后递增；<strong>check point</strong>表示redo log中的修改记录已刷入磁盘后的LSN，循环往后递增，这个LSN之前的数据已经全落盘。</p><p><strong>write pos</strong>到<strong>check point</strong>之间的部分是redo log空余的部分（绿色），用来记录新的日志；<strong>check point</strong>到<strong>write pos</strong>之间是redo log已经记录的数据页修改数据，此时数据页还未刷回磁盘的部分。当<strong>write pos</strong>追上<strong>check point</strong>时，会先推动<strong>check point</strong>向前移动，空出位置（刷盘）再记录新的日志。</p><blockquote><p><strong>注意</strong>：redo log日志满了，在擦除之前，需要确保这些要被擦除记录对应在内存中的数据页都已经刷到磁盘中了。擦除旧记录腾出新空间这段期间，是不能再接收新的更新请求的，此刻MySQL的性能会下降。所以在并发量大的情况下，合理调整redo log的文件大小非常重要。</p></blockquote><h2 id=13-crash-safe>1.3 crash-safe</h2><p>因为redo log的存在使得<strong>Innodb</strong>引擎具有了<strong>crash-safe</strong>的能力，即MySQL宕机重启，系统会自动去检查redo log，将修改还未写入磁盘的数据从redo log恢复到MySQL中。</p><p>MySQL启动时，不管上次是正常关闭还是异常关闭，总是会进行恢复操作。会先检查数据页中的<strong>LSN</strong>，如果这个 LSN 小于 redo log 中的LSN，即<strong>write pos</strong>位置，说明在<strong>redo log</strong>上记录着数据页上尚未完成的操作，接着就会从最近的一个<strong>check point</strong>出发，开始同步数据。</p><p>简单理解，比如：redo log的<strong>LSN</strong>是500，数据页的LSN是300，表明重启前有部分数据未完全刷入到磁盘中，那么系统则将redo log中<strong>LSN</strong>序号300到500的记录进行重放刷盘。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/ca9efde0f4ffa038d557bc3a9125fa9e.png alt=img></p><h1 id=2-undo-log回滚日志>2. undo log（回滚日志）</h1><p><strong>undo log</strong>也是属于MySQL存储引擎InnoDB的事务日志。</p><p><strong>undo log</strong>属于逻辑日志，如其名主要起到回滚的作用，它是保证事务原子性的关键。记录的是数据修改前的状态，在数据修改的流程中，同时会记录一条与当前操作相反的逻辑日志到<strong>undo log</strong>中。</p><p>我们举个栗子：假如更新ID=1记录的name字段，name原始数据为小富，现改name为程序员内点事</p><p>事务执行<strong>update X set name = 程序员内点事 where id =1</strong>语句时，先会在<strong>undo log</strong>中记录一条相反逻辑的<strong>update X set name = 小富 where id =1</strong>记录，这样当某些原因导致服务异常事务失败，就可以借助<strong>undo log</strong>将数据回滚到事务执行前的状态，保证事务的完整性。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/93baaa0f4679acb48caff3e6cca9eaa4.png alt=img></p><p>那可能有人会问：同一个事物内的一条记录被多次修改，那是不是每次都要把数据修改前的状态都写入<strong>undo log</strong>呢？</p><p>答案是不会的！</p><p><strong>undo log</strong>只负责记录事务开始前要修改数据的原始版本，当我们再次对这行数据进行修改，所产生的修改记录会写入到<strong>redo log</strong>，<strong>undo log</strong>负责完成回滚，<strong>redo log</strong>负责完成前滚。</p><h2 id=21-回滚>2.1 回滚</h2><p>未提交的事务，即事务未执行commit。但该事务内修改的脏页中，可能有一部分脏块已经刷盘。如果此时数据库实例宕机重启，就需要用回滚来将先前那部分已经刷盘的脏块从磁盘上撤销。</p><h2 id=22-前滚>2.2 前滚</h2><p>未完全提交的事务，即事务已经执行<strong>commit</strong>，但该事务内修改的脏页中只有一部分数据被刷盘，另外一部分还在<strong>buffer pool</strong>缓存上，如果此时数据库实例宕机重启，就需要用前滚来完成未完全提交的事务。将先前那部分由于宕机在内存上的未来得及刷盘数据，从<strong>redo log</strong>中恢复出来并刷入磁盘。</p><blockquote><p>数据库实例恢复时，先做前滚，后做回滚。</p></blockquote><p>如果你仔细看过了上边的 <strong>MySQL数据更新流程图</strong> 就会发现，<strong>undo log、redo log、bin log</strong>三种日志都是在刷脏页之前就已经刷到磁盘了的，相互协作最大限度保证了用户提交的数据不丢失。</p><h1 id=3-bin-log归档日志>3. bin log（归档日志）</h1><p><strong>bin log</strong>是一种数据库Server层（和什么引擎无关），以二进制形式存储在磁盘中的逻辑日志。<strong>bin log</strong>记录了数据库所有DDL和DML操作（不包含 SELECT 和 SHOW等命令，因为这类操作对数据本身并没有修改）。</p><p>默认情况下，二进制日志功能是关闭的。可以通过以下命令查看二进制日志是否开启：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SHOW VARIABLES LIKE <span>&#39;</span>log_bin<span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name <span style=color:#666>|</span> Value <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> log_bin       <span style=color:#666>|</span> OFF   <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+-------+</span>
+</span></span></code></pre></div><p><strong>bin log</strong>也被叫做<strong>归档日志</strong>，因为它不会像<strong>redo log</strong>那样循环写擦除之前的记录，而是会一直记录日志。一个<strong>bin log</strong>日志文件默认最大容量1G（也可以通过<strong>max_binlog_size</strong>参数修改），单个日志超过最大值，则会新创建一个文件继续写。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> show binary logs<span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+-----------------+-----------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Log_name        <span style=color:#666>|</span> File_size <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+-----------------+-----------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000001</span> <span style=color:#666>|</span>      <span style=color:#666>8687</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000002</span> <span style=color:#666>|</span>      <span style=color:#666>1445</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000003</span> <span style=color:#666>|</span>      <span style=color:#666>3966</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000004</span> <span style=color:#666>|</span>       <span style=color:#666>177</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000005</span> <span style=color:#666>|</span>      <span style=color:#666>6405</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000006</span> <span style=color:#666>|</span>       <span style=color:#666>177</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000007</span> <span style=color:#666>|</span>       <span style=color:#666>154</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> mysq<span style=color:#666>-</span>bin<span style=color:#666>.000008</span> <span style=color:#666>|</span>       <span style=color:#666>154</span> <span style=color:#666>|</span>
+</span></span></code></pre></div><p><strong>bin log</strong>日志的内容格式其实就是执行SQL命令的反向逻辑，这点和<strong>undo log</strong>有点类似。一般来说开启<strong>bin log</strong>都会给日志文件设置过期时间（<strong>expire_logs_days</strong>参数，默认永久保存），要不然日志的体量会非常庞大。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> show variables like <span>&#39;</span>expire_logs_days<span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+------------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name    <span style=color:#666>|</span> Value <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+------------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> expire_logs_days <span style=color:#666>|</span> <span style=color:#666>0</span>     <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+------------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>1</span> row in set
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SET GLOBAL expire_logs_days<span style=color:#666>=</span><span style=color:#666>30</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>Query OK<span style=color:#666>,</span> <span style=color:#666>0</span> rows affected
+</span></span></code></pre></div><p><strong>bin log</strong>主要应用于MySQL主从模式（<strong>master-slave</strong>）中，主从节点间的数据同步；以及基于时间点的数据还原。</p><h2 id=31-主从同步>3.1 主从同步</h2><p>通过下图MySQL的主从复制过程，来了解下<strong>bin log</strong>在主从模式下的应用。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/827653cfc6cf576f18c97ef11ac64707.png alt=img></p><ul><li>用户在主库master执行DDL和DML操作，修改记录顺序写入bin log;</li><li>从库slave的I/O线程连接上Master，并请求读取指定位置position的日志内容;</li><li>Master收到从库slave请求后，将指定位置position之后的日志内容，和主库bin log文件的名称以及在日志中的位置推送给从库;</li><li>slave的I/O线程接收到数据后，将接收到的日志内容依次写入到relay log文件最末端，并将读取到的主库bin log文件名和位置position记录到master-info文件中，以便在下一次读取用;</li><li>slave的SQL线程检测到relay log中内容更新后，读取日志并解析成可执行的SQL语句，这样就实现了主从库的数据一致;</li></ul><h2 id=32-基于时间点还原>3.2 基于时间点还原</h2><p>我们看到<strong>bin log</strong>也可以做数据的恢复，而<strong>redo log</strong>也可以，那它们有什么区别？</p><ul><li>层次不同：redo log 是InnoDB存储引擎实现的，bin log 是MySQL的服务器层实现的，但MySQL数据库中的任何存储引擎对于数据库的更改都会产生bin log。</li><li>作用不同：redo log 用于碰撞恢复（crash recovery），保证MySQL宕机也不会影响持久性；bin log 用于时间点恢复（point-in-time recovery），保证服务器可以基于时间点恢复数据和主从复制。</li><li>内容不同：redo log 是物理日志，内容基于磁盘的页Page；bin log的内容是二进制，可以根据binlog_format参数自行设置。</li><li>写入方式不同：redo log 采用循环写的方式记录；binlog 通过追加的方式记录，当文件大小大于给定值后，后续的日志会记录到新的文件上。</li><li>刷盘时机不同：bin log在事务提交时写入；redo log 在事务开始时即开始写入。</li></ul><p>bin log 与 redo log 功能并不冲突而是起到相辅相成的作用，需要二者同时记录，才能保证当数据库发生宕机重启时，数据不会丢失。</p><h1 id=4-relay-log中继日志>4. relay log（中继日志）</h1><p><strong>relay log</strong>日志文件具有与<strong>bin log</strong>日志文件相同的格式，从上边MySQL主从复制的流程可以看出，<strong>relay log</strong>起到一个中转的作用，<strong>slave</strong>先从主库<strong>master</strong>读取二进制日志数据，写入从库本地，后续再异步由<strong>SQL线程</strong>读取解析<strong>relay log</strong>为对应的SQL命令执行。</p><h1 id=5-slow-query-log>5. slow query log</h1><p>慢查询日志（<strong>slow query log</strong>）: 用来记录在 MySQL 中执行时间超过指定时间的查询语句，在 SQL 优化过程中会经常使用到。通过慢查询日志，我们可以查找出哪些查询语句的执行效率低，耗时严重。</p><p>出于性能方面的考虑，一般只有在排查慢SQL、调试参数时才会开启，默认情况下，慢查询日志功能是关闭的。可以通过以下命令查看是否开启慢查询日志：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SHOW VARIABLES LIKE <span>&#39;</span>slow_query<span style=color:#666>%</span><span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------------+--------------------------------------------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name       <span style=color:#666>|</span> Value                                                  <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------------+--------------------------------------------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> slow_query_log      <span style=color:#666>|</span> OFF                                                    <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> slow_query_log_file <span style=color:#666>|</span> <span style=color:#666>/</span>usr<span style=color:#666>/</span>local<span style=color:#666>/</span>mysql<span style=color:#666>/</span>data<span style=color:#666>/</span>iZ2zebfzaequ90bdlz820sZ<span style=color:#666>-</span>slow<span style=color:#666>.</span><span style=color:#b44>log</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------------+--------------------------------------------------------+</span>
+</span></span></code></pre></div><p>通过如下命令开启慢查询日志后，我发现<strong>iZ2zebfzaequ90bdlz820sZ-slow.log</strong> 日志文件里并没有内容啊，可能因为我执行的 SQL 都比较简单没有超过指定时间。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span>  SET GLOBAL slow_query_log<span style=color:#666>=</span>ON<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>Query OK<span style=color:#666>,</span> <span style=color:#666>0</span> rows affected
+</span></span></code></pre></div><p>上边提到超过 <strong>指定时间</strong> 的查询语句才算是慢查询，那么这个时间阈值又是多少嘞？我们通过<strong>long_query_time</strong>参数来查看一下，发现默认是 10 秒。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SHOW VARIABLES LIKE <span>&#39;</span>long_query_time<span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+-----------------+-----------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name   <span style=color:#666>|</span> Value     <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+-----------------+-----------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> long_query_time <span style=color:#666>|</span> <span style=color:#666>10.000000</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+-----------------+-----------+</span>
+</span></span></code></pre></div><p>这里我们将<strong>long_query_time</strong> 参数改小为 0.001秒再次执行查询SQL，看看慢查询日志里是否有变化。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SET GLOBAL long_query_time<span style=color:#666>=</span><span style=color:#666>0.001</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>Query OK<span style=color:#666>,</span> <span style=color:#666>0</span> rows affected
+</span></span></code></pre></div><p>果然再执行 SQL 的时，执行时间大于 0.001秒，发现慢查询日志开始记录了。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/07d0194971b418cc1e7cbeecb089ab3e.png alt=img></p><h1 id=6-general-query-log>6. general query log</h1><p>一般查询日志（general query log）：用来记录用户的<strong>所有</strong>操作，包括客户端何时连接了服务器、客户端发送的所有SQL以及其他事件，比如 MySQL 服务启动和关闭等等。MySQL服务器会按照它接收到语句的先后顺序写入日志文件。</p><p>由于一般查询日志记录的内容过于详细，开启后 Log 文件的体量会非常庞大，所以出于对性能的考虑，默认情况下，该日志功能是关闭的，通常会在排查故障需获得详细日志的时候才会临时开启。</p><p>我们可以通过以下命令查看一般查询日志是否开启，命令如下：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> show variables like <span>&#39;</span>general_log<span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name <span style=color:#666>|</span> Value <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+-------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> general_log   <span style=color:#666>|</span> OFF   <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+-------+</span>
+</span></span></code></pre></div><p>下边开启一般查询日志并查看日志存放的位置。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SET GLOBAL general_log<span style=color:#666>=</span>on<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>Query OK<span style=color:#666>,</span> <span style=color:#666>0</span> rows affected
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> show variables like <span>&#39;</span>general_log_file<span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+------------------+---------------------------------------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name    <span style=color:#666>|</span> Value                                             <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+------------------+---------------------------------------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> general_log_file <span style=color:#666>|</span> <span style=color:#666>/</span>usr<span style=color:#666>/</span>local<span style=color:#666>/</span>mysql<span style=color:#666>/</span>data<span style=color:#666>/</span>iZ2zebfzaequ90bdlz820sZ<span style=color:#666>.</span><span style=color:#b44>log</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+------------------+---------------------------------------------------+</span>
+</span></span></code></pre></div><p>执行一条查询 SQL 看看日志内容的变化。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> select <span style=color:#666>*</span> from t_config<span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------------+------------+---------------------+---------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> id                  <span style=color:#666>|</span> remark     <span style=color:#666>|</span> create_time         <span style=color:#666>|</span> last_modify_time    <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------------+------------+---------------------+---------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> <span style=color:#666>1325741604307734530</span> <span style=color:#666>|</span> <span>我是广播表</span> <span style=color:#666>|</span> <span style=color:#666>2020</span><span style=color:#666>-</span><span style=color:#666>11</span><span style=color:#666>-</span><span style=color:#666>09</span> <span style=color:#666>18</span><span style=color:#666>:</span><span style=color:#666>06</span><span style=color:#666>:</span><span style=color:#666>44</span> <span style=color:#666>|</span> <span style=color:#666>2020</span><span style=color:#666>-</span><span style=color:#666>11</span><span style=color:#666>-</span><span style=color:#666>09</span> <span style=color:#666>18</span><span style=color:#666>:</span><span style=color:#666>06</span><span style=color:#666>:</span><span style=color:#666>44</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------------+------------+---------------------+---------------------+</span>
+</span></span></code></pre></div><p>我们看到日志内容详细的记录了所有执行的命令、SQL、SQL的解析过程、数据库设置等等。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/6164113b78671af66813d8bc64133758.png alt=img></p><h1 id=7-error-log>7. error log</h1><p>错误日志（<strong>error log</strong>）: 应该是 MySQL 中最好理解的一种日志，主要记录 MySQL 服务器每次启动和停止的时间以及诊断和出错信息。</p><p>默认情况下，该日志功能是开启的，通过如下命令查找错误日志文件的存放路径。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>mysql<span style=color:#666>&gt;</span> SHOW VARIABLES LIKE <span>&#39;</span>log_error<span>&#39;</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+----------------------------------------------------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> Variable_name <span style=color:#666>|</span> Value                                                          <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+----------------------------------------------------------------+</span>
+</span></span><span style=display:flex><span><span style=color:#666>|</span> log_error     <span style=color:#666>|</span> <span style=color:#666>/</span>usr<span style=color:#666>/</span>local<span style=color:#666>/</span>mysql<span style=color:#666>/</span>data<span style=color:#666>/</span>LAPTOP<span style=color:#666>-</span>UHQ6V8KP<span style=color:#666>.</span><span style=color:#b44>err</span> <span style=color:#666>|</span>
+</span></span><span style=display:flex><span><span style=color:#666>+---------------+----------------------------------------------------------------+</span>
+</span></span></code></pre></div><p><strong>注意</strong>：错误日志中记录的可并非全是错误信息，像 MySQL 如何启动 InnoDB 的表空间文件、如何初始化自己的存储引擎，初始化 buffer pool 等等，这些也记录在错误日志文件中。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/71c8d83aaedfe620056efe21d6341732.png alt=img></p></div><footer class=post-footer><div class=post-tags><a href=/tags/mysql rel=tag title=Mysql>#Mysql#</a></div><div class=addthis_inline_share_toolbox></div><div class=post-nav><div class=article-copyright><div class=article-copyright-img><img src=/img/qq_qrcode.png width=129px height=129px><div style=text-align:center>QQ扫一扫交流</div></div><div class=article-copyright-info><p><span>标题：</span>MySQL七种日志介绍</p><p><span>链接：</span>https://codingroam.github.io/post/mysql%E4%B8%83%E7%A7%8D%E6%97%A5%E5%BF%97%E4%BB%8B%E7%BB%8D/</p><p><span>作者：</span>roam</p><p><span>声明： </span>本博客文章除特别声明外，均采用 <a href=https://creativecommons.org/licenses/by-nc-sa/3.0/ target=_blank style=text-decoration:underline>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！</p></div></div><div class=clear></div></div><div class=reward-qr-info><div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div><button id=rewardButton disable=enable onclick='var qr=document.getElementById("QR");qr.style.display==="none"?qr.style.display="block":qr.style.display="none"'>
+<span>赏</span></button><div id=QR style=display:none><div id=wechat style=display:inline-block><img id=wechat_qr src=/img/wechat-pay.png alt="WeChat Pay"><p>微信打赏</p></div><div id=alipay style=display:inline-block><img id=alipay_qr src=/img/ali-pay.png alt=Alipay><p>支付宝打赏</p></div></div></div><div class=post-nav><div class="post-nav-next post-nav-item"><a href=https://codingroam.github.io/post/mysql-rr%E7%BA%A7%E5%88%AB%E4%B8%8B%E4%BB%8D%E7%84%B6%E4%BC%9A%E5%8F%91%E7%94%9F%E5%B9%BB%E8%AF%BB%E5%92%8C%E4%B8%8D%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB/ rel=next title="MySQL RR级别下仍然会发生幻读和不可重复读"><i class="fa fa-chevron-left"></i> MySQL RR级别下仍然会发生幻读和不可重复读</a></div><div class="post-nav-prev post-nav-item"><a href=https://codingroam.github.io/post/postgresql%E6%9F%A5%E8%AF%A2%E5%87%BA%E6%89%80%E6%9C%89%E8%A1%A8%E7%9A%84%E8%AE%B0%E5%BD%95%E6%95%B0/ rel=prev title=PostgreSQL查询出所有表的记录数>PostgreSQL查询出所有表的记录数
+<i class="fa fa-chevron-right"></i></a></div></div><div id=wcomments></div></footer></article></section></div></div><div class=sidebar-toggle><div class=sidebar-toggle-line-wrap><span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id=sidebar class=sidebar><div class=sidebar-inner><section class="site-overview sidebar-panel sidebar-panel-active"><div class="site-author motion-element" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image src=/img/avatar.png alt=roam><p class=site-author-name itemprop=name>roam</p><p class="site-description motion-element" itemprop=description>以为打得赢我啊你</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href=/post/><span class=site-state-item-count>52</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>49</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>62</span>
+<span class=site-state-item-name>标签</span></a></div></nav><div class="links-of-author motion-element"><span class=links-of-author-item><a href=https://github.com/wk123456/ target=_blank title=GitHub><i class="fa fa-fw fa-github"></i>
+GitHub</a></span>
+<span class=links-of-author-item><a href=https://www.zhihu.com/ target=_blank title=知乎><i class="fa fa-fw fa-globe"></i>
+知乎</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-inline"><div class=links-of-blogroll-title><i class="fa fa-fw fa-globe"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://nutzam.com/ title=Nutz target=_blank>Nutz</a></li><li class=links-of-blogroll-item><a href=https://jfinal.com/ title=JFinal target=_blank>JFinal</a></li><li class=links-of-blogroll-item><a href=http://wendal.net/ title=Wendal target=_blank>Wendal</a></li><li class=links-of-blogroll-item><a href=https://www.liaoxuefeng.com/ title=廖雪峰 target=_blank>廖雪峰</a></li></ul></div><div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline"><div class=tagcloud-of-blogroll-title><i class="fa fa-fw fa-tags"></i>
+标签云</div><ul class=tagcloud-of-blogroll-list><li class=tagcloud-of-blogroll-item><a href=/tags/linux>Linux
+<sup>10</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java>Java
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/mysql>Mysql
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/docker>Docker
+<sup>6</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/git>Git
+<sup>5</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/problem-solving>Problem solving
+<sup>5</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java-base>Java base
+<sup>4</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/spring>Spring
+<sup>3</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/threadlocal>Threadlocal
+<sup>3</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/command>Command
+<sup>2</sup></a></li></ul></div></section></div></aside></div></main><footer id=footer class=footer><div class=footer-inner><div class=copyright><span class=copyright-year>&copy; 2010 - 2023</span>
+<span class=with-love><i class="fa fa-heart"></i></span>
+<span class=copyright-author>想学啊你</span></div><div class=powered-info><span class=powered-by>Powered by - <a class=powered-link href=//gohugo.io target=_blank title=hugo>Hugo v0.115.4</a></span>
+<span class=separator-line>/</span>
+<span class=theme-info>Theme by - <a class=powered-link href=//github.com/elkan1788/hugo-theme-next target=_blank>NexT</a></span></div><div class=vistor-info><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<span class=site-uv><i class="fa fa-user"></i>
+<span class=busuanzi-value id=busuanzi_value_site_uv></span></span>
+<span class=separator-line>/</span>
+<span class=site-pv><i class="fa fa-eye"></i>
+<span class=busuanzi-value id=busuanzi_value_site_pv></span></span></div><div class=license-info><span class=storage-info>Storage by
+<a href=https://gitee.com/ style=font-weight:700 target=_blank>Gitee 仓库</a></span>
+<span class=separator-line>/</span>
+<span class=license-num><a href=http://beian.miit.gov.cn target=_blank>粤 ICP 备 18047355 号</a></span></div></div></footer><div class=back-to-top><i class="fa fa-arrow-up"></i>
+<span id=scrollpercent><span>0</span>%</span></div></div><script type=text/javascript src=//unpkg.com/jquery@2.1.4/dist/jquery.min.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/search.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/affix.js></script>
+<script type=text/javascript>function detectIE(){var e=window.navigator.userAgent,t=e.indexOf("MSIE "),n=e.indexOf("Trident/"),s=e.indexOf("Edge/");return t>0||n>0||s>0?-1:1}function getCntViewHeight(){var t=$("#content").height(),e=$(window).height(),n=t>e?t-e:$(document).height()-e;return n}function getScrollbarWidth(){var e=$("<div />").addClass("scrollbar-measure").prependTo("body"),t=e[0],n=t.offsetWidth-t.clientWidth;return e.remove(),n}function registerBackTop(){var t=50,e=$(".back-to-top");$(window).on("scroll",function(){e.toggleClass("back-to-top-on",window.pageYOffset>t);var s=$(window).scrollTop(),o=getCntViewHeight(),i=s/o,n=Math.round(i*100),a=n>100?100:n;$("#scrollpercent>span").html(a)}),e.on("click",function(){$("html,body").animate({scrollTop:0,screenLeft:0},800)})}function initScrollSpy(){var e=".post-toc",s=$(e),t=".active-current";s.on("activate.bs.scrollspy",function(){var t=$(e+" .active").last();n(),t.addClass("active-current")}).on("clear.bs.scrollspy",n),$("body").scrollspy({target:e});function n(){$(e+" "+t).removeClass(t.substring(1))}}function initAffix(){var e=$(".header-inner").height(),t=parseInt($(".footer").outerHeight(!0),10),n=e+10;$(".sidebar-inner").affix({offset:{top:n,bottom:t}})}function initTOCDimension(){$(window).on("resize",function(){e&&clearTimeout(e),e=setTimeout(function(){var e=document.body.clientHeight-100;updateTOCHeight(e)},0)}),updateTOCHeight(document.body.clientHeight-100);var e,t=getScrollbarWidth();$(".post-toc").css("width","calc(100% + "+t+"px)")}function updateTOCHeight(e){e=e||"auto",$(".post-toc").css("max-height",e)}$(function(){var e,t,n,s,o=$(".header-inner").height()+10;$("#sidebar").css({"margin-top":o}).show(),t=parseInt($("#sidebar").css("margin-top")),n=parseInt($(".sidebar-inner").css("height")),e=t+n,s=$(".content-wrap").height(),s<e&&$(".content-wrap").css("min-height",e),$(".site-nav-toggle").on("click",function(){var e=$(".site-nav"),o=$(".toggle"),t="site-nav-on",i="toggle-close",n=e.hasClass(t),a=n?"slideUp":"slideDown",s=n?"removeClass":"addClass";e.stop()[a]("normal",function(){e[s](t),o[s](i)})}),registerBackTop(),initAffix(),initTOCDimension(),$(".sidebar-nav-toc").click(function(){$(this).addClass("sidebar-nav-active"),$(this).next().removeClass("sidebar-nav-active"),$("."+$(this).next().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)}),$(".sidebar-nav-overview").click(function(){$(this).addClass("sidebar-nav-active"),$(this).prev().removeClass("sidebar-nav-active"),$("."+$(this).prev().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)})})</script><script src=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js></script>
+<script type=text/javascript>$(function(){$(".post-body").viewer()})</script><script type=text/javascript>const locale={placeholder:"欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^"};$(function(){detectIE()>0?$.getScript(document.location.protocol+"//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js",function(){new Waline({el:"#wcomments",visitor:!0,emoji:[],wordLimit:"200",uploadImage:!1,locale,requiredMeta:["nick","mail"],serverURL:"Your WalineSerURL",lang:"zh-cn"})}):$("#wcomments").html("抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。")})</script><script type=text/javascript src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+<script>(function(){var t,e=document.createElement("script"),n=window.location.protocol.split(":")[0];n==="https"?e.src="https://zz.bdstatic.com/linksubmit/push.js":e.src="http://push.zhanzhang.baidu.com/push.js",t=document.getElementsByTagName("script")[0],t.parentNode.insertBefore(e,t)})()</script></body></html>

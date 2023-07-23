@@ -43,7 +43,7 @@ canal的好处在于对业务代码没有侵入，因为是基于监听binlog日
 Canal的部署也是支持集群的，需要配合ZooKeeper进行集群管理。
 Canal还有一个简单的Web管理界面。
 下一篇就讲一下集群部署Canal，配合使用Kafka，同步数据到Redis。
-参考资料：Canal官网</content></entry><entry><title>redis的实战项目01_模拟短信登录业务</title><url>https://codingroam.github.io/post/redis%E7%9A%84%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE01_%E6%A8%A1%E6%8B%9F%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1/</url><categories><category>Redis</category></categories><tags><tag>Redis</tag><tag>中间件</tag><tag>项目实战</tag></tags><content type="html"> 黑马redis的实战项目模拟短信登录业务
+参考资料：Canal官网</content></entry><entry><title>redis的实战项目01_模拟短信登录业务</title><url>https://codingroam.github.io/post/redis%E7%9A%84%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE01_%E6%A8%A1%E6%8B%9F%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1/</url><categories><category>Redis</category><category>中间件</category></categories><tags><tag>Redis</tag><tag>中间件</tag><tag>项目实战</tag></tags><content type="html"> 黑马redis的实战项目模拟短信登录业务
 1. 数据库： ⚫ tb_user：用户表 ⚫ tb_user_info：用户详情表 ⚫ tb_shop：商户信息表 ⚫ tb_shop_type：商户类型表 ⚫ tb_blog：用户日记表（达人探店日记） ⚫ tb_follow：用户关注表 ⚫ tb_voucher：优惠券表 ⚫ tb_voucher_order：优惠券的订单表
 2. 单体项目介绍： 案例是：前后端分离的单体项目，后端部署在Tomcat，前端部署在Nginx服务器上。 当移动端、客户端、app端发起Nginx请求，得到静态资源。页面再通过Nginx，向服务端发起请求，进行查询数据。查询后，返回给前端，前端在进行渲染。 开启Nginx: D:\Program Files\Nginx_Test\nginx-1.18.0> start .\nginx.exe
 短信登录包括：

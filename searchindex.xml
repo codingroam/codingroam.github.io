@@ -1941,7 +1941,7 @@ postProcessAfterInstantiation方法执行，直接return null。 postProcessProp
 缓冲IO与直接IO有几点需要贴别说明：
 fflush和fsync的区别。fflush是缓冲IO的一个api，作用是把数据从用户缓存刷到内核缓存，fsync是把数据从内核缓存刷到磁盘，所以无论是直接IO还是缓冲IO在写数据之后不调用fsync,此时断电的话会造成数据丢失。 对于直接IO也有read/write和pread/pwrite两组api，后者在多线程读写同一个文件时效率更高 内存映射与零拷贝
 相较于直接IO,内存映射文件更进一步，其实现是用应用程序的逻辑内存与Linux操作系统的内核缓存区映射，相当于与内核共用内存，数据拷贝只需一次即
-磁盘$\Leftrightarrow$内核缓冲区</content></entry><entry><title>java设计模式</title><url>https://codingroam.github.io/post/java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url><categories><category>Design Pattern</category></categories><tags><tag>design pattern</tag><tag>java</tag></tags><content type="html"> java 设计模式学习
+磁盘$\Leftrightarrow$内核缓冲区</content></entry><entry><title>设计模式七原则</title><url>https://codingroam.github.io/post/java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url><categories><category>设计模式</category></categories><tags><tag>设计模式</tag></tags><content type="html"> 设计模式学习
 1 七大原则 单一职责原则：一个类只负责一个功能领域中的相应职责，或者可以定义为：就一个类而言，应该只有一个引起它变化的原因
 开闭原则：一个软件实体应当对扩展开放，对修改关闭。即软件实体应尽量在不修改原有代码的情况下进行扩展。 为了满足开闭原则，需要对系统进行抽象化设计，抽象化是开闭原则的关键，可以为系统定义一个相对稳定的抽象层，而将不同的实现行为移至具体的实现层中完成。
 里氏代换原则：所有引用基类（父类）的地方必须能透明地使用其子类的对象。里氏代换原则是实现开闭原则的重要方式之一，由于使用基类对象的地方都可以使用子类对象，因此在程序中尽量使用基类类型来对对象进行定义，而在运行时再确定其子类类型，用子类对象来替换父类对象

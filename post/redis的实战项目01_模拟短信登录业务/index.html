@@ -1,0 +1,646 @@
+<!doctype html><html lang=zh-cn dir=zh><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=content-security-policy content="upgrade-insecure-requests"><title>redis的实战项目01_模拟短信登录业务 - 想学啊你</title><meta name=keywords content="博客"><meta name=author content="roam"><meta property="og:title" content="redis的实战项目01_模拟短信登录业务"><meta property="og:site_name" content="想学啊你"><meta property="og:image" content="https://codingroam.github.io/img/author.jpg"><meta name=title content="redis的实战项目01_模拟短信登录业务 - 想学啊你"><meta name=description content="轻轻的你来了"><link rel="shortcut icon" href=https://codingroam.github.io/img/favicon.ico><link rel=apple-touch-icon href=https://codingroam.github.io/img/apple-touch-icon.png><link rel=apple-touch-icon-precomposed href=https://codingroam.github.io/img/apple-touch-icon.png><link href=//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css rel=stylesheet type=text/css><link href=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css rel=stylesheet><link href=https://codingroam.github.io/css/main.css rel=stylesheet type=text/css><link href=https://codingroam.github.io/css/syntax.css rel=stylesheet type=text/css></head><body itemscope itemtype=http://schema.org/WebPage lang=zh-Hans><div class="container one-collumn sidebar-position-left page-home"><div class=headband></div><header id=header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle role=button style=opacity:1;top:0><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><div class=custom-logo-site-title><a href=/ class=brand rel=start><span class=logo-line-before><i></i></span>
+<span class=site-title>想学啊你</span>
+<span class=logo-line-after><i></i></span></a></div><p class=site-subtitle>三四楼那么高了</p></div><div class=site-nav-right><div class="toggle popup-trigger" style=opacity:1;top:0><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul id=menu class=menu><li class=menu-item><a href=/ rel=section><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-active"><a href=/post rel=section><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class=menu-item><a href=/tags rel=section><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class=menu-item><a href=/categories rel=section><i class="menu-item-icon fa fa-fw fa-book"></i><br>分类</a></li><li class="menu-item menu-item-search"><a href=javascript:; class=popup-trigger><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class=site-search><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class=search-icon><i class="fa fa-search"></i></span>
+<span class=popup-btn-close><i class="fa fa-times-circle"></i></span><div class=local-search-input-wrapper><input autocomplete=off placeholder=搜索关键字... spellcheck=false type=text id=local-search-input autocapitalize=none autocorrect=off></div></div><div id=local-search-result></div></div></div></nav></div></header><main id=main class=main><div class=main-inner><div class=content-wrap><div id=content class=content><section id=posts class=posts-expand><article class="post post-type-normal" itemscope itemtype=http://schema.org/Article><header class=post-header><h1 class=post-title itemprop="name headline"><a class=post-title-link href=https://codingroam.github.io/post/redis%E7%9A%84%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE01_%E6%A8%A1%E6%8B%9F%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1/ itemprop=url>redis的实战项目01_模拟短信登录业务</a></h1><div class=post-meta><span class=post-pushdate><i class="fa fa-calendar-o fa-fw"></i>
+<span class=post-meta-item-text>时间：</span>
+<time itemprop=dateCreated datetime=2016-03-22T13:04:35+08:00 content="2023-07-23">2023-07-23</time></span>
+<span class=post-category><i class="fa fa-folder-o fa-fw"></i>
+<span class=post-meta-item-text>分类：</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/redis itemprop=url rel=index><span itemprop=name>Redis</span></a>
+&nbsp;</span></span>
+<span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
+<span class=post-meta-item-text>字数：</span>
+<span class=leancloud-world-count>6723 字</span></span>
+<span class=post-readtime><i class="fa fa-eye fa-fw"></i>
+<span class=post-meta-item-text>阅读：</span>
+<span class=leancloud-view-count>14分钟</span></span>
+<span id=/post/redis%E7%9A%84%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE01_%E6%A8%A1%E6%8B%9F%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1/ class="leancloud_visitors post-visitor" data-flag-title=redis的实战项目01_模拟短信登录业务><i class="fa fa-binoculars fa-fw"></i>
+<span class=post-meta-item-text>阅读次数：</span>
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>黑马redis的实战项目模拟短信登录业务</p><h2 id=1-数据库>1. 数据库：</h2><p>⚫ tb_user：用户表 ⚫ tb_user_info：用户详情表 ⚫ tb_shop：商户信息表 ⚫ tb_shop_type：商户类型表 ⚫ tb_blog：用户日记表（达人探店日记） ⚫ tb_follow：用户关注表 ⚫ tb_voucher：优惠券表 ⚫ tb_voucher_order：优惠券的订单表</p><h2 id=2-单体项目介绍>2. 单体项目介绍：</h2><p>案例是：前后端分离的单体项目，后端部署在Tomcat，前端部署在Nginx服务器上。 当移动端、客户端、app端发起Nginx请求，得到静态资源。页面再通过Nginx，向服务端发起请求，进行查询数据。查询后，返回给前端，前端在进行渲染。 <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/832f14bb967b411c9f5c3630d4edd919.png alt=img> 开启Nginx: D:\Program Files\Nginx_Test\nginx-1.18.0> start .\nginx.exe</p><blockquote><p>短信登录包括：</p></blockquote><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/22be0ba43e134aefb3032631aaf33900.png alt=img></p><h2 id=1发送短信验证码>1、发送短信验证码</h2><h3 id=1理论流程>1.理论流程</h3><p>用户通过手机进行获取验证码，进行登录。 1.那么用户会根据手机号请求一个验证码 2.服务端接收到手机号后，进行验证手机号。 2.1校验失败，重新写手机号 2.2校验成功，服务端生成验证码 3.保存验证码到session 4.发送验证码 <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/50402235896b46b2b4969d21da7d4877.png alt=img> <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/d13f7d93d81545d9941e747a2b951243.png alt=img></p><p>请求路径：api是表示当前的请求，是一个发向Tomcat服务的请求，会过滤掉。真正的请求路径是：/user/code 请求参数：phone=888888</p><h3 id=2代码操作>2.代码操作：</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>controller<span>层：</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@PostMapping</span><span style=color:#666>(</span><span style=color:#b44>&#34;code&#34;</span><span style=color:#666>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> Result <span style=color:#00a000>sendCode</span><span style=color:#666>(</span><span style=color:#a2f>@RequestParam</span><span style=color:#666>(</span><span style=color:#b44>&#34;phone&#34;</span><span style=color:#666>)</span> String phone<span style=color:#666>,</span> HttpSession session<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         *  发送短信验证码并保存验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         *  session：需要把验证码保存到session
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         */</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> userService<span style=color:#666>.</span><span style=color:#b44>sendCode</span><span style=color:#666>(</span>phone<span style=color:#666>,</span>session<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>----------------------</span>sever<span>层</span><span style=color:#666>-----------------------</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.service.impl</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.hutool.core.util.RandomUtil</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.baomidou.mybatisplus.extension.service.impl.ServiceImpl</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.dto.Result</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.entity.User</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.mapper.UserMapper</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.service.IUserService</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.utils.RegexUtils</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>lombok.extern.slf4j.Slf4j</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.stereotype.Service</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpSession</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * &lt;p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 服务实现类
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * &lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f>@Slf4j</span>
+</span></span><span style=display:flex><span><span style=color:#a2f>@Service</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>UserServiceImpl</span> <span style=color:#a2f;font-weight:700>extends</span> ServiceImpl<span style=color:#666>&lt;</span>UserMapper<span style=color:#666>,</span> User<span style=color:#666>&gt;</span> <span style=color:#a2f;font-weight:700>implements</span> IUserService <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> Result <span style=color:#00a000>sendCode</span><span style=color:#666>(</span>String phone<span style=color:#666>,</span> HttpSession session<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//1. 验证手机号
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// RegexUtils 是一个工具类，直接将前端传过来的电话，传过去，判断手机格式字是否正常
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// 如果返回false 是手机号格式正常。 返回true，是手机号错误。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>RegexUtils<span style=color:#666>.</span><span style=color:#b44>isPhoneInvalid</span><span style=color:#666>(</span>phone<span style=color:#666>)){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//2. 验证不通过返回错误提示
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            log<span style=color:#666>.</span><span style=color:#b44>debug</span><span style=color:#666>(</span><span style=color:#b44>&#34;验证码错误.....&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> Result<span style=color:#666>.</span><span style=color:#b44>fail</span><span style=color:#666>(</span><span style=color:#b44>&#34;手机号错误，请重新填写&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//3. 验证通过，生成验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// RandomUtil 是一个工具包。该方法生成6位随机数
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String code <span style=color:#666>=</span> RandomUtil<span style=color:#666>.</span><span style=color:#b44>randomNumbers</span><span style=color:#666>(</span><span style=color:#666>6</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//4. 保存验证码到session
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        session<span style=color:#666>.</span><span style=color:#b44>setAttribute</span><span style=color:#666>(</span><span style=color:#b44>&#34;code&#34;</span><span style=color:#666>,</span>code<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//5. 发送验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        log<span style=color:#666>.</span><span style=color:#b44>debug</span><span style=color:#666>(</span><span style=color:#b44>&#34;验证码发送成功,{}&#34;</span><span style=color:#666>,</span>code<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> Result<span style=color:#666>.</span><span style=color:#b44>ok</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>---------</span><span>手机号正则</span><span style=color:#666>---------------</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#a2f;font-weight:700>final</span> String PHONE_REGEX <span style=color:#666>=</span> <span style=color:#b44>&#34;^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\\d{8}$&#34;</span><span style=color:#666>;</span>
+</span></span></code></pre></div><h2 id=2短信验证码登录注册>2、短信验证码登录、注册</h2><h3 id=1理论流程-1>1.理论流程</h3><p>用户收到了验证码，就可以进行登录或者注册了。 1.用户将手机号和验证码进行提交。 2.服务端进行校验验证码。从session中取出验证码进行比较 2.1比较失败，拒绝登录 2.2比较成功，说明验证码填写的是正确的，但是手机号不能确定是否正确。 3.根据手机号查询用户信息。用户是否存在 3.1如果不存在说明该用户第一次登录，那么为该用户注册成新的用户。然后在进行登录。 3.2该用户以及存在了，可也进行登录 4.登录-》保存用户信息。保存到session中。 <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/bce0e26e59454ea7afd53a24d88c8280.png alt=img> <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/8fe96e4b399c425ba7cef508e69d8c78.png alt=img></p><h3 id=2代码操作-1>2.代码操作：</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#666>-----------</span>controller <span style=color:#666>---------</span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 登录功能
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @RequestBody注解: 前端穿过来的是JSON格式，就必须用requestBody注解。并且实体类来接受
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param loginForm 登录参数，包含手机号、验证码；或者手机号、密码.
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * session:登录的时候需要把用户信息存到session，验证码校验也需要用到session
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@PostMapping</span><span style=color:#666>(</span><span style=color:#b44>&#34;/login&#34;</span><span style=color:#666>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> Result <span style=color:#00a000>login</span><span style=color:#666>(</span><span style=color:#a2f>@RequestBody</span> LoginFormDTO loginForm<span style=color:#666>,</span> HttpSession session<span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//  实现登录功能
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> userService<span style=color:#666>.</span><span style=color:#b44>login</span><span style=color:#666>(</span>loginForm<span style=color:#666>,</span>session<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>------------</span>service<span style=color:#666>-------------------------</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>UserServiceImpl</span> <span style=color:#a2f;font-weight:700>extends</span> ServiceImpl<span style=color:#666>&lt;</span>UserMapper<span style=color:#666>,</span> User<span style=color:#666>&gt;</span> <span style=color:#a2f;font-weight:700>implements</span> IUserService
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 进行登录功能
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param loginForm 前端传来的用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param session
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> Result <span style=color:#00a000>login</span><span style=color:#666>(</span>LoginFormDTO loginForm<span style=color:#666>,</span> HttpSession session<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//1. 判断手机号格式是否正确
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String phone <span style=color:#666>=</span> loginForm<span style=color:#666>.</span><span style=color:#b44>getPhone</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>RegexUtils<span style=color:#666>.</span><span style=color:#b44>isPhoneInvalid</span><span style=color:#666>(</span>phone<span style=color:#666>)){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//2.如果不正确则直接返回错误
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            log<span style=color:#666>.</span><span style=color:#b44>debug</span><span style=color:#666>(</span><span style=color:#b44>&#34;手机号:{}错误&#34;</span><span style=color:#666>,</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            Result<span style=color:#666>.</span><span style=color:#b44>fail</span><span style=color:#666>(</span><span style=color:#b44>&#34;手机号格式错误&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//3. 判断验证码是否一致，session中对比
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>//从session中获取验证码，也就是后端生成的验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        Object cacheCode <span style=color:#666>=</span> session<span style=color:#666>.</span><span style=color:#b44>getAttribute</span><span style=color:#666>(</span><span style=color:#b44>&#34;code&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//前端传过来的验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String code <span style=color:#666>=</span> loginForm<span style=color:#666>.</span><span style=color:#b44>getCode</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//如果验证码为空，或者不一致，则返回验证码错误
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>code <span style=color:#666>==</span><span style=color:#a2f;font-weight:700>null</span> <span style=color:#666>||</span> cacheCode<span style=color:#666>.</span><span style=color:#b44>toString</span><span style=color:#666>().</span><span style=color:#b44>equals</span><span style=color:#666>(</span>code<span style=color:#666>)</span> <span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            log<span style=color:#666>.</span><span style=color:#b44>debug</span><span style=color:#666>(</span><span style=color:#b44>&#34;验证码:{}错误&#34;</span><span style=color:#666>,</span>code<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            Result<span style=color:#666>.</span><span style=color:#b44>fail</span><span style=color:#666>(</span><span style=color:#b44>&#34;验证码错误&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//4. 用户是否存在  select * from t_user where phone=?
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// 查询表t_user，当“表中字段”中有等于phone的信息，进行查询处理，查询一条。返回的是一个user实体类
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        User user <span style=color:#666>=</span> query<span style=color:#666>().</span><span style=color:#b44>eq</span><span style=color:#666>(</span><span style=color:#b44>&#34;phone&#34;</span><span style=color:#666>,</span> phone<span style=color:#666>).</span><span style=color:#b44>one</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//5 如果用户不存在则创建用户，保存到数据库
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>user <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            user <span style=color:#666>=</span> createUser<span style=color:#666>(</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//5. 如果用户存在，保存到session
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        session<span style=color:#666>.</span><span style=color:#b44>setAttribute</span><span style=color:#666>(</span><span style=color:#b44>&#34;user&#34;</span><span style=color:#666>,</span>user<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> Result<span style=color:#666>.</span><span style=color:#b44>ok</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 创建用户，添加到数据库中
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param phone
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> User <span style=color:#00a000>createUser</span><span style=color:#666>(</span>String phone<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        User user <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> User<span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        user<span style=color:#666>.</span><span style=color:#b44>setPhone</span><span style=color:#666>(</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        user<span style=color:#666>.</span><span style=color:#b44>setNickName</span><span style=color:#666>(</span>USER_NICK_NAME_PREFIX<span style=color:#666>+</span>RandomUtil<span style=color:#666>.</span><span style=color:#b44>randomString</span><span style=color:#666>(</span><span style=color:#666>10</span><span style=color:#666>));</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//将用户信息插入到 t_user表中
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        save<span style=color:#666>(</span>user<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span>  user<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span></code></pre></div><h2 id=3校验登录状态>3、校验登录状态</h2><h3 id=1理论流程-2>1.理论流程</h3><p>用户登录成功后，在进行访问其他页面的的时候，需要进行校验登录状态。 1.基于session进行校验。 基于cookie中的session的id，拿到session。</p><blockquote><p>之前将用户信息保存到了session。session是基于cookie,每个session都有一个id，保存在浏览器的cookie当中。<br>当用户来访问其他页面时，那么就会携带着自己的cookie，而cookie有session的id。那么就可以基于session中的id，拿到session。从而在session中获取用户信息。</p></blockquote><p>2.判断session有无用户 2.1如果没有，则拦截请求 2.2如果有，则缓存用户信息，将用户信息保存到ThreadLocal。这样其他业务就可以直接从ThreadLoad中获取用户信息。</p><blockquote><p>ThreadLoad是线程域对象，在业务当中，每一个请求到达微服务，都会是一个独立的线程。<br>ThreadLoad会将数据保存到每一个线程的内部，在线程内部创建一个map来保存。<br>每一个请求来了以后，都有独立的存储空间，请求之间相互没有干扰。</p></blockquote><p>3.放行。</p><blockquote><p>后续其他请求，就可以从ThreadLoad中取出自己的用户信息</p></blockquote><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/7ce8c27d54e0497a8831f283d95a3557.png alt=img></p><p>前端在请求接口时，会携带cookie。而登录的凭证就是session的id，而该id是存在cookie其中。 那么服务端根据这个session的id得到session。 从session中获取用户信息。 在根据该用户信息去数据库判断，有无该用户， 如果没有则拦截。 如果有，则保护信息到ThreadLoad，在进行放行；</p><blockquote><p>在springmvc中，<strong>拦截器</strong>可以在所有controller执行前，进行执行。<br>那么所有的请求，先经过拦截器，在进行访问各个controller。<br>拦截器：实现用户登录的校验。<br>–校验后：<br>那么后续的业务当中【比如说订单、点赞、评论】，都是需要用户的信息<br>所有说各个controller也需要的到用户信息。<br>那么就需要将拦截器拦截后得到的信息，传给各个controller。 需要注意的是：线程安全<br>–解解方法：ThreadLoad<br>当拦截器拦截了用户信息后，将用户信息保存到ThreadLoad。<br>ThreadLoad是一个线程域对象，每一个进入Tomcat的请求都是一个独立的线程。<br>ThreadLoad就会在线程内开一个内存空间，进行保存对应的用户。这样每个用户相互不干扰<br>– controller需要用到用户信息时，在从ThreadLoad中取出用户</p></blockquote><h3 id=2代码操作-2>2.代码操作：</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#666>-----------------</span><span>拦截器：</span><span style=color:#666>----------</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.utils</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.entity.User</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.HandlerInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletRequest</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletResponse</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpSession</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 用户登录拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @Author Hu
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>LoginInterceptor</span> <span style=color:#a2f;font-weight:700>implements</span> HandlerInterceptor <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * pre：前置拦截。 进入controller执行，进行校验。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param request
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param response
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param handler
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @throws Exception
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>preHandle</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 1. 获取session对象
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        HttpSession session <span style=color:#666>=</span> request<span style=color:#666>.</span><span style=color:#b44>getSession</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 2. 从session中获取用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        Object user <span style=color:#666>=</span> session<span style=color:#666>.</span><span style=color:#b44>getAttribute</span><span style=color:#666>(</span><span style=color:#b44>&#34;user&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//3. 判断用户是否存在
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>user <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span> <span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//4. 如果不存在，则拦截
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            response<span style=color:#666>.</span><span style=color:#b44>setStatus</span><span style=color:#666>(</span><span style=color:#666>401</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>false</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//5. 如果存在则保存到ThreadLoad
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        UserHolder<span style=color:#666>.</span><span style=color:#b44>saveUser</span><span style=color:#666>((</span>User<span style=color:#666>)</span> user<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//6. 放行
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>true</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 渲染之后，返回用户之前。 用户执行完毕后，销毁对应的用户信息。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 避免用户泄露
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param request
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param response
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param handler
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param ex
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @throws Exception
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>afterCompletion</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                                Exception ex<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        UserHolder<span style=color:#666>.</span><span style=color:#b44>removeUser</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>-----------</span><span>配置拦截器的</span>configuration<span style=color:#666>-----------</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.config</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.utils.LoginInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.context.annotation.Configuration</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.config.annotation.InterceptorRegistration</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.config.annotation.InterceptorRegistry</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.config.annotation.WebMvcConfigurer</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 配置拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 可以让LoginInterceptor拦截器生效。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f>@Configuration</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>MvcConfiguration</span> <span style=color:#a2f;font-weight:700>implements</span> WebMvcConfigurer <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 添加拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param registry
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>addInterceptors</span><span style=color:#666>(</span>InterceptorRegistry registry<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//添加拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        InterceptorRegistration interceptorRegistration <span style=color:#666>=</span> registry<span style=color:#666>.</span><span style=color:#b44>addInterceptor</span><span style=color:#666>(</span><span style=color:#a2f;font-weight:700>new</span> LoginInterceptor<span style=color:#666>());</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 添加配置可以放行哪些路径
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        interceptorRegistration<span style=color:#666>.</span><span style=color:#b44>excludePathPatterns</span><span style=color:#666>(</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/shop/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/voucher/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/shop-type/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/upload/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/blog/hot&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/user/code&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/user/login&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>----------------</span>controller<span>类进行返回用户信息</span><span style=color:#666>--------</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@GetMapping</span><span style=color:#666>(</span><span style=color:#b44>&#34;/me&#34;</span><span style=color:#666>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> Result <span style=color:#00a000>me</span><span style=color:#666>(){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//  获取当前登录的用户并返回
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> Result<span style=color:#666>.</span><span style=color:#b44>ok</span><span style=color:#666>(</span>UserHolder<span style=color:#666>.</span><span style=color:#b44>getUser</span><span style=color:#666>());</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>----</span>ThreadLoad<span>类的信息</span><span style=color:#666>------</span><span>该信息是隐藏了用户信息累的实体类</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.utils</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.dto.UserDTO</span><span style=color:#666>;</span> 
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 创建ThreadLoad
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>UserHolder</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#a2f;font-weight:700>final</span> ThreadLocal<span style=color:#666>&lt;</span>UserDTO<span style=color:#666>&gt;</span> tl <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> ThreadLocal<span style=color:#666>&lt;&gt;();</span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//添加到线程里面
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>saveUser</span><span style=color:#666>(</span>UserDTO user<span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        tl<span style=color:#666>.</span><span style=color:#b44>set</span><span style=color:#666>(</span>user<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>// 获取用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> UserDTO <span style=color:#00a000>getUser</span><span style=color:#666>(){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span> tl<span style=color:#666>.</span><span style=color:#b44>get</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>// 移除信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>removeUser</span><span style=color:#666>(){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        tl<span style=color:#666>.</span><span style=color:#b44>remove</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span></code></pre></div><h3 id=3隐藏用户敏感信息>3.隐藏用户敏感信息</h3><p>登录校验功能，返回的信息比较多。比如密码这些重要信息不应该进行返回到前端。 <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/01e12c97417444d9bd8bd5ad0ee1ca50.png alt=img></p><p><strong>为什么前端收到了所有的用户信息？</strong> 从后往前推：</p><ol><li>controller接口：校验成功后，将用户信息返回给前端，返回的是User完整的信息。而user信息是从UserHolder中得到的</li><li>拦截器： 从session中获取的用户信息，就是完整的用户信息。直接通过UserHolder的save方法，将所有的用户信息，添加到了拦截器。</li><li>那么谁给session存的信息呢？是登录业务时：从数据库中查询了所有的用户信息。直接放到了session中。</li></ol><p><strong>解决方法：</strong> 4. 也就是上的第三步：将数据库查询出来的用户信息，放到新pojo类中，在放到session中。 5. 也就是第二步：获取session中的就是UserDTo了。不在是整个user用户信息了</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/d4d0ee2d56574dddb76004b360f8eff2.png alt=img> 改动的代码： <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/0692da81676c47899607c980fe6f4a70.png alt=img> <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/a4e25a593c7143008306a67e01c3bf13.png alt=img></p><p>session共享问题：多台Tomcat并不共享session共享空间，当请求切换到不同Tomcat服务时导致数据丢失的问题。</p><blockquote><p>存储到ATomcat服务器时，在其他的Tomcat服务器中是看不到的。</p></blockquote><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/b1fda7c2a1e346118012d4183fc22143.png alt=img> <img src=https://img-blog.csdnimg.cn/726adbe2192d430abf566161aec1bf4f.png alt=img></p><h2 id=1发送验证码如何将验证码存入到redis中>1、发送验证码。如何将验证码存入到redis中？</h2><ul><li>redis的数据类型：用String类型 验证码就是6位数字。</li><li>Redis的Key：手机号 确保每一个手机号来验证时，保存的key都是不一样的。那么就用每一个手机号来作为redis的key。 当登录时，取验证码时，将前端传过来的手机号作为key，来获取验证码，进行比较登录成功。</li><li>Redis的value：就是验证码</li></ul><h3 id=代码操作>代码操作：</h3><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/fad31d780a054272bcbd9074d7cf77b1.png alt=img></p><h2 id=2验证码登录如何将用户信息保存到redis>2、验证码登录。如何将用户信息保存到redis</h2><ul><li>数据类型：hash 保存的是用户信息，用户对象。</li><li>redis的key：随机token为key存储用户数据。比如用UUID来生成。 key的要求：key唯一</li><li>redis的value：保存整个用户信息</li></ul><blockquote><p>String类型：把java对象序列化为Jason字符串，保存在redis。看起来简单，把整个JSON数据变成一个字符串了。占用内存多，除了保存自身外，还有JSON串的格式，比如冒号、大括号<br>hash类型：value是一个hashMap类型。把java中每一个字段保存在redis。每个字段是独立的，可以针对单个字段做CRUD。占用更少的内存。只需要保存数据本身就可以了。<br><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/856c2e3a060d448caa59479963dea953.png alt=在这里插入图片描述><br><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/037db177846e42b097738a19d7f56885.png alt=在这里插入图片描述></p></blockquote><h3 id=代码操作-1>代码操作：</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#666>-----</span><span>用户登录</span>service<span>层</span><span style=color:#666>----------</span> 
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 进行登录功能
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param loginForm 前端传来的用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param session
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> Result <span style=color:#00a000>login</span><span style=color:#666>(</span>LoginFormDTO loginForm<span style=color:#666>,</span> HttpSession session<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//1. 判断手机号格式是否正确
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String phone <span style=color:#666>=</span> loginForm<span style=color:#666>.</span><span style=color:#b44>getPhone</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>RegexUtils<span style=color:#666>.</span><span style=color:#b44>isPhoneInvalid</span><span style=color:#666>(</span>phone<span style=color:#666>)){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//2.如果不正确则直接返回错误
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            log<span style=color:#666>.</span><span style=color:#b44>debug</span><span style=color:#666>(</span><span style=color:#b44>&#34;手机号:{}错误&#34;</span><span style=color:#666>,</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            Result<span style=color:#666>.</span><span style=color:#b44>fail</span><span style=color:#666>(</span><span style=color:#b44>&#34;手机号格式错误&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>/*//3. 判断验证码是否一致，session中对比
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>        //从session中获取验证码，也就是上面方法获取验证码时，后端生成的验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>        Object cacheCode = session.getAttribute(&#34;code&#34;);*/</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 3. 从redis中获取验证码
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String cacheCode <span style=color:#666>=</span> stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>opsForValue</span><span style=color:#666>().</span><span style=color:#b44>get</span><span style=color:#666>(</span>LOGIN_CODE_KEY<span style=color:#666>+</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        String code <span style=color:#666>=</span> loginForm<span style=color:#666>.</span><span style=color:#b44>getCode</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 4. 如果验证码为空，或者不一致，则返回验证码错误
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>code <span style=color:#666>==</span><span style=color:#a2f;font-weight:700>null</span> <span style=color:#666>||</span> <span style=color:#666>!</span>cacheCode<span style=color:#666>.</span><span style=color:#b44>equals</span><span style=color:#666>(</span>code<span style=color:#666>)</span> <span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            log<span style=color:#666>.</span><span style=color:#b44>debug</span><span style=color:#666>(</span><span style=color:#b44>&#34;验证码:{}的错误&#34;</span><span style=color:#666>,</span>code<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> Result<span style=color:#666>.</span><span style=color:#b44>fail</span><span style=color:#666>(</span><span style=color:#b44>&#34;验证码错误&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//5. 用户是否存在  select * from t_user where phone=?
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>         <span style=color:#080;font-style:italic>/*查询表t_user，当“表中字段”中有等于phone的信息，进行查询处理，查询一条。返回的是一个user实体类*/</span>
+</span></span><span style=display:flex><span>        User user <span style=color:#666>=</span> query<span style=color:#666>().</span><span style=color:#b44>eq</span><span style=color:#666>(</span><span style=color:#b44>&#34;phone&#34;</span><span style=color:#666>,</span> phone<span style=color:#666>).</span><span style=color:#b44>one</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//6 如果用户不存在则创建用户，保存到数据库
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>user <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>// 6.如果用户不存在则创建用户，保存到数据库
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            user <span style=color:#666>=</span> createUser<span style=color:#666>(</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>/*//7. 如果用户存在，保存到session。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>        // 通过hutool类中的对象，将用户的部分信息放到session中。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>        session.setAttribute(&#34;user&#34;,BeanUtil.copyProperties(user, UserDTO.class)); */</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 7.如果用户存在，以hash的形式保存到redis中
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// 7.1生成token，作为登录令牌
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String token <span style=color:#666>=</span> UUID<span style=color:#666>.</span><span style=color:#b44>randomUUID</span><span style=color:#666>().</span><span style=color:#b44>toString</span><span style=color:#666>(</span><span style=color:#a2f;font-weight:700>true</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//7.2 将User对象转为Hash存储. UserDTO是用户的部分信息，发送给前端即可。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        UserDTO userDTO <span style=color:#666>=</span> BeanUtil<span style=color:#666>.</span><span style=color:#b44>copyProperties</span><span style=color:#666>(</span>user<span style=color:#666>,</span> UserDTO<span style=color:#666>.</span><span style=color:#b44>class</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         * beanToMap是将user实体类转为HashMap类型
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         * 而StringRedisTemplate&lt;string,string&gt;都是string类型。而userDTO中的id是Long类型，所以报错了
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         * 允许对key/value进行自定义
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         *  对字段值的修改器，修改字段值
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>         */</span>
+</span></span><span style=display:flex><span>        Map<span style=color:#666>&lt;</span>String<span style=color:#666>,</span> Object<span style=color:#666>&gt;</span> userMap <span style=color:#666>=</span> BeanUtil<span style=color:#666>.</span><span style=color:#b44>beanToMap</span><span style=color:#666>(</span>userDTO<span style=color:#666>,</span><span style=color:#a2f;font-weight:700>new</span> HashMap<span style=color:#666>&lt;&gt;(),</span> CopyOptions<span style=color:#666>.</span><span style=color:#b44>create</span><span style=color:#666>()</span>
+</span></span><span style=display:flex><span>                <span style=color:#666>.</span><span style=color:#b44>setIgnoreNullValue</span><span style=color:#666>(</span><span style=color:#a2f;font-weight:700>true</span><span style=color:#666>)</span> <span style=color:#080;font-style:italic>// 忽略空的值
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>                <span style=color:#666>.</span><span style=color:#b44>setFieldValueEditor</span><span style=color:#666>((</span>fieldName<span style=color:#666>,</span>fieldVaule<span style=color:#666>)-&gt;</span>fieldVaule<span style=color:#666>.</span><span style=color:#b44>toString</span><span style=color:#666>()));</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//7.3 存储用户信息，保存到redis中。 key：token, key:value是用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String tokenKey <span style=color:#666>=</span> LOGIN_USER_KEY<span style=color:#666>+</span> token<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>opsForHash</span><span style=color:#666>().</span><span style=color:#b44>putAll</span><span style=color:#666>(</span>tokenKey<span style=color:#666>,</span>userMap<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//7.4 为该key，设置有效期
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>expire</span><span style=color:#666>(</span>tokenKey<span style=color:#666>,</span>LOGIN_USER_TTL<span style=color:#666>,</span> TimeUnit<span style=color:#666>.</span><span style=color:#b44>MINUTES</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 8 将token，返回给前端
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> Result<span style=color:#666>.</span><span style=color:#b44>ok</span><span style=color:#666>(</span>token<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 创建用户，添加到数据库中
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param phone
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> User <span style=color:#00a000>createUser</span><span style=color:#666>(</span>String phone<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        User user <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> User<span style=color:#666>();</span>
+</span></span><span style=display:flex><span>        user<span style=color:#666>.</span><span style=color:#b44>setPhone</span><span style=color:#666>(</span>phone<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        user<span style=color:#666>.</span><span style=color:#b44>setNickName</span><span style=color:#666>(</span>USER_NICK_NAME_PREFIX<span style=color:#666>+</span>RandomUtil<span style=color:#666>.</span><span style=color:#b44>randomString</span><span style=color:#666>(</span><span style=color:#666>10</span><span style=color:#666>));</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//将用户信息插入到 t_user表中
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        save<span style=color:#666>(</span>user<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>return</span>  user<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span></code></pre></div><h2 id=3校验登录功能获取用户信息中的tokenhash的key>3、校验登录功能。获取用户信息中的token【hash的key】</h2><p>将redis中token返回给前端。访问接口时就会携带这token来访问接口，服务端就会根据token，获取用户信息。在进行判断是否存在，能否访问接口等等校验功能，以及业务代码功能。 <img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/ac67f5610f4345dfb94a007aecd9f393.png alt=img></p><h3 id=代码操作-2>代码操作：</h3><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#666>-------</span>interceptor<span>拦截器代码：</span><span style=color:#666>-------------</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.utils</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.hutool.core.bean.BeanUtil</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.hutool.core.util.StrUtil</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.dto.UserDTO</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.entity.User</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.data.redis.core.StringRedisTemplate</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.HandlerInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletRequest</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletResponse</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpSession</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>java.util.Map</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>java.util.concurrent.TimeUnit</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 用户登录拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @Author Hu
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>LoginInterceptor</span> <span style=color:#a2f;font-weight:700>implements</span> HandlerInterceptor <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * pre：前置拦截。 进入controller执行，进行校验。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param request
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param response
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param handler
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @return
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @throws Exception
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> StringRedisTemplate stringRedisTemplate<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>LoginInterceptor</span><span style=color:#666>(</span>StringRedisTemplate stringRedisTemplate<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>stringRedisTemplate</span> <span style=color:#666>=</span> stringRedisTemplate<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>preHandle</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 1. 获取session对象
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String token <span style=color:#666>=</span> request<span style=color:#666>.</span><span style=color:#b44>getHeader</span><span style=color:#666>(</span><span style=color:#b44>&#34;authorization&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>StrUtil<span style=color:#666>.</span><span style=color:#b44>isBlank</span><span style=color:#666>(</span>token<span style=color:#666>)){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>false</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 2. 基于token，获取用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String redisKey <span style=color:#666>=</span> RedisConstants<span style=color:#666>.</span><span style=color:#b44>LOGIN_USER_KEY</span><span style=color:#666>+</span>token<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        Map<span style=color:#666>&lt;</span>Object<span style=color:#666>,</span> Object<span style=color:#666>&gt;</span> userMap <span style=color:#666>=</span> stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>opsForHash</span><span style=color:#666>().</span><span style=color:#b44>entries</span><span style=color:#666>(</span>redisKey<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//3. 判断用户是否存在
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>userMap<span style=color:#666>.</span><span style=color:#b44>isEmpty</span><span style=color:#666>()</span> <span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#080;font-style:italic>//4. 如果不存在，则拦截
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>            response<span style=color:#666>.</span><span style=color:#b44>setStatus</span><span style=color:#666>(</span><span style=color:#666>401</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>false</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//5.将查询到的Hash类型数据，转换为userDTO对象
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        UserDTO userDTO <span style=color:#666>=</span> BeanUtil<span style=color:#666>.</span><span style=color:#b44>fillBeanWithMap</span><span style=color:#666>(</span>userMap<span style=color:#666>,</span> <span style=color:#a2f;font-weight:700>new</span> UserDTO<span style=color:#666>(),</span> <span style=color:#a2f;font-weight:700>false</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 6.将userDTO对象，保存到ThreadLoad
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        UserHolder<span style=color:#666>.</span><span style=color:#b44>saveUser</span><span style=color:#666>(</span>userDTO<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//7. 刷新token有效值
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>expire</span><span style=color:#666>(</span>redisKey<span style=color:#666>,</span>RedisConstants<span style=color:#666>.</span><span style=color:#b44>LOGIN_USER_TTL</span><span style=color:#666>,</span> TimeUnit<span style=color:#666>.</span><span style=color:#b44>MINUTES</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 8.放行
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>true</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 渲染之后，返回用户之前。 用户执行完毕后，销毁对应的用户信息。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 避免用户泄露
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param request
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param response
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param handler
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param ex
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @throws Exception
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>afterCompletion</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                                Exception ex<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        UserHolder<span style=color:#666>.</span><span style=color:#b44>removeUser</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span></code></pre></div><p>在拦截器中：不能使用@Aotuwired、@Resurces注解，自动导入。 因为interceptor拦截器类是手动new出来的，并不是@Component、@Configuration等注解来构建的。也就是说不是由spring来构建的，就不能进行依赖注入。 所以说通过构造函数注入，谁来注入呢？那就是谁用了类，谁就来注入该类。而MVC的configuration拦截器用到了。从而mvcConfig来帮助redisTemplate来注入到spring中。</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/2cf4f38775eb4d8f8ed4150ba3cb3879.png alt=img></p><h2 id=4测试>4、测试：</h2><p><img src=https://img-blog.csdnimg.cn/05a17a95db914def86b8f16b94690ce1.png alt=img></p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/cd3ed3a532b44f5991b7e8b5970b0b26.png alt=img></p><p>用户访问任何一个页面，都会进行刷新登录token的倒计时：</p><p><img src=https://bucket-typora-kw.oss-cn-beijing.aliyuncs.com/typora-image/12e6a6b00f3c4f08aecd867f8ad01bf7.png alt=img> <img src=https://img-blog.csdnimg.cn/04aff194593a4d138147ec6db29709b4.png alt=img></p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#666>----------</span><span>拦截所有请求，都进行刷新</span>token<span style=color:#666>----------</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.utils</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>cn.hutool.core.bean.BeanUtil</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.dto.UserDTO</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.data.redis.core.StringRedisTemplate</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.HandlerInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletRequest</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletResponse</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>java.util.Map</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>java.util.concurrent.TimeUnit</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>RefreshTokenInterceptor</span> <span style=color:#a2f;font-weight:700>implements</span> HandlerInterceptor <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> StringRedisTemplate stringRedisTemplate<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#00a000>RefreshTokenInterceptor</span><span style=color:#666>(</span>StringRedisTemplate stringRedisTemplate<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>stringRedisTemplate</span> <span style=color:#666>=</span> stringRedisTemplate<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>preHandle</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 1. 获取token
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String token <span style=color:#666>=</span> request<span style=color:#666>.</span><span style=color:#b44>getHeader</span><span style=color:#666>(</span><span style=color:#b44>&#34;authorization&#34;</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//2. 根据token获取对象用户信息
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        String redisKey <span style=color:#666>=</span> RedisConstants<span style=color:#666>.</span><span style=color:#b44>LOGIN_USER_KEY</span><span style=color:#666>+</span>token<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        Map<span style=color:#666>&lt;</span>Object<span style=color:#666>,</span> Object<span style=color:#666>&gt;</span> userMap <span style=color:#666>=</span> stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>opsForHash</span><span style=color:#666>().</span><span style=color:#b44>entries</span><span style=color:#666>(</span>redisKey<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//3.判断用户是否存在
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>userMap<span style=color:#666>.</span><span style=color:#b44>isEmpty</span><span style=color:#666>()){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>true</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 4. 将查询到的userMap转为UserDTO
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        UserDTO userDTO <span style=color:#666>=</span> BeanUtil<span style=color:#666>.</span><span style=color:#b44>fillBeanWithMap</span><span style=color:#666>(</span>userMap<span style=color:#666>,</span> <span style=color:#a2f;font-weight:700>new</span> UserDTO<span style=color:#666>(),</span> <span style=color:#a2f;font-weight:700>false</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 5. 存在，将用户信息存入ThreadLoad
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        UserHolder<span style=color:#666>.</span><span style=color:#b44>saveUser</span><span style=color:#666>(</span>userDTO<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 6. 刷新token有效期
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        stringRedisTemplate<span style=color:#666>.</span><span style=color:#b44>expire</span><span style=color:#666>(</span>redisKey<span style=color:#666>,</span>RedisConstants<span style=color:#666>.</span><span style=color:#b44>LOGIN_USER_TTL</span><span style=color:#666>,</span> TimeUnit<span style=color:#666>.</span><span style=color:#b44>MINUTES</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 7.放行
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span>  <span style=color:#a2f;font-weight:700>true</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 渲染之后，返回用户之前。 用户执行完毕后，销毁对应的用户信息。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 避免用户泄露
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param request
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param response
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param handler
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param ex
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @throws Exception
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>afterCompletion</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                                Exception ex<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        UserHolder<span style=color:#666>.</span><span style=color:#b44>removeUser</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>---------</span><span>拦截部分请求，刷洗</span>token<span style=color:#666>---------</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.utils</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.HandlerInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletRequest</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>javax.servlet.http.HttpServletResponse</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 用户登录拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * @Author Hu
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>LoginInterceptor</span> <span style=color:#a2f;font-weight:700>implements</span> HandlerInterceptor <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>boolean</span> <span style=color:#00a000>preHandle</span><span style=color:#666>(</span>HttpServletRequest request<span style=color:#666>,</span> HttpServletResponse response<span style=color:#666>,</span> Object handler<span style=color:#666>)</span> <span style=color:#a2f;font-weight:700>throws</span> Exception <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 1. 判断是否拦截： 查看ThreadLoad是否有用户
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>UserHolder<span style=color:#666>.</span><span style=color:#b44>getUser</span><span style=color:#666>()</span> <span style=color:#666>==</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>){</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>            response<span style=color:#666>.</span><span style=color:#b44>setStatus</span><span style=color:#666>(</span><span style=color:#666>401</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>            <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>false</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 8.放行
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        <span style=color:#a2f;font-weight:700>return</span> <span style=color:#a2f;font-weight:700>true</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#666>--------</span>mvcConfig<span>配置拦截器：</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> <span style=color:#00f;font-weight:700>com.hmdp.config</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.utils.LoginInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>com.hmdp.utils.RefreshTokenInterceptor</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.beans.factory.annotation.Autowired</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.context.annotation.Configuration</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.data.redis.core.StringRedisTemplate</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.config.annotation.InterceptorRegistration</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.config.annotation.InterceptorRegistry</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#00f;font-weight:700>org.springframework.web.servlet.config.annotation.WebMvcConfigurer</span><span style=color:#666>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 配置拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> * 可以让LoginInterceptor拦截器生效。
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> *
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic> */</span>
+</span></span><span style=display:flex><span><span style=color:#a2f>@Configuration</span>
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>public</span> <span style=color:#a2f;font-weight:700>class</span> <span style=color:#00f>MvcConfiguration</span> <span style=color:#a2f;font-weight:700>implements</span> WebMvcConfigurer <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>/**
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * 添加拦截器
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     * @param registry
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic>     */</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Autowired</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>private</span> StringRedisTemplate stringRedisTemplate<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>addInterceptors</span><span style=color:#666>(</span>InterceptorRegistry registry<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>//添加登录拦截器。 拦截部分请求，优先级低
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        InterceptorRegistration interceptorRegistration <span style=color:#666>=</span> registry<span style=color:#666>.</span><span style=color:#b44>addInterceptor</span><span style=color:#666>(</span><span style=color:#a2f;font-weight:700>new</span> LoginInterceptor<span style=color:#666>());</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 添加配置可以放行哪些路径
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        interceptorRegistration<span style=color:#666>.</span><span style=color:#b44>excludePathPatterns</span><span style=color:#666>(</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/shop/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/voucher/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/shop-type/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/upload/**&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/blog/hot&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/user/code&#34;</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>                <span style=color:#b44>&#34;/user/login&#34;</span>
+</span></span><span style=display:flex><span>        <span style=color:#666>).</span><span style=color:#b44>order</span><span style=color:#666>(</span><span style=color:#666>1</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#080;font-style:italic>// 添加刷新拦截所有请求。 设置优先级高于 拦截部分请求
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>        registry<span style=color:#666>.</span><span style=color:#b44>addInterceptor</span><span style=color:#666>(</span><span style=color:#a2f;font-weight:700>new</span> RefreshTokenInterceptor<span style=color:#666>(</span>stringRedisTemplate<span style=color:#666>)).</span><span style=color:#b44>addPathPatterns</span><span style=color:#666>(</span><span style=color:#b44>&#34;/**&#34;</span><span style=color:#666>).</span><span style=color:#b44>order</span><span style=color:#666>(</span><span style=color:#666>0</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#666>}</span>
+</span></span><span style=display:flex><span><span style=color:#666>}</span>
+</span></span></code></pre></div></div><footer class=post-footer><div class=post-tags><a href=/tags/redis rel=tag title=Redis>#Redis#</a>
+<a href=/tags/%e4%b8%ad%e9%97%b4%e4%bb%b6 rel=tag title=中间件>#中间件#</a>
+<a href=/tags/%e9%a1%b9%e7%9b%ae%e5%ae%9e%e6%88%98 rel=tag title=项目实战>#项目实战#</a></div><div class=addthis_inline_share_toolbox></div><div class=post-nav><div class=article-copyright><div class=article-copyright-img><img src=/img/qq_qrcode.png width=129px height=129px><div style=text-align:center>QQ扫一扫交流</div></div><div class=article-copyright-info><p><span>标题：</span>redis的实战项目01_模拟短信登录业务</p><p><span>链接：</span>https://codingroam.github.io/post/redis%E7%9A%84%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE01_%E6%A8%A1%E6%8B%9F%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E4%B8%9A%E5%8A%A1/</p><p><span>作者：</span>roam</p><p><span>声明： </span>本博客文章除特别声明外，均采用 <a href=https://creativecommons.org/licenses/by-nc-sa/3.0/ target=_blank style=text-decoration:underline>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！</p></div></div><div class=clear></div></div><div class=reward-qr-info><div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div><button id=rewardButton disable=enable onclick='var qr=document.getElementById("QR");qr.style.display==="none"?qr.style.display="block":qr.style.display="none"'>
+<span>赏</span></button><div id=QR style=display:none><div id=wechat style=display:inline-block><img id=wechat_qr src=/img/wechat-pay.png alt="WeChat Pay"><p>微信打赏</p></div><div id=alipay style=display:inline-block><img id=alipay_qr src=/img/ali-pay.png alt=Alipay><p>支付宝打赏</p></div></div></div><div class=post-nav><div class="post-nav-next post-nav-item"><a href=https://codingroam.github.io/post/%E5%BD%BB%E5%BA%95%E7%90%86%E8%A7%A3canal%E7%9C%8B%E8%BF%99%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/ rel=next title=Canal基础操作><i class="fa fa-chevron-left"></i> Canal基础操作</a></div><div class="post-nav-prev post-nav-item"><a href=https://codingroam.github.io/post/%E6%89%B9%E5%A4%84%E7%90%86if-%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/ rel=prev title="批处理if 命令详解">批处理if 命令详解
+<i class="fa fa-chevron-right"></i></a></div></div><div id=wcomments></div></footer></article></section></div></div><div class=sidebar-toggle><div class=sidebar-toggle-line-wrap><span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id=sidebar class=sidebar><div class=sidebar-inner><section class="site-overview sidebar-panel sidebar-panel-active"><div class="site-author motion-element" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image src=/img/avatar.png alt=roam><p class=site-author-name itemprop=name>roam</p><p class="site-description motion-element" itemprop=description>以为打得赢我啊你</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href=/post/><span class=site-state-item-count>51</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>19</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>40</span>
+<span class=site-state-item-name>标签</span></a></div></nav><div class="links-of-author motion-element"><span class=links-of-author-item><a href=https://github.com/wk123456/ target=_blank title=GitHub><i class="fa fa-fw fa-github"></i>
+GitHub</a></span>
+<span class=links-of-author-item><a href=https://www.zhihu.com/ target=_blank title=知乎><i class="fa fa-fw fa-globe"></i>
+知乎</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-inline"><div class=links-of-blogroll-title><i class="fa fa-fw fa-globe"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://nutzam.com/ title=Nutz target=_blank>Nutz</a></li><li class=links-of-blogroll-item><a href=https://jfinal.com/ title=JFinal target=_blank>JFinal</a></li><li class=links-of-blogroll-item><a href=http://wendal.net/ title=Wendal target=_blank>Wendal</a></li><li class=links-of-blogroll-item><a href=https://www.liaoxuefeng.com/ title=廖雪峰 target=_blank>廖雪峰</a></li></ul></div><div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline"><div class=tagcloud-of-blogroll-title><i class="fa fa-fw fa-tags"></i>
+标签云</div><ul class=tagcloud-of-blogroll-list><li class=tagcloud-of-blogroll-item><a href=/tags/learning>Learning
+<sup>26</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java>Java
+<sup>9</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/linux>Linux
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/mysql>Mysql
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/problem-solving>Problem solving
+<sup>7</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/docker>Docker
+<sup>6</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/hands-on>Hands on
+<sup>5</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/git>Git
+<sup>4</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/spring>Spring
+<sup>4</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java-base>Java base
+<sup>3</sup></a></li></ul></div></section></div></aside></div></main><footer id=footer class=footer><div class=footer-inner><div class=copyright><span class=copyright-year>&copy; 2010 - 2023</span>
+<span class=with-love><i class="fa fa-heart"></i></span>
+<span class=copyright-author>想学啊你</span></div><div class=powered-info><span class=powered-by>Powered by - <a class=powered-link href=//gohugo.io target=_blank title=hugo>Hugo v0.115.4</a></span>
+<span class=separator-line>/</span>
+<span class=theme-info>Theme by - <a class=powered-link href=//github.com/elkan1788/hugo-theme-next target=_blank>NexT</a></span></div><div class=vistor-info><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<span class=site-uv><i class="fa fa-user"></i>
+<span class=busuanzi-value id=busuanzi_value_site_uv></span></span>
+<span class=separator-line>/</span>
+<span class=site-pv><i class="fa fa-eye"></i>
+<span class=busuanzi-value id=busuanzi_value_site_pv></span></span></div><div class=license-info><span class=storage-info>Storage by
+<a href=https://gitee.com/ style=font-weight:700 target=_blank>Gitee 仓库</a></span>
+<span class=separator-line>/</span>
+<span class=license-num><a href=http://beian.miit.gov.cn target=_blank>粤 ICP 备 18047355 号</a></span></div></div></footer><div class=back-to-top><i class="fa fa-arrow-up"></i>
+<span id=scrollpercent><span>0</span>%</span></div></div><script type=text/javascript src=//unpkg.com/jquery@2.1.4/dist/jquery.min.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/search.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/affix.js></script>
+<script type=text/javascript>function detectIE(){var e=window.navigator.userAgent,t=e.indexOf("MSIE "),n=e.indexOf("Trident/"),s=e.indexOf("Edge/");return t>0||n>0||s>0?-1:1}function getCntViewHeight(){var t=$("#content").height(),e=$(window).height(),n=t>e?t-e:$(document).height()-e;return n}function getScrollbarWidth(){var e=$("<div />").addClass("scrollbar-measure").prependTo("body"),t=e[0],n=t.offsetWidth-t.clientWidth;return e.remove(),n}function registerBackTop(){var t=50,e=$(".back-to-top");$(window).on("scroll",function(){e.toggleClass("back-to-top-on",window.pageYOffset>t);var s=$(window).scrollTop(),o=getCntViewHeight(),i=s/o,n=Math.round(i*100),a=n>100?100:n;$("#scrollpercent>span").html(a)}),e.on("click",function(){$("html,body").animate({scrollTop:0,screenLeft:0},800)})}function initScrollSpy(){var e=".post-toc",s=$(e),t=".active-current";s.on("activate.bs.scrollspy",function(){var t=$(e+" .active").last();n(),t.addClass("active-current")}).on("clear.bs.scrollspy",n),$("body").scrollspy({target:e});function n(){$(e+" "+t).removeClass(t.substring(1))}}function initAffix(){var e=$(".header-inner").height(),t=parseInt($(".footer").outerHeight(!0),10),n=e+10;$(".sidebar-inner").affix({offset:{top:n,bottom:t}})}function initTOCDimension(){$(window).on("resize",function(){e&&clearTimeout(e),e=setTimeout(function(){var e=document.body.clientHeight-100;updateTOCHeight(e)},0)}),updateTOCHeight(document.body.clientHeight-100);var e,t=getScrollbarWidth();$(".post-toc").css("width","calc(100% + "+t+"px)")}function updateTOCHeight(e){e=e||"auto",$(".post-toc").css("max-height",e)}$(function(){var e,t,n,s,o=$(".header-inner").height()+10;$("#sidebar").css({"margin-top":o}).show(),t=parseInt($("#sidebar").css("margin-top")),n=parseInt($(".sidebar-inner").css("height")),e=t+n,s=$(".content-wrap").height(),s<e&&$(".content-wrap").css("min-height",e),$(".site-nav-toggle").on("click",function(){var e=$(".site-nav"),o=$(".toggle"),t="site-nav-on",i="toggle-close",n=e.hasClass(t),a=n?"slideUp":"slideDown",s=n?"removeClass":"addClass";e.stop()[a]("normal",function(){e[s](t),o[s](i)})}),registerBackTop(),initAffix(),initTOCDimension(),$(".sidebar-nav-toc").click(function(){$(this).addClass("sidebar-nav-active"),$(this).next().removeClass("sidebar-nav-active"),$("."+$(this).next().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)}),$(".sidebar-nav-overview").click(function(){$(this).addClass("sidebar-nav-active"),$(this).prev().removeClass("sidebar-nav-active"),$("."+$(this).prev().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)})})</script><script src=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js></script>
+<script type=text/javascript>$(function(){$(".post-body").viewer()})</script><script type=text/javascript>const locale={placeholder:"欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^"};$(function(){detectIE()>0?$.getScript(document.location.protocol+"//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js",function(){new Waline({el:"#wcomments",visitor:!0,emoji:[],wordLimit:"200",uploadImage:!1,locale,requiredMeta:["nick","mail"],serverURL:"Your WalineSerURL",lang:"zh-cn"})}):$("#wcomments").html("抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。")})</script><script type=text/javascript src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+<script>(function(){var t,e=document.createElement("script"),n=window.location.protocol.split(":")[0];n==="https"?e.src="https://zz.bdstatic.com/linksubmit/push.js":e.src="http://push.zhanzhang.baidu.com/push.js",t=document.getElementsByTagName("script")[0],t.parentNode.insertBefore(e,t)})()</script></body></html>

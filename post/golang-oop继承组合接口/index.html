@@ -1,0 +1,233 @@
+<!doctype html><html lang=zh-cn dir=zh><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=content-security-policy content="upgrade-insecure-requests"><title>Golang OOP、继承、组合、接口 - 想学啊你</title><meta name=keywords content="博客"><meta name=author content="roam"><meta property="og:title" content="Golang OOP、继承、组合、接口"><meta property="og:site_name" content="想学啊你"><meta property="og:image" content="https://codingroam.github.io/img/author.jpg"><meta name=title content="Golang OOP、继承、组合、接口 - 想学啊你"><meta name=description content="轻轻的你来了"><link rel="shortcut icon" href=https://codingroam.github.io/img/favicon.ico><link rel=apple-touch-icon href=https://codingroam.github.io/img/apple-touch-icon.png><link rel=apple-touch-icon-precomposed href=https://codingroam.github.io/img/apple-touch-icon.png><link href=//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css rel=stylesheet type=text/css><link href=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css rel=stylesheet><link href=https://codingroam.github.io/css/main.css rel=stylesheet type=text/css><link href=https://codingroam.github.io/css/syntax.css rel=stylesheet type=text/css></head><body itemscope itemtype=http://schema.org/WebPage lang=zh-Hans><div class="container one-collumn sidebar-position-left page-home"><div class=headband></div><header id=header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle role=button style=opacity:1;top:0><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><div class=custom-logo-site-title><a href=/ class=brand rel=start><span class=logo-line-before><i></i></span>
+<span class=site-title>想学啊你</span>
+<span class=logo-line-after><i></i></span></a></div><p class=site-subtitle>三四楼那么高了</p></div><div class=site-nav-right><div class="toggle popup-trigger" style=opacity:1;top:0><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul id=menu class=menu><li class=menu-item><a href=/ rel=section><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-active"><a href=/post rel=section><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class=menu-item><a href=/tags rel=section><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class=menu-item><a href=/categories rel=section><i class="menu-item-icon fa fa-fw fa-book"></i><br>分类</a></li><li class="menu-item menu-item-search"><a href=javascript:; class=popup-trigger><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class=site-search><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class=search-icon><i class="fa fa-search"></i></span>
+<span class=popup-btn-close><i class="fa fa-times-circle"></i></span><div class=local-search-input-wrapper><input autocomplete=off placeholder=搜索关键字... spellcheck=false type=text id=local-search-input autocapitalize=none autocorrect=off></div></div><div id=local-search-result></div></div></div></nav></div></header><main id=main class=main><div class=main-inner><div class=content-wrap><div id=content class=content><section id=posts class=posts-expand><article class="post post-type-normal" itemscope itemtype=http://schema.org/Article><header class=post-header><h1 class=post-title itemprop="name headline"><a class=post-title-link href=https://codingroam.github.io/post/golang-oop%E7%BB%A7%E6%89%BF%E7%BB%84%E5%90%88%E6%8E%A5%E5%8F%A3/ itemprop=url>Golang OOP、继承、组合、接口</a></h1><div class=post-meta><span class=post-pushdate><i class="fa fa-calendar-o fa-fw"></i>
+<span class=post-meta-item-text>时间：</span>
+<time itemprop=dateCreated datetime=2016-03-22T13:04:35+08:00 content="2023-07-29">2023-07-29</time></span>
+<span class=post-category><i class="fa fa-folder-o fa-fw"></i>
+<span class=post-meta-item-text>分类：</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/golang itemprop=url rel=index><span itemprop=name>Golang</span></a>
+&nbsp;</span></span>
+<span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
+<span class=post-meta-item-text>字数：</span>
+<span class=leancloud-world-count>2562 字</span></span>
+<span class=post-readtime><i class="fa fa-eye fa-fw"></i>
+<span class=post-meta-item-text>阅读：</span>
+<span class=leancloud-view-count>6分钟</span></span>
+<span id=/post/golang-oop%E7%BB%A7%E6%89%BF%E7%BB%84%E5%90%88%E6%8E%A5%E5%8F%A3/ class="leancloud_visitors post-visitor" data-flag-title="Golang OOP、继承、组合、接口"><i class="fa fa-binoculars fa-fw"></i>
+<span class=post-meta-item-text>阅读次数：</span>
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>Golang概念初识，oop对比。</p><p><strong>传统 OOP 概念</strong></p><p>OOP（面向对象编程）是对真实世界的一种抽象思维方式，可以在更高的层次上对所涉及到的实体和实体之间的关系进行更好的管理。</p><p>流传很广的 OOP 的三要素是：封装、继承、多态。</p><p>对象：可以看做是一些特征的集合，这些特征主要由 属性 和 方法 来体现。</p><p>封装：划定了对象的边界，也就是定义了对象。</p><p>继承：表明了子对象和父对象之间的关系，子对象是对父对象的扩展，实际上，子对象 “是” 父对象。相当于说“码农是人”。从特征的集合这个意义上说，子对象包含父对象，父对象有的公共特征，子对象全都有。</p><p>多态：根据继承的含义，子对象在特性上全包围了父对象，因此，在需要父对象的时候，子对象可以替代父对象。</p><p>传统的 OOP 语言，例如 Java，C++，C#，对 OOP 的实现也各不相同。以 Java 为例： Java 支持 extends，也支持 interface。这是两种不同的抽象方式。</p><p>extends 就是继承，A extends B，表明 A 是 B 的一种，是概念上的抽象关系。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Class Human {
+</span></span><span style=display:flex><span>    name:string
+</span></span><span style=display:flex><span>    age:int
+</span></span><span style=display:flex><span>    function eat(){}
+</span></span><span style=display:flex><span>    function speak(){}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>Class Man extends Human {
+</span></span><span style=display:flex><span>    function fish(){}
+</span></span><span style=display:flex><span>    function drink(){}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span></code></pre></div><p><strong>Golang 的 OOP</strong></p><p>回到 Golang。Golang 并没有 extends，它类似的方式是 Embedding。这种方式并不能实现 is-a 这种定义上的抽象关系，因此 Golang 并没有传统意义上的多态。</p><p>注意下面代码中的绿色粗体注释，把 Student 当做 Human 会报错。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#a2f;font-weight:700>package</span> main
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>import</span> <span style=color:#b44>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> <span style=color:#00a000>main</span>(){
+</span></span><span style=display:flex><span>    <span style=color:#a2f;font-weight:700>var</span> h Human
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    s <span style=color:#666>:=</span> Student{Grade: <span style=color:#666>1</span>, Major: <span style=color:#b44>&#34;English&#34;</span>, Human: Human{Name: <span style=color:#b44>&#34;Jason&#34;</span>, Age: <span style=color:#666>12</span>, Being: Being{IsLive: <span style=color:#a2f;font-weight:700>true</span>}}}
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;student:&#34;</span>, s)
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;student:&#34;</span>, s.Name, <span style=color:#b44>&#34;, isLive:&#34;</span>, s.IsLive, <span style=color:#b44>&#34;, age:&#34;</span>, s.Age, <span style=color:#b44>&#34;, grade:&#34;</span>, s.Grade, <span style=color:#b44>&#34;, major:&#34;</span>, s.Major)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//h = s // cannot use s (type Student) as type Human in assignment
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    fmt.<span style=color:#00a000>Println</span>(h)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    <span style=color:#080;font-style:italic>//Heal(s) // cannot use s (type Student) as type Being in argument to Heal
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span>    <span style=color:#00a000>Heal</span>(s.Human.Being) <span style=color:#080;font-style:italic>// true
+</span></span></span><span style=display:flex><span><span style=color:#080;font-style:italic></span> 
+</span></span><span style=display:flex><span>    s.<span style=color:#00a000>Drink</span>()
+</span></span><span style=display:flex><span>    s.<span style=color:#00a000>Eat</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> Car <span style=color:#a2f;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>    Color <span style=color:#0b0;font-weight:700>string</span>
+</span></span><span style=display:flex><span>    SeatCount <span style=color:#0b0;font-weight:700>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> Being <span style=color:#a2f;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>    IsLive <span style=color:#0b0;font-weight:700>bool</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> Human <span style=color:#a2f;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>    Being
+</span></span><span style=display:flex><span>    Name <span style=color:#0b0;font-weight:700>string</span>
+</span></span><span style=display:flex><span>    Age <span style=color:#0b0;font-weight:700>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> (h Human) <span style=color:#00a000>Eat</span>(){
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;human eating...&#34;</span>)
+</span></span><span style=display:flex><span>    h.<span style=color:#00a000>Drink</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> (h Human) <span style=color:#00a000>Drink</span>(){
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;human drinking...&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> (h Human) <span style=color:#00a000>Move</span>(){
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;human moving...&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> Student <span style=color:#a2f;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>    Human
+</span></span><span style=display:flex><span>    Grade <span style=color:#0b0;font-weight:700>int</span>
+</span></span><span style=display:flex><span>    Major <span style=color:#0b0;font-weight:700>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> (s Student) <span style=color:#00a000>Drink</span>(){
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;student drinking...&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> Teacher <span style=color:#a2f;font-weight:700>struct</span> {
+</span></span><span style=display:flex><span>    Human
+</span></span><span style=display:flex><span>    School <span style=color:#0b0;font-weight:700>string</span>
+</span></span><span style=display:flex><span>    Major <span style=color:#0b0;font-weight:700>string</span>
+</span></span><span style=display:flex><span>    Grade <span style=color:#0b0;font-weight:700>int</span>
+</span></span><span style=display:flex><span>    Salary <span style=color:#0b0;font-weight:700>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> (s Teacher) <span style=color:#00a000>Drink</span>(){
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(<span style=color:#b44>&#34;teacher drinking...&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> IEat <span style=color:#a2f;font-weight:700>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#00a000>Eat</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> IMove <span style=color:#a2f;font-weight:700>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#00a000>Move</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>type</span> IDrink <span style=color:#a2f;font-weight:700>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#00a000>Drink</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span><span style=color:#a2f;font-weight:700>func</span> <span style=color:#00a000>Heal</span>(b Being){
+</span></span><span style=display:flex><span>    fmt.<span style=color:#00a000>Println</span>(b.IsLive)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p> 输出结果：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>student: {{{true} Jason 12} 1 English}
+</span></span><span style=display:flex><span>student: Jason , isLive: true , age: 12 , grade: 1 , major: English
+</span></span><span style=display:flex><span>{{false}  0}
+</span></span><span style=display:flex><span>true
+</span></span><span style=display:flex><span>student drinking...
+</span></span><span style=display:flex><span>human eating...
+</span></span><span style=display:flex><span>human drinking...
+</span></span></code></pre></div><p>这里有一点需要注意，Student 实现了 Drink 方法，覆盖了 Human 的 Drink，但是没有实现 Eat 方法。因此，Student 在调用 Eat 方法时，调用的是 Human 的 Eat()；而 Human 的 Eat() 调用了 Human 的 Drink()，于是我们看到结果中输出的是 human drinking&mldr; 。这既不同于 Java 类语言的行为，也不同于 prototype 链式继承的行为，Golang 叫做 Embedding，这像是一种寄生关系：Human 寄生在 Student 中，但仍保持一定程度的独立。</p><p><strong>Golang 的接口</strong></p><p>我们从接口产生的原因来考虑。</p><p>代码处理的是各种数据。对于强类型语言来说，非常希望一批数据都是单一类型的，这样它们的行为完全一致。但世界是复杂的，很多时候数据可能包含不同的类型，却有一个或多个共同点。这些共同点就是抽象的基础。单一继承关系解决了 is-a 也就是定义问题，因此可以把子类当做父类来对待。但对于父类不同但又具有某些共同行为的数据，单一继承就不能解决了。单一继承构造的是树状结构，而现实世界中更常见的是网状结构。</p><p>于是有了接口。接口是在某一个方面的抽象，也可以看做具有某些相同行为的事物的标签。</p><p>但不同于继承，接口是松散的结构，它不和定义绑定。从这一点上来说，Duck Type 相比传统的 extends 是更加松耦合的方式，可以同时从多个维度对数据进行抽象，找出它们的共同点，使用同一套逻辑来处理。</p><p>Java 中的接口方式是先声明后实现的强制模式，比如，你要告诉大家你会英语，并且要会听说读写，你才具有英语这项技能。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>interface IEnglishSpeaker {
+</span></span><span style=display:flex><span>     ListenEnglish()
+</span></span><span style=display:flex><span>     ReadEnglish()
+</span></span><span style=display:flex><span>     SpeakEnglish()
+</span></span><span style=display:flex><span>     WriteEnglish()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Golang 不同，你不需要声明你会英语，只要你会听说读写了，你就会英语了。也就是实现决定了概念：如果一个人在学校（有 School、Grade、Class 这些属性），还会学习（有 Study() 方法），那么这个人就是个学生。</p><p>Duck Type 更符合人类对现实世界的认知过程：我们总是通过认识不同的个体来进行总结归纳，然后抽象出概念和定义。这基本上就是在软件开发的前期工作，抽象建模。</p><p>相比较而言， Java 的方式是先定义了关系（接口），然后去实现，这更像是从上帝视角先规划概念产生定义，然后进行造物。</p><p>因为 interface 和 object 之间的松耦合，Golang 有 type assertion 这样的方式来判断一个接口是不是某个类型：</p><p>value, b := interface.(Type)，value 是 Type 的默认实例；b 是 bool 类型，表明断言是否成立。</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>// 接上面的例子
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v1, b := interface{}(s).(Car)
+</span></span><span style=display:flex><span>fmt.Println(v1, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v2, b := interface{}(s).(Being)
+</span></span><span style=display:flex><span>fmt.Println(v2, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v3, b := interface{}(s).(Human)
+</span></span><span style=display:flex><span>fmt.Println(v3, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v4, b := interface{}(s).(Student)
+</span></span><span style=display:flex><span>fmt.Println(v4, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v5, b := interface{}(s).(IDrink)
+</span></span><span style=display:flex><span>fmt.Println(v5, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v6, b := interface{}(s).(IEat)
+</span></span><span style=display:flex><span>fmt.Println(v6, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v7, b := interface{}(s).(IMove)
+</span></span><span style=display:flex><span>fmt.Println(v7, b)
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>v8, b := interface{}(s).(int)
+</span></span><span style=display:flex><span>fmt.Println(v8, b)
+</span></span></code></pre></div><p> 输出结果：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>{ 0} false
+</span></span><span style=display:flex><span>{false} false
+</span></span><span style=display:flex><span>{{false}  0} false
+</span></span><span style=display:flex><span>{{{true} Jason 12}  1 English} true
+</span></span><span style=display:flex><span>{{{true} Jason 12}  1 English} true
+</span></span><span style=display:flex><span>{{{true} Jason 12}  1 English} true
+</span></span><span style=display:flex><span>&lt;nil&gt; false
+</span></span><span style=display:flex><span>0 false
+</span></span></code></pre></div><p>上面的代码中，使用空接口 interface{} 对 s 进行了类型转换，因为 s 是 struct，不是 interface，而类型断言表达式要求点号左边必须为接口。</p><p>常用的方式应该是类似泛型的使用方式：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>s1 := Student{Grade: 1, Major: &#34;English&#34;, Human: Human{Name: &#34;Jason&#34;, Age: 12, Being: Being{IsLive: true}}}
+</span></span><span style=display:flex><span>s2 := Student{Grade: 1, Major: &#34;English&#34;, Human: Human{Name: &#34;Tom&#34;, Age: 13, Being: Being{IsLive: true}}}
+</span></span><span style=display:flex><span>s3 := Student{Grade: 1, Major: &#34;English&#34;, Human: Human{Name: &#34;Mike&#34;, Age: 14, Being: Being{IsLive: true}}}
+</span></span><span style=display:flex><span>t1 := Teacher{Grade: 1, Major: &#34;English&#34;, Salary: 2000, Human: Human{Name: &#34;Michael&#34;, Age: 34, Being: Being{IsLive: true}}}
+</span></span><span style=display:flex><span>t2 := Teacher{Grade: 1, Major: &#34;English&#34;, Salary: 3000, Human: Human{Name: &#34;Tony&#34;, Age: 31, Being: Being{IsLive: true}}}
+</span></span><span style=display:flex><span>t3 := Teacher{Grade: 1, Major: &#34;English&#34;, Salary: 4000, Human: Human{Name: &#34;Ivy&#34;, Age: 40, Being: Being{IsLive: true}}}
+</span></span><span style=display:flex><span>drinkers := []IDrink{s1, s2, s3, t1, t2, t3}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>for _, v := range drinkers {
+</span></span><span style=display:flex><span>    switch t := v.(type) {
+</span></span><span style=display:flex><span>    case Student:
+</span></span><span style=display:flex><span>        fmt.Println(t.Name, &#34;is a Student, he/she needs more homework.&#34;)
+</span></span><span style=display:flex><span>    case Teacher:
+</span></span><span style=display:flex><span>        fmt.Println(t.Name, &#34;is a Teacher, he/she needs more jobs.&#34;)
+</span></span><span style=display:flex><span>    default:
+</span></span><span style=display:flex><span>        fmt.Println(&#34;Invalid Human being:&#34;, t)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>输出结果：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Jason is a Student, he/she needs more homework.
+</span></span><span style=display:flex><span>Tom is a Student, he/she needs more homework.
+</span></span><span style=display:flex><span>Mike is a Student, he/she needs more homework.
+</span></span><span style=display:flex><span>Michael is a Teacher, he/she needs more jobs.
+</span></span><span style=display:flex><span>Tony is a Teacher, he/she needs more jobs.
+</span></span><span style=display:flex><span>Ivy is a Teacher, he/she needs more jobs.
+</span></span></code></pre></div><p>这段代码中使用了 Type Switch，这种 switch 判断的目标是类型。</p><p><strong>Golang：接口为重</strong></p><p>了解了 Golang 的 OOP 相关的基本知识后，难免会有疑问，为什么 Golang 要用这种 “非主流” 的方式呢？</p><p> Java 之父 James Gosling 在某次会议上有过这样一次问答：</p><p>I once attended a Java user group meeting where James Gosling (Java’s inventor) was the featured speaker.</p><p>During the memorable Q&amp;A session, someone asked him: “If you could do Java over again, what would you change?”  </p><p>“I’d leave out classes,” he replied. After the laughter died down, he explained that the real problem wasn’t classes per se, but rather implementation inheritance (the extends relationship). Interface inheritance (the implements relationship) is preferable. You should avoid implementation inheritance whenever possible.</p><p>大意是：</p><p>问：如果你重新做 Java，有什么是你想改变的？</p><p>答：我会把类（class）丢掉。真正的问题不在于类本身，而在于基于实现的继承（the extends relationship）。基于接口的继承（the implements relationship）是更好的选择，你应该在任何可能的时候避免使用实现继承。</p><p>我的理解是：实现之间应该少用继承式的强关联，多用接口这种弱关联。接口已经可以在很多方面替代继承的作用，比如多态和泛型。而且接口的关系松散、随意，可以有更高的自由度、更多的抽象角度。</p><p>以继承为特点的 OOP 只是编程世界的一种抽象方式，在 Golang 的世界里没有继承，只有组合和接口，这看起来更符合 Gosling 的设想。借用那位老人的话：黑猫白猫，捉住老鼠就是好猫。让我来继续探索吧。</p><p>注：刚刚学习 Golang 不久，后面可能会发现也许某些理解是错误的。随时修正。</p></div><footer class=post-footer><div class=post-tags><a href=/tags/golang rel=tag title=Golang>#Golang#</a>
+<a href=/tags/learning rel=tag title=Learning>#Learning#</a></div><div class=addthis_inline_share_toolbox></div><div class=post-nav><div class=article-copyright><div class=article-copyright-img><img src=/img/qq_qrcode.png width=129px height=129px><div style=text-align:center>QQ扫一扫交流</div></div><div class=article-copyright-info><p><span>标题：</span>Golang OOP、继承、组合、接口</p><p><span>链接：</span>https://codingroam.github.io/post/golang-oop%E7%BB%A7%E6%89%BF%E7%BB%84%E5%90%88%E6%8E%A5%E5%8F%A3/</p><p><span>作者：</span>roam</p><p><span>声明： </span>本博客文章除特别声明外，均采用 <a href=https://creativecommons.org/licenses/by-nc-sa/3.0/ target=_blank style=text-decoration:underline>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！</p></div></div><div class=clear></div></div><div class=reward-qr-info><div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div><button id=rewardButton disable=enable onclick='var qr=document.getElementById("QR");qr.style.display==="none"?qr.style.display="block":qr.style.display="none"'>
+<span>赏</span></button><div id=QR style=display:none><div id=wechat style=display:inline-block><img id=wechat_qr src=/img/wechat-pay.png alt="WeChat Pay"><p>微信打赏</p></div><div id=alipay style=display:inline-block><img id=alipay_qr src=/img/ali-pay.png alt=Alipay><p>支付宝打赏</p></div></div></div><div class=post-nav><div class="post-nav-next post-nav-item"></div><div class="post-nav-prev post-nav-item"><a href=https://codingroam.github.io/post/shardingsphere%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E5%AE%9E%E6%88%98/ rel=prev title=ShardingSphere分库分表实战>ShardingSphere分库分表实战
+<i class="fa fa-chevron-right"></i></a></div></div><div id=wcomments></div></footer></article></section></div></div><div class=sidebar-toggle><div class=sidebar-toggle-line-wrap><span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id=sidebar class=sidebar><div class=sidebar-inner><section class="site-overview sidebar-panel sidebar-panel-active"><div class="site-author motion-element" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image src=/img/avatar.png alt=roam><p class=site-author-name itemprop=name>roam</p><p class="site-description motion-element" itemprop=description>以为打得赢我啊你</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href=/post/><span class=site-state-item-count>58</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>22</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>43</span>
+<span class=site-state-item-name>标签</span></a></div></nav><div class="links-of-author motion-element"><span class=links-of-author-item><a href=https://github.com/wk123456/ target=_blank title=GitHub><i class="fa fa-fw fa-github"></i>
+GitHub</a></span>
+<span class=links-of-author-item><a href=https://www.zhihu.com/ target=_blank title=知乎><i class="fa fa-fw fa-globe"></i>
+知乎</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-inline"><div class=links-of-blogroll-title><i class="fa fa-fw fa-globe"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://nutzam.com/ title=Nutz target=_blank>Nutz</a></li><li class=links-of-blogroll-item><a href=https://jfinal.com/ title=JFinal target=_blank>JFinal</a></li><li class=links-of-blogroll-item><a href=http://wendal.net/ title=Wendal target=_blank>Wendal</a></li><li class=links-of-blogroll-item><a href=https://www.liaoxuefeng.com/ title=廖雪峰 target=_blank>廖雪峰</a></li></ul></div><div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline"><div class=tagcloud-of-blogroll-title><i class="fa fa-fw fa-tags"></i>
+标签云</div><ul class=tagcloud-of-blogroll-list><li class=tagcloud-of-blogroll-item><a href=/tags/learning>Learning
+<sup>28</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/mysql>Mysql
+<sup>10</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java>Java
+<sup>9</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6>中间件
+<sup>9</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/linux>Linux
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/problem-solving>Problem solving
+<sup>7</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/docker>Docker
+<sup>6</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/redis>Redis
+<sup>6</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/hands-on>Hands on
+<sup>5</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/git>Git
+<sup>4</sup></a></li></ul></div></section></div></aside></div></main><footer id=footer class=footer><div class=footer-inner><div class=copyright><span class=copyright-year>&copy; 2010 - 2023</span>
+<span class=with-love><i class="fa fa-heart"></i></span>
+<span class=copyright-author>想学啊你</span></div><div class=powered-info><span class=powered-by>Powered by - <a class=powered-link href=//gohugo.io target=_blank title=hugo>Hugo v0.115.4</a></span>
+<span class=separator-line>/</span>
+<span class=theme-info>Theme by - <a class=powered-link href=//github.com/elkan1788/hugo-theme-next target=_blank>NexT</a></span></div><div class=vistor-info><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<span class=site-uv><i class="fa fa-user"></i>
+<span class=busuanzi-value id=busuanzi_value_site_uv></span></span>
+<span class=separator-line>/</span>
+<span class=site-pv><i class="fa fa-eye"></i>
+<span class=busuanzi-value id=busuanzi_value_site_pv></span></span></div><div class=license-info><span class=storage-info>Storage by
+<a href=https://gitee.com/ style=font-weight:700 target=_blank>Gitee 仓库</a></span>
+<span class=separator-line>/</span>
+<span class=license-num><a href=http://beian.miit.gov.cn target=_blank>粤 ICP 备 18047355 号</a></span></div></div></footer><div class=back-to-top><i class="fa fa-arrow-up"></i>
+<span id=scrollpercent><span>0</span>%</span></div></div><script type=text/javascript src=//unpkg.com/jquery@2.1.4/dist/jquery.min.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/search.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/affix.js></script>
+<script type=text/javascript>function detectIE(){var e=window.navigator.userAgent,t=e.indexOf("MSIE "),n=e.indexOf("Trident/"),s=e.indexOf("Edge/");return t>0||n>0||s>0?-1:1}function getCntViewHeight(){var t=$("#content").height(),e=$(window).height(),n=t>e?t-e:$(document).height()-e;return n}function getScrollbarWidth(){var e=$("<div />").addClass("scrollbar-measure").prependTo("body"),t=e[0],n=t.offsetWidth-t.clientWidth;return e.remove(),n}function registerBackTop(){var t=50,e=$(".back-to-top");$(window).on("scroll",function(){e.toggleClass("back-to-top-on",window.pageYOffset>t);var s=$(window).scrollTop(),o=getCntViewHeight(),i=s/o,n=Math.round(i*100),a=n>100?100:n;$("#scrollpercent>span").html(a)}),e.on("click",function(){$("html,body").animate({scrollTop:0,screenLeft:0},800)})}function initScrollSpy(){var e=".post-toc",s=$(e),t=".active-current";s.on("activate.bs.scrollspy",function(){var t=$(e+" .active").last();n(),t.addClass("active-current")}).on("clear.bs.scrollspy",n),$("body").scrollspy({target:e});function n(){$(e+" "+t).removeClass(t.substring(1))}}function initAffix(){var e=$(".header-inner").height(),t=parseInt($(".footer").outerHeight(!0),10),n=e+10;$(".sidebar-inner").affix({offset:{top:n,bottom:t}})}function initTOCDimension(){$(window).on("resize",function(){e&&clearTimeout(e),e=setTimeout(function(){var e=document.body.clientHeight-100;updateTOCHeight(e)},0)}),updateTOCHeight(document.body.clientHeight-100);var e,t=getScrollbarWidth();$(".post-toc").css("width","calc(100% + "+t+"px)")}function updateTOCHeight(e){e=e||"auto",$(".post-toc").css("max-height",e)}$(function(){var e,t,n,s,o=$(".header-inner").height()+10;$("#sidebar").css({"margin-top":o}).show(),t=parseInt($("#sidebar").css("margin-top")),n=parseInt($(".sidebar-inner").css("height")),e=t+n,s=$(".content-wrap").height(),s<e&&$(".content-wrap").css("min-height",e),$(".site-nav-toggle").on("click",function(){var e=$(".site-nav"),o=$(".toggle"),t="site-nav-on",i="toggle-close",n=e.hasClass(t),a=n?"slideUp":"slideDown",s=n?"removeClass":"addClass";e.stop()[a]("normal",function(){e[s](t),o[s](i)})}),registerBackTop(),initAffix(),initTOCDimension(),$(".sidebar-nav-toc").click(function(){$(this).addClass("sidebar-nav-active"),$(this).next().removeClass("sidebar-nav-active"),$("."+$(this).next().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)}),$(".sidebar-nav-overview").click(function(){$(this).addClass("sidebar-nav-active"),$(this).prev().removeClass("sidebar-nav-active"),$("."+$(this).prev().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)})})</script><script src=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js></script>
+<script type=text/javascript>$(function(){$(".post-body").viewer()})</script><script type=text/javascript>const locale={placeholder:"欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^"};$(function(){detectIE()>0?$.getScript(document.location.protocol+"//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js",function(){new Waline({el:"#wcomments",visitor:!0,emoji:[],wordLimit:"200",uploadImage:!1,locale,requiredMeta:["nick","mail"],serverURL:"Your WalineSerURL",lang:"zh-cn"})}):$("#wcomments").html("抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。")})</script><script type=text/javascript src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+<script>(function(){var t,e=document.createElement("script"),n=window.location.protocol.split(":")[0];n==="https"?e.src="https://zz.bdstatic.com/linksubmit/push.js":e.src="http://push.zhanzhang.baidu.com/push.js",t=document.getElementsByTagName("script")[0],t.parentNode.insertBefore(e,t)})()</script></body></html>

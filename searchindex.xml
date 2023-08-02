@@ -1,4 +1,13 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Golang OOP、继承、组合、接口</title><url>https://codingroam.github.io/post/golang-oop%E7%BB%A7%E6%89%BF%E7%BB%84%E5%90%88%E6%8E%A5%E5%8F%A3/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> Golang概念初识，oop对比。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>go 究竟是路径还是包名</title><url>https://codingroam.github.io/post/go-%E7%A9%B6%E7%AB%9F%E6%98%AF%E8%B7%AF%E5%BE%84%E8%BF%98%E6%98%AF%E5%8C%85%E5%90%8D/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> go 究竟是路径还是包名
+结论：源文件头部的包导入语句import后面的部分就是一个路径，路径的最后一个分段也不一定是包名，最后一个分段可与包名相同也可不同。
+证明：
+在$GOPATH/src/github.com/bigwhite/effective-go-book/chapter3-demo1下面建立cmd/app2和pkg/pkg2这两个目录：
+$tree -LF 3 chapter3-demo1 chapter3-demo1 ├── cmd/ │ └── app2/ │ └── main.go └── pkg/ └── pkg2/ └── pkg2.go app2/main.go和pkg2/pkg2.go的源码如下：
+// pkg2/pkg2.go package mypkg2 import "fmt" func Func1() { fmt.Println("mypkg2.Func1 invoked") } // app2/main.go package main import ( "github.com/bigwhite/effective-go-book/chapter3-demo1/pkg/pkg2" ) func main() { mypkg2.Func1() } 编译运行app2：
+$go build github.com/bigwhite/effective-go-book/chapter3-demo1/cmd/app2 $./app2 mypkg2.Func1 invoked 我们看到app2的包导入语句中的路径末尾是pkg2，而在main函数中使用的包名却是mypkg2，这再次印证了包导入语句中的只是一个路径。不过Go语言有一个惯用法，那就是包导入路径的最后一段目录名最好与包名一致，就像pkg1那样：
+// pkg1/pkg1.go package pkg1 import "fmt" func Func1() { fmt.Println("mypkg2.Func1 invoked") } // app1/main.go package main import ( "github.com/bigwhite/effective-go-book/chapter3-demo1/pkg/pkg1" ) func main() { pkg1.Func1() } pkg1包导入路径的最后一段目录名为pkg1，而包名也是pkg1。也就是说上面代码中出现的两个pkg1虽然书写上是一模一样的，但代表的含义完全不同：包导入路径上的pkg1表示的是一个目录名，而main函数体中的pkg1则是包名。
+关于包导入，Go语言还有一个惯用法：当包名与包导入路径中的最后一个目录名不同时，最好用下面的语法将包名显式放入包导入语句。以上面的app2为例
+// app2/main.go package main import ( mypkg2 "github.com/bigwhite/effective-go-book/chapter3-demo1/pkg/pkg2" ) func main() { mypkg2.Func1() } 显然，这种惯用法让代码可读性更好。</content></entry><entry><title>Golang OOP、继承、组合、接口</title><url>https://codingroam.github.io/post/golang-oop%E7%BB%A7%E6%89%BF%E7%BB%84%E5%90%88%E6%8E%A5%E5%8F%A3/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> Golang概念初识，oop对比。
 传统 OOP 概念
 OOP（面向对象编程）是对真实世界的一种抽象思维方式，可以在更高的层次上对所涉及到的实体和实体之间的关系进行更好的管理。
 流传很广的 OOP 的三要素是：封装、继承、多态。

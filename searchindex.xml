@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>go 究竟是路径还是包名</title><url>https://codingroam.github.io/post/go-%E7%A9%B6%E7%AB%9F%E6%98%AF%E8%B7%AF%E5%BE%84%E8%BF%98%E6%98%AF%E5%8C%85%E5%90%8D/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> go 究竟是路径还是包名
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Go 究竟是路径还是包名</title><url>https://codingroam.github.io/post/go-%E7%A9%B6%E7%AB%9F%E6%98%AF%E8%B7%AF%E5%BE%84%E8%BF%98%E6%98%AF%E5%8C%85%E5%90%8D/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> Go 究竟是路径还是包名
 结论：源文件头部的包导入语句import后面的部分就是一个路径，路径的最后一个分段也不一定是包名，最后一个分段可与包名相同也可不同。
 证明：
 在$GOPATH/src/github.com/bigwhite/effective-go-book/chapter3-demo1下面建立cmd/app2和pkg/pkg2这两个目录：

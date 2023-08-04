@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Go 究竟是路径还是包名</title><url>https://codingroam.github.io/post/go-%E7%A9%B6%E7%AB%9F%E6%98%AF%E8%B7%AF%E5%BE%84%E8%BF%98%E6%98%AF%E5%8C%85%E5%90%8D/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> Go 究竟是路径还是包名
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Golang 语言规范(一)</title><url>https://codingroam.github.io/post/golang-%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E4%B8%80/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> 结构类型、接口类型与方法
+方法集合是类型与接口间隐式关系的纽带，只有当类型的方法集合是某接口类型的超集时，我们才说该类型实现了某接口
+类型T的方法集合是以T为receiver类型的所有方法的集合，类型*T的方法集合是以*T为receiver类型的所有方法的集合与类型T的方法集合的并集
+基于接口类型创建的defined类型与原类型具有相同的方法集合，而基于自定义非接口类型创建的defined类型的方法集合为空
+Go语言支持基于已有的类型创建新类型，比如：
+type MyInterface I type Mystruct T 已有的类型（比如上面的I、T）被称为underlying类型，而新类型被称为defined类型。新定义的defined类型与原underlying类型是完全不同的类型，那么它们的方法集合上又会有什么关系呢？我们通过下面的例子来看一下
+// chapter4/sources/method_set_11.go package main type T struct{} func (T) M1() {} func (*T) M2() {} type Interface interface { M1() M2() } type T1 T type Interface1 Interface func main() { var t T var pt *T var t1 T1 var pt1 *T1 DumpMethodSet(&amp;t) DumpMethodSet(&amp;t1) DumpMethodSet(&amp;pt) DumpMethodSet(&amp;pt1) DumpMethodSet((*Interface)(nil)) DumpMethodSet((*Interface1)(nil)) } 结果：
+$ go run method_set_11.go method_set_utils.go main.T's method set: - M1 main.T1's method set is empty! *main.T's method set: - M1 - M2 *main.T1's method set is empty! main.Interface's method set: - M1 - M2 main.Interface1's method set: - M1 - M2 从例子的输出结果来看，Go对于分别基于接口类型和自定义非接口类型创建的defined类型给出了不一致的结果：基于接口类型创建的defined类型与原接口类型的方法集合是一致的，如上面的Interface和Interface1；而基于自定义非接口类型创建的defined类型则并没有“继承”原类型的方法集合，新的defined类型的方法集合是空的。方法集合决定接口实现。基于自定义非接口类型的defined类型的方法集合为空，这决定了即便原类型实现了某些接口，基于其创建的defined类型也没有“继承”这一隐式关联。新defined类型要想实现那些接口，仍需重新实现接口的所有方法。
+类型别名与原类型拥有完全相同的方法集合。
+// chapter4/sources/method_set_12.go package main type T struct{} func (T) M1() {} func (*T) M2() {} type Interface interface { M1() M2() } //别名 type T1 = T //别名 type Interface1 = Interface</content></entry><entry><title>markdown折叠语法</title><url>https://codingroam.github.io/post/markdown%E6%8A%98%E5%8F%A0%E8%AF%AD%E6%B3%95/</url><categories><category>Markdown</category></categories><tags><tag>Markdown</tag><tag>Learning</tag></tags><content type="html"> markdown折叠语法
+利用html5的detail标签实现折叠
+&lt;details> &lt;summary>展开查看&lt;/summary> &lt;pre> &lt;blockcode>dsfdsfdsfds&lt;/blockcode> &lt;blockquote> Go语言支持基于已有的类型创建新类型，比如： &lt;blockcode>type MyInterface I type Mystruct T&lt;/blockcode> 已有的类型（比如上面的I、T）被称为underlying类型，而新类型被称为defined类型。新定义的defined类型与原underlying类型是完全不同的类型，那么它们的方法集合上又会有什么关系呢？我们通过下面的例子来看一下 &lt;/blockquote> &lt;/pre> &lt;/details></content></entry><entry><title>Go 究竟是路径还是包名</title><url>https://codingroam.github.io/post/go-%E7%A9%B6%E7%AB%9F%E6%98%AF%E8%B7%AF%E5%BE%84%E8%BF%98%E6%98%AF%E5%8C%85%E5%90%8D/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Learning</tag></tags><content type="html"> Go 究竟是路径还是包名
 结论：源文件头部的包导入语句import后面的部分就是一个路径，路径的最后一个分段也不一定是包名，最后一个分段可与包名相同也可不同。
 证明：
 在$GOPATH/src/github.com/bigwhite/effective-go-book/chapter3-demo1下面建立cmd/app2和pkg/pkg2这两个目录：

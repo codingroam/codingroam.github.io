@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>SpringCloud 集成Sentinel</title><url>https://codingroam.github.io/post/springcloud-%E9%9B%86%E6%88%90sentinel/</url><categories><category>SpringCloud</category><category>Sentinel</category></categories><tags><tag>SpringCloud</tag><tag>Sentinel</tag></tags><content type="html"> SpringCloud 集成Sentinel
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Golang 语言规范(一)——函数参数值传递问题</title><url>https://codingroam.github.io/post/golang%E5%87%BD%E6%95%B0%E5%80%BC%E4%BC%A0%E9%80%92%E9%97%AE%E9%A2%98/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Golang编程学习</tag></tags><content type="html"> 函数参数值传递问题
+结论：Go函数的参数采用的是值复制传递
+package main import "fmt" type T struct { name string } func (t T) M1() { t.name = "name1_u" } func (t *T) M2() { t.name = "name2_u" } func M3(t *T) { t.name = "name3_u" } func M4(t T) { t.name = "name4_u" } func main() { t := T{"name"} t.M1() fmt.Println(t.name) //name t.M2() fmt.Println(t.name) //name2_u M3(&amp;t) fmt.Println(t.name) //name3_u M4(t) fmt.Println(t.name) //name3_u } Go函数的参数采用的是值复制传递，也就是说M1函数体中的t是T类型实例的一个副本，这样在M1函数的实现中对参数t做任何修改都只会影响副本，而不会影响到原T类型实例
+当receiver参数的类型为*T时，选择指针类型的receiver选择以*T作为receiver参数类型时，T的M2方法等价为M2(t *T)。我们传递给M2函数的t是T类型实例的地址，这样M2函数体中对参数t做的任何修改都会反映到原T类型实例上
+M3()，M4()道理一样。
+如果要对类型实例进行修改，那么为receiver选择*T类型。如果没有对类型实例修改的需求，那么为receiver选择T类型或*T类型均可；但考虑到Go方法调用时，receiver是以值复制的形式传入方法中的，如果类型的size较大，以值形式传入会导致较大损耗，这时选择*T作为receiver类型会更好些</content></entry><entry><title>SpringCloud 集成Sentinel</title><url>https://codingroam.github.io/post/springcloud-%E9%9B%86%E6%88%90sentinel/</url><categories><category>SpringCloud</category><category>Sentinel</category></categories><tags><tag>SpringCloud</tag><tag>Sentinel</tag></tags><content type="html"> SpringCloud 集成Sentinel
 一、Seninel简介 二、Sentinel和Hystrix的区别 三、sentinel可视化界面安装 下载对应版本的sentinel的jar包，通过终端命令：
 java -jar jar包名 启动
 访问对应路径：控制台如下：
@@ -319,7 +324,7 @@ TCC模式定义中提到：如果confirm或者cancel方法执行失败，要一�
 CREATE TABLE IF NOT EXISTS `tcc_fence_log` ( `xid` VARCHAR(128) NOT NULL COMMENT 'global id', `branch_id` BIGINT NOT NULL COMMENT 'branch id', `action_name` VARCHAR(64) NOT NULL COMMENT 'action name', `status` TINYINT NOT NULL COMMENT 'status(tried:1;committed:2;rollbacked:3;suspended:4)', `gmt_create` DATETIME(3) NOT NULL COMMENT 'create time', `gmt_modified` DATETIME(3) NOT NULL COMMENT 'update time', PRIMARY KEY (`xid`, `branch_id`), KEY `idx_gmt_modified` (`gmt_modified`), KEY `idx_status` (`status`) ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4; 保证幂等 提交事务时首先会判断 tcc_fence_log 表中是否已经有记录，如果有记录，则判断事务执行状态并返回。这样如果判断到事务的状态已经是 STATUS_COMMITTED，就不会再次提交，保证了幂等。如果 tcc_fence_log 表中没有记录，则插入一条记录，供后面重试时判断。
 Rollback 的逻辑跟 commit 类似，逻辑在类 TCCFenceHandler 的 rollbackFence 方法。
 防止空回滚 Seata 的解决方案是在 try 阶段 往 tcc_fence_log 表插入一条记录，status 字段值是 STATUS_TRIED，在 Rollback 阶段判断记录是否存在，如果不存在，则不执行回滚操作。
-防止悬挂 Seata 解决这个问题的方法是执行 Rollback 方法时先判断 tcc_fence_log 是否存在当前 xid 的记录，如果没有则向 tcc_fence_log 表插入一条记录，状态是 STATUS_SUSPENDED，并且不再执行回滚操作。代码如下：</content></entry><entry><title>Golang 语言规范(一)</title><url>https://codingroam.github.io/post/golang-%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E4%B8%80/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Golang编程学习</tag></tags><content type="html"> 结构类型、接口类型与方法
+防止悬挂 Seata 解决这个问题的方法是执行 Rollback 方法时先判断 tcc_fence_log 是否存在当前 xid 的记录，如果没有则向 tcc_fence_log 表插入一条记录，状态是 STATUS_SUSPENDED，并且不再执行回滚操作。代码如下：</content></entry><entry><title>Golang 语言规范(一)——结构类型、接口类型与方法</title><url>https://codingroam.github.io/post/golang-%E8%AF%AD%E8%A8%80%E8%A7%84%E8%8C%83%E4%B8%80/</url><categories><category>Golang</category></categories><tags><tag>Golang</tag><tag>Golang编程学习</tag></tags><content type="html"> 结构类型、接口类型与方法
 方法集合是类型与接口间隐式关系的纽带，只有当类型的方法集合是某接口类型的超集时，我们才说该类型实现了某接口
 类型T的方法集合是以T为receiver类型的所有方法的集合，类型*T的方法集合是以*T为receiver类型的所有方法的集合与类型T的方法集合的并集
 基于接口类型创建的defined类型与原类型具有相同的方法集合，而基于自定义非接口类型创建的defined类型的方法集合为空

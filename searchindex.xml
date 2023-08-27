@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>15个必知的 Mysql 索引失效场景</title><url>https://codingroam.github.io/post/15%E4%B8%AA%E5%BF%85%E7%9F%A5%E7%9A%84-mysql-%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%E5%9C%BA%E6%99%AF/</url><categories><category>MySQL</category></categories><tags><tag>MySQL</tag><tag>MySQL索引</tag></tags><content type="html"> 函数参数值传递问题
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>MongoDB学习总结</title><url>https://codingroam.github.io/post/mongodb-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</url><categories><category>MongoDB</category></categories><tags><tag>MongoDB</tag></tags><content type="html"> MongoDB学习总结
+一、简介 MongoDB 是一款流行的开源文档型数据库，从它的命名来看，确实是有一定野心的。
+MongoDB 的原名一开始来自于 英文单词 &ldquo;Humongous&rdquo;, 中文含义是指 &ldquo;庞大&rdquo;，即命名者的意图是可以处理大规模的数据。
+但笔者更喜欢称呼它为 &ldquo;芒果&rdquo; 数据库，除了译音更加相近之外，原因还来自于这几年使用 MongoDB 的两层感觉：
+第一层感受是 &ldquo;爽&rdquo;，使用这个文档数据库的特点是几乎不受什么限制，一方面 Json 文档式的结构更容易理解，而无 Schema 约束也让 DDL 管理更加简单，一切都可以很快速的进行。 第二层感受是 &ldquo;酸爽&rdquo;，这点相信干运维或是支撑性工作的兄弟感受会比较深刻，MongoDB 由于入门体验 &ldquo;太过于友好&rdquo;，导致一些团队认为用好这个数据库是个很简单的事情，所以开发兄弟在存量系统上埋一些坑也是正常的事情。
+所谓交付一时爽，维护火葬场.. 当然了，这句话可能有些过。 但这里的潜台词是：与传统的 RDBMS 数据库一样，MongoDB 在使用上也需要认真的考量和看护，不然的化，会遇到更多的坑。 那么，尽管文档数据库在选型上会让一些团队望而却步，仍然不阻碍该数据库所获得的一些支持，比如 DB-Engine 上的排名：
+图 - DBEngine 排名
+在全部的排名中，MongoDB 长期排在第 5 位 (文档数据库排名第 1 位)，同时也是最受欢迎的 NoSQL 数据库。
+另外，MongoDB 的社区一直比较活跃，加上商业上的驱动 (MongoDB 于 2017 年在纳斯达克上市)，这些因素都推动了该开源数据库的发展。
+如果对于 MongoDB 的发展史感兴趣，可以参考下没有一个技术天生完美，MongoDB 十年发展全纪录
+这篇文章。
+MongoDB 数据库的一些特性：
+面向文档存储，基于 JSON/BSON 可表示灵活的数据结构 动态 DDL 能力，没有强 Schema 约束，支持快速迭代 高性能计算，提供基于内存的快速数据查询 容易扩展，利用数据分片可以支持海量数据存储 丰富的功能集，支持二级索引、强大的聚合管道功能，为开发者量身定做的功能，如数据自动老化、固定集合等等。 跨平台版本、支持多语言 SDK.. 假定你是初次了解 MongoDB，下面的内容将能帮助你对该数据库技术的全貌产生一定的了解。
+二、基本模型 数据结构对于一个软件来说是至关重要的，MongoDB 在概念模型上参考了 SQL 数据库，但并非完全相同。
+关于这点，也有人说，MongoDB 是 NoSQL 中最像 SQL 的数据库..
+如下表所示：
+database 数据库，与 SQL 的数据库 (database) 概念相同，一个数据库包含多个集合(表) collection 集合，相当于 SQL 中的表 (table)，一个集合可以存放多个文档(行)。 不同之处就在于集合的结构(schema) 是动态的，不需要预先声明一个严格的表结构。更重要的是，默认情况下 MongoDB 并不会对写入的数据做任何 schema 的校验。 document 文档，相当于 SQL 中的行 (row)，一个文档由多个字段(列) 组成，并采用 bson(json)格式表示。 field 字段，相当于 SQL 中的列 (column)，相比普通 column 的差别在于 field 的类型可以更加灵活，比如支持嵌套的文档、数组。
+此外，MongoDB 中字段的类型是固定的、区分大小写、并且文档中的字段也是有序的。 另外，SQL 还有一些其他的概念，对应关系如下：
+_id 主键，MongoDB 默认使用一个_id 字段来保证文档的唯一性。 reference 引用，勉强可以对应于 外键 (foreign key) 的概念，之所以是勉强是因为 reference 并没有实现任何外键的约束，而只是由客户端(driver) 自动进行关联查询、转换的一个特殊类型。 view 视图，MongoDB 3.4 开始支持视图，和 SQL 的视图没有什么差异，视图是基于表 / 集合之上进行动态查询的一层对象，可以是虚拟的，也可以是物理的 (物化视图)。 index 索引，与 SQL 的索引相同。 $lookup，这是一个聚合操作符，可以用于实现类似 SQL-join 连接的功能 transaction 事务，从 MongoDB 4.0 版本开始，提供了对于事务的支持 aggregation 聚合，MongoDB 提供了强大的聚合计算框架，group by 是其中的一类聚合操作。 BSON 数据类型 MongoDB 文档可以使用 Javascript 对象表示，从格式上讲，是基于 JSON 的。
+一个典型的文档如下：
+{ "_id": 1, "name" : { "first" : "John", "last" : "Backus" }, "contribs" : [ "Fortran", "ALGOL", "Backus-Naur Form", "FP" ], "awards" : [ { "award" : "W.W. McDowell Award", "year" : 1967, "by" : "IEEE Computer Society" }, { "award" : "Draper Prize", "year" : 1993, "by" : "National Academy of Engineering" } ] } 曾经，JSON 的出现及流行让 Web 2.0 的数据传输变得非常简单，所以使用 JSON 语法是非常容易让开发者接受的。
+但是 JSON 也有自己的短板，比如无法支持像日期这样的特定数据类型，因此 MongoDB 实际上使用的是一种扩展式的 JSON，叫 BSON(Binary JSON)。
+BSON 所支持的数据类型包括：
+图 - BSON 类型
+分布式 ID 在单机时代，大多数应用可以使用数据库自增式 ID 来作为主键。 传统的 RDBMS 也都支持这种方式，比如 mysql 可以通过声明 auto_increment 来实现自增的主键。 但一旦数据实现了分布式存储，这种方式就不再适用了，原因就在于无法保证多个节点上的主键不出现重复。
+为了实现分布式数据 ID 的唯一性保证，应用开发者提出了自己的方案，而大多数方案中都会将 ID 分段生成，如著名的 snowflake 算法中就同时使用了时间戳、机器号、进程号以及随机数来保证唯一性。
+MongoDB 采用 ObjectId 来表示主键的类型，数据库中每个文档都拥有一个_id 字段表示主键。
+_id 的生成规则如下：
+图 - ObjecteID
+其中包括：
+4-byte Unix 时间戳 3-byte 机器 ID 2-byte 进程 ID 3-byte 计数器 (初始化随机) 值得一提的是 _id 的生成实质上是由客户端 (Driver) 生成的，这样可以获得更好的随机性，同时降低服务端的负载。
+当然服务端也会检测写入的文档是否包含_id 字段，如果没有就生成一个。
+三、操作语法 除了文档模型本身，对于数据的操作命令也是基于 JSON/BSON 格式的语法。
+比如插入文档的操作：
+db.book.insert( { title: "My first blog post", published: new Date(), tags: [ "NoSQL", "MongoDB" ], type: "Work", author : "James", viewCount: 25, commentCount: 2 } ) 执行文档查找：
+db.book.find({author : "James"}) 更新文档的命令：
+db.book.update( {"_id" : ObjectId("5c61301c15338f68639e6802")}, {"$inc": {"viewCount": 3} } ) 删除文档的命令：
+db.book.remove({"_id": ObjectId("5c612b2f15338f68639e67d5")}) 在传统的 SQL 语法中，可以限定返回的字段，MongoDB 可以使用 Projection 来表示：
+db.book.find({"author": "James"}, {"_id": 1, "title": 1, "author": 1}) 实现简单的分页查询：
+db.book.find({}) .sort({"viewCount" : -1}) .skip(10).limit(5) 这种基于 BSON/JSON 的语法格式并不复杂，它的表达能力或许要比 SQL 更加强大。
+与 MongoDB 做法类似的还有 ElasticSearch，后者是搜索数据库的佼佼者。
+关于文档操作与 SQL 方式完整的对比，官方的文档描述得比较详细：
+https://docs.mongodb.com/manual/reference/sql-comparison/
+那么，一个有趣的问题是 MongoDB 能不能用 SQL 进行查询？
+当然是可以！
+但需要注意这些功能并不是 MongoDB 原生自带的，而需要借由第三方工具平台实现：
+客户端使用 SQL，可以使用 mongobooster、studio3t 这样的工具 服务端的话，可以看看 presto 之类的一些平台.. 四、索引 无疑，索引是一个数据库的关键能力，MongoDB 支持非常丰富的索引类型。
+利用这些索引，可以实现快速的数据查找，而索引的类型和特性则是针对不同的应用场景设计的。
+索引的技术实现依赖于底层的存储引擎，在当前的版本中 MongoDB 使用 wiredTiger 作为默认的引擎。
+在索引的实现上使用了 B + 树的结构，这与其他的传统数据库并没有什么不同。
+所以这是个好消息，大部分基于 SQL 数据库的一些索引调优技巧在 MongoDB 上仍然是可行的。
+图 - B + 树
+使用 ensureIndexes 可以为集合声明一个普通的索引：
+db.book.ensureIndex({author: 1}) author 后面的数字 1 代表升序，如果是降序则是 -1
+实现复合式 (compound) 的索引，如下：
+db.book.ensureIndex({type: 1, published: 1}) 只有对于复合式索引时，索引键的顺序才变得有意义
+如果索引的字段是数组类型，该索引就自动成为数组 (multikey) 索引：
+db.book.ensureIndex({tags: 1}) MongoDB 可以在复合索引上包含数组的字段，但最多只能包含一个
+索引特性 在声明索引时，还可以通过一些参数化选项来为索引赋予一定的特性，包括：
+unique=true，表示一个唯一性索引 expireAfterSeconds=3600，表示这是一个 TTL 索引，并且数据将在 1 小时后老化 sparse=true，表示稀疏的索引，仅索引非空 (non-null) 字段的文档 partialFilterExpression: {rating: { $gt: 5}，条件式索引，即满足计算条件的文档才进行索引 索引分类 除了普通索引之外，MongoDB 支持的类型还包括：
+哈希 (HASH) 索引，哈希是另一种快速检索的数据结构，MongoDB 的 HASH 类型分片键会使用哈希索引。 地理空间索引，用于支持快速的地理空间查询，如寻找附近 1 公里的商家。 文本索引，用于支持快速的全文检索 模糊索引 (Wildcard Index)，一种基于匹配规则的灵活式索引，在 4.2 版本开始引入。 索引评估、调优 使用 explain() 命令可以用于查询计划分析，进一步评估索引的效果。
+如下：
+> db.test.explain().find( { a : 5 } ) { "queryPlanner" : { ... "winningPlan" : { "stage" : "FETCH", "inputStage" : { "stage" : "IXSCAN", "keyPattern" : { "a" : 5 }, "indexName" : "a_1", "isMultiKey" : false, "direction" : "forward", "indexBounds" : {"a" : ["[5.0, 5.0]"]} } }}, ... } 从结果 winningPlan 中可以看出执行计划是否高效，比如：
+未能命中索引的结果，会显示 COLLSCAN 命中索引的结果，使用 IXSCAN 出现了内存排序，显示为 SORT 关于 explain 的结果说明，可以进一步参考文档：
+https://docs.mongodb.com/manual/reference/explain-results/index.html
+五、集群 在大数据领域常常提到的 4V 特征中，Volume(数据量大) 是首当其冲被提及的。
+由于单机垂直扩展能力的局限，水平扩展的方式则显得更加的靠谱。 MongoDB 自带了这种能力，可以将数据存储到多个机器上以提供更大的容量和负载能力。
+此外，同时为了保证数据的高可用，MongoDB 采用副本集的方式来实现数据复制。
+一个典型的 MongoDB 集群架构会同时采用分片 + 副本集的方式，如下图：
+图 - MongoDB 分片集群 (Shard Cluster)
+架构说明
+数据分片（Shards）
+分片用于存储真正的集群数据，可以是一个单独的 Mongod 实例，也可以是一个副本集。 生产环境下 Shard 一般是一个 Replica Set，以防止该数据片的单点故障。
+对于分片集合 (sharded collection) 来说，每个分片上都存储了集合的一部分数据(按照分片键切分)，如果集合没有分片，那么该集合的数据都存储在数据库的 Primary Shard 中。 配置服务器（Config Servers）
+保存集群的元数据（metadata），包含各个 Shard 的路由规则，配置服务器由一个副本集 (ReplicaSet) 组成。 查询路由（Query Routers）
+Mongos 是 Sharded Cluster 的访问入口，其本身并不持久化数据 。Mongos 启动后，会从 Config Server 加载元数据，开始提供服务，并将用户的请求正确路由到对应的 Shard。
+Sharding 集群可以部署多个 Mongos 以分担客户端请求的压力。 分片机制 下面的几个细节，对于理解和应用 MongoDB 的分片机制比较重要，所以有必要提及一下：
+1. 数据如何切分
+首先，基于分片切分后的数据块称为 chunk，一个分片后的集合会包含多个 chunk，每个 chunk 位于哪个分片 (Shard) 则记录在 Config Server(配置服务器) 上。
+Mongos 在操作分片集合时，会自动根据分片键找到对应的 chunk，并向该 chunk 所在的分片发起操作请求。
+数据是根据分片策略来进行切分的，而分片策略则由 分片键 (ShardKey)+ 分片算法(ShardStrategy) 组成。
+MongoDB 支持两种分片算法：
+范围分片 如上图所示，假设集合根据 x 字段来分片，x 的取值范围为 [minKey, maxKey]（x 为整型，这里的 minKey、maxKey 为整型的最小值和最大值），将整个取值范围划分为多个 chunk，每个 chunk（默认配置为 64MB）包含其中一小段的数据：
+如 Chunk1 包含 x 的取值在 [minKey, -75) 的所有文档，而 Chunk2 包含 x 取值在 [-75, 25) 之间的所有文档&hellip;
+范围分片能很好的满足范围查询的需求，比如想查询 x 的值在 [-30, 10] 之间的所有文档，这时 Mongos 直接能将请求路由到 Chunk2，就能查询出所有符合条件的文档。 范围分片的缺点在于，如果 ShardKey 有明显递增（或者递减）趋势，则新插入的文档多会分布到同一个 chunk，无法扩展写的能力，比如使用_id 作为 ShardKey，而 MongoDB 自动生成的 id 高位是时间戳，是持续递增的。
+哈希分片 Hash 分片是根据用户的 ShardKey 先计算出 hash 值（64bit 整型），再根据 hash 值按照范围分片的策略将文档分布到不同的 chunk。
+由于 hash 值的计算是随机的，因此 Hash 分片具有很好的离散性，可以将数据随机分发到不同的 chunk 上。 Hash 分片可以充分的扩展写能力，弥补了范围分片的不足，但不能高效的服务范围查询，所有的范围查询要查询多个 chunk 才能找出满足条件的文档。
+2. 如何保证均衡
+如前面的说明中，数据是分布在不同的 chunk 上的，而 chunk 则会分配到不同的分片上，那么如何保证分片上的 数据 (chunk) 是均衡的呢？
+在真实的场景中，会存在下面两种情况：
+A. 全预分配，chunk 的数量和 shard 都是预先定义好的，比如 10 个 shard，存储 1000 个 chunk，那么每个 shard 分别拥有 100 个 chunk。
+此时集群已经是均衡的状态 (这里假定) B. 非预分配，这种情况则比较复杂，一般当一个 chunk 太大时会产生分裂 (split)，不断分裂的结果会导致不均衡；或者动态扩容增加分片时，也会出现不均衡的状态。 这种不均衡的状态由集群均衡器进行检测，一旦发现了不均衡则执行 chunk 数据的搬迁达到均衡。 MongoDB 的数据均衡器运行于 Primary Config Server(配置服务器的主节点) 上，而该节点也同时会控制 Chunk 数据的搬迁流程。
+图 - 数据自动均衡
+对于数据的不均衡是根据两个分片上的 Chunk 个数差异来判定的，阈值对应表如下：
+MongoDB 的数据迁移对集群性能存在一定影响，这点无法避免，目前的规避手段只能是将均衡窗口
+对齐到业务闲时段。
+3. 应用高可用
+应用节点可以通过同时连接多个 Mongos 来实现高可用，如下：
+图 - mongos 高可用
+当然，连接高可用的功能是由 Driver 实现的。
+副本集 副本集又是另一个话题，实质上除了前面架构图所体现的，副本集可以作为 Shard Cluster 中的一个 Shard(片) 之外，对于规模较小的业务来说，也可以使用一个单副本集的方式进行部署。
+MongoDB 的副本集采取了一主多从的结构，即一个 Primary Node + N* Secondary Node 的方式，数据从主节点写入，并复制到多个备节点。
+典型的架构如下：
+利用副本集，我们可以实现：：
+数据库高可用，主节点宕机后，由备节点自动选举成为新的主节点； 读写分离，读请求可以分流到备节点，减轻主节点的单点压力。 请注意，读写分离只能增加集群 &ldquo;读&rdquo; 的能力，对于写负载非常高的情况却无能为力。
+对此需求，使用分片集群并增加分片，或者提升数据库节点的磁盘 IO、CPU 能力可以取得一定效果。
+选举
+MongoDB 副本集通过 Raft 算法来完成主节点的选举，这个环节在初始化的时候会自动完成，如下面的命令：
+config = { _id : "my_replica_set", members : [ {_id : 0, host : "rs1.example.net:27017"}, {_id : 1, host : "rs2.example.net:27017"}, {_id : 2, host : "rs3.example.net:27017"}, ] } rs.initiate(config) initiate 命令用于实现副本集的初始化，在选举完成后，通过 isMaster() 命令就可以看到选举的结果：
+> db.isMaster() { "hosts" : [ "192.168.100.1:27030", "192.168.100.2:27030", "192.168.100.3:27030" ], "setName" : "myReplSet", "setVersion" : 1, "ismaster" : true, "secondary" : false, "primary" : "192.168.100.1:27030", "me" : "192.168.100.1:27030", "electionId" : ObjectId("7fffffff0000000000000001"), "ok" : 1 } 受 Raft 算法的影响，主节点的选举需要满足 &ldquo;大多数&rdquo; 原则，可以参考下表：
+因此，为了避免出现平票的情况，副本集的部署一般采用是基数个节点，比如 3 个，正所谓三人行必有我师..
+心跳
+在高可用的实现机制中，心跳 (heartbeat) 是非常关键的，判断一个节点是否宕机就取决于这个节点的心跳是否还是正常的。
+副本集中的每个节点上都会定时向其他节点发送心跳，以此来感知其他节点的变化，比如是否失效、或者角色发生了变化。
+利用心跳，MongoDB 副本集实现了自动故障转移的功能，如下图：
+默认情况下，节点会每 2 秒向其他节点发出心跳，这其中包括了主节点。 如果备节点在 10 秒内没有收到主节点的响应就会主动发起选举。
+此时新一轮选举开始，新的主节点会产生并接管原来主节点的业务。 整个过程对于上层是透明的，应用并不需要感知，因为 Mongos 会自动发现这些变化。
+如果应用仅仅使用了单个副本集，那么就会由 Driver 层来自动完成处理。
+复制
+主节点和备节点的数据是通过日志 (oplog) 复制来实现的，这很类似于 mysql 的 binlog。
+在每一个副本集的节点中，都会存在一个名为 local.oplog.rs 的特殊集合。 当 Primary 上的写操作完成后，会向该集合中写入一条 oplog，
+而 Secondary 则持续从 Primary 拉取新的 oplog 并在本地进行回放以达到同步的目的。
+下面，看看一条 oplog 的具体形式：
+{ "ts" : Timestamp(1446011584, 2), "h" : NumberLong("1687359108795812092"), "v" : 2, "op" : "i", "ns" : "test.nosql", "o" : { "_id" : ObjectId("563062c0b085733f34ab4129"), "name" : "mongodb", "score" : "100" } } 其中的一些关键字段有：
+ts 操作的 optime，该字段不仅仅包含了操作的时间戳 (timestamp)，还包含一个自增的计数器值。 h 操作的全局唯一表示 v oplog 的版本信息 op 操作类型，比如 i=insert,u=update.. ns 操作集合，形式为 database.collection o 指具体的操作内容，对于一个 insert 操作，则包含了整个文档的内容 MongoDB 对于 oplog 的设计是比较仔细的，比如：
+oplog 必须保证有序，通过 optime 来保证。 oplog 必须包含能够进行数据回放的完整信息。 oplog 必须是幂等的，即多次回放同一条日志产生的结果相同。 oplog 集合是固定大小的，为了避免对空间占用太大，旧的 oplog 记录会被滚动式的清理。 有兴趣的读者，可以参考官方文档：
+https://docs.mongodb.com/manual/core/replica-set-oplog/index.html
+六、事务与一致性 一直以来，&ldquo;不支持事务&rdquo; 是 MongoDB 一直被诟病的问题，当然也可以说这是 NoSQL 数据库的一种权衡 (放弃事务，追求高性能、高可扩展)
+但实质上，MongoDB 很早就有事务的概念，但是这个事务只能是针对单文档的，即单个文档的操作是有原子性保证的。
+在 4.0 版本之后，MongoDB 开始支持多文档的事务：
+4.0 版本支持副本集范围的多文档事务。 4.2 版本支持跨分片的多文档事务 (基于两阶段提交)。 在事务的隔离性上，MongoDB 支持快照 (snapshot) 的隔离级别，可以避免脏读、不可重复读和幻读。
+尽管有了真正意义上的事务功能，但多文档事务对于性能有一定的影响，应用应该在充分评估后再做选用。
+一致性 一致性是一个复杂的话题，而一致性更多从应用角度上提出的，比如：
+向系统写入一条数据，应该能够马上读到写入的这个数据。 在分布式架构的 CAP 理论以及许多延续的观点中提到，由于网络分区的存在，要求系统在一致性和可用性之间做出选择，而不能两者兼得。
+图 -CAP 理论
+在 MongoDB 中，这个选择是可以由开发者来定的。 MongoDB 允许客户端为其操作设定一定的级别或者偏好，包括：
+read preference
+读取偏好，可指定读主节点、读备节点，或者是优先读主、优先读备、取最近的节点 write concern
+写关注，指定写入结果达到什么状态时才返回，可以为无应答 (none)、应答 (ack)，或者是大多数节点完成了数据复制等等 read concern
+读关注，指定读取的数据版本处于怎样的状态，可以为读本地、读大多数节点写入，或者是线性读 (linearizable) 等等。 使用不同的设定将会产生对于 C(一致性)、A(可用性) 的不同的抉择，比如：
+将读偏好设置为 primary，此时读写都在主节点上。 这保证了数据的一致性，但一旦主节点宕机会导致失败 (可用性降低) 将读偏好设置为 secondaryPrefered，此时写主，优先读备，可用性提高了，但数据存在延迟 (出现不一致) 将读写关注都设置为 majority(大多数)，一致性提升了，但可用性也同时降低了 (节点失效会导致大多数写失败) 关于这种权衡的讨论会一直存在，而 MongoDB 除了提供多样化的选择之外，其主要是通过复制、基于心跳的自动 failover 等机制来降低系统发生故障时产生的影响，从而提升整体的可用性。
+小结 本文主要揭示了 MongoDB 多个方面的细节，同时在使用体验上也借助 SQL 的概念做了一些对比。
+从笔者的角度看，MongoDB 的发展性是很强的，其灵活快速的开发模式、天生自带分布式等能力弥补了传统型 SQL 数据库的缺陷。当然，目前的 NewSQL 本质上也貌似在以 &ldquo;模仿的方式&rdquo; 弥补这些缺陷。</content></entry><entry><title>15个必知的 Mysql 索引失效场景</title><url>https://codingroam.github.io/post/15%E4%B8%AA%E5%BF%85%E7%9F%A5%E7%9A%84-mysql-%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88%E5%9C%BA%E6%99%AF/</url><categories><category>MySQL</category></categories><tags><tag>MySQL</tag><tag>MySQL索引</tag></tags><content type="html"> 函数参数值传递问题
 数据库及索引准备 创建表结构 为了逐项验证索引的使用情况，我们先准备一张表 t_user：
 CREATE TABLE `t_user` ( `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID', `id_no` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '身份编号', `username` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户名', `age` int(11) DEFAULT NULL COMMENT '年龄', `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间', PRIMARY KEY (`id`), KEY `union_idx` (`id_no`,`username`,`age`), KEY `create_time_idx` (`create_time`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin; 在上述表结构中有三个索引：
 id：为数据库主键； union_idx：为 id_no、username、age 构成的联合索引； create_time_idx：是由 create_time 构成的普通索引； 初始化数据 初始化数据分两部分：基础数据和批量导入数据。

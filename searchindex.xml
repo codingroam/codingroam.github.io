@@ -1,4 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>MongoDB学习总结</title><url>https://codingroam.github.io/post/mongodb-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</url><categories><category>MongoDB</category></categories><tags><tag>MongoDB</tag></tags><content type="html"> MongoDB学习总结
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>场景设计(一)</title><url>https://codingroam.github.io/post/%E5%9C%BA%E6%99%AF%E8%AE%BE%E8%AE%A1%E4%B8%80/</url><categories><category>Redis</category><category>场景设计</category></categories><tags><tag>Redis</tag><tag>场景设计</tag></tags><content type="html"> 场景设计思路
+1.如何在40亿个整数中寻找一个数字？ java一个整形占四个字节，4*40=160亿个字节约等于16GB,如果按照传统思路将40亿个整数加载到内存就需要16G，所以节约内存要使用Bitmap。
+bitmap每位占用1bit，值是0或者1，2的32次方约等于42亿，所以可以用一个2的32次方的bitmap来表示0~42亿个数，0表示不存在该数，1表示存在。找寻数字是否存在40亿个数中只需找到下标位置，看看bitmap存的是0还是1即可。
+2的32次方bit约等于500兆内存。bitmap用一个bit位表示一个整数，比四个字节表示一个整数缩小了32倍，节省32倍的内存。
+2.10亿级用户系统中如何统计用户在线数? 使用redis的bitmap
+key:user_login_status
+offset:uid
+用户10023登录： setbit user_login_status 10023 1
+用户10023退出： setbit user_login_status 10023 0
+判断用户是否在线： getbit user_login_status 10023
+用户在线数：bitcount user_login_status
+3.排行榜怎么设计实现 使用redis的sorted set有序集合
+zset基本命令
+ZADD key score1 member1 [score2 member2]
+向有序集合添加一个或多个成员，或者更新已存在成员的分数
+zadd topic2023 tid001 0 tid002 3
+增加2023话题成员，话题001赋初值0 ，话题002赋初值3
+ZINCRBY key increment member
+有序集合中对指定成员的分数加上增量 increment
+zincrby topic2023 2 tid001
+tid001话题点击量加2
+ZREVRANGE key start stop [WITHSCORES]
+返回有序集中指定区间内的成员，通过索引，分数从高到低
+zrevrange topic2023 0 10 withscores
+获取2023年点击最高（分数最高）的十个话题</content></entry><entry><title>MongoDB学习总结</title><url>https://codingroam.github.io/post/mongodb-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</url><categories><category>MongoDB</category></categories><tags><tag>MongoDB</tag></tags><content type="html"> MongoDB学习总结
 一、简介 MongoDB 是一款流行的开源文档型数据库，从它的命名来看，确实是有一定野心的。
 MongoDB 的原名一开始来自于 英文单词 &ldquo;Humongous&rdquo;, 中文含义是指 &ldquo;庞大&rdquo;，即命名者的意图是可以处理大规模的数据。
 但笔者更喜欢称呼它为 &ldquo;芒果&rdquo; 数据库，除了译音更加相近之外，原因还来自于这几年使用 MongoDB 的两层感觉：

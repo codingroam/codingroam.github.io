@@ -1,4 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>场景设计(一)</title><url>https://codingroam.github.io/post/%E5%9C%BA%E6%99%AF%E8%AE%BE%E8%AE%A1%E4%B8%80/</url><categories><category>Redis</category><category>场景设计</category></categories><tags><tag>Redis</tag><tag>场景设计</tag></tags><content type="html"> 场景设计思路
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>sql删除重复数据</title><url>https://codingroam.github.io/post/sql%E5%88%A0%E9%99%A4%E9%87%8D%E5%A4%8D%E6%95%B0%E6%8D%AE/</url><categories><category>Sql</category></categories><tags><tag>Sql</tag></tags><content type="html"> sql删除重复数据
+业务中经常出现错误数据，比如某些逻辑不严谨或者跨模块跨系统间的错误导致数据被重复插入，此时就需要脚本删除重复的数据，只留下最开始插入的那条。脚本如下：
+oracle版：
+--备份数据 create table dept_bak as select * from dept where dname in ('部门名称'); --删除重复数据 DELETE FROM dept WHERE dname IN ( SELECT dname FROM dept GROUP BY dname HAVING count( dname ) > 1 ) -- 过滤出重复的dname AND deptno NOT IN ( SELECT min( deptno ) AS deptno FROM dept GROUP BY dname HAVING count( dname ) > 1 ) -- 过滤出不在需要保留的id之外的所有id 如果是oracle数据库，上面的SQL语句可以正常执行，可是换成mysql数据库，SQL语句执行会报错：
+1093 - You can&rsquo;t specify target table &lsquo;dept&rsquo; for update in FROM clause 1 含义:不能在同一表中查询的数据作为同一表的更新数据，所以mysql需要把条件结果集再包一层，并且给条件结果集取别名
+mysql版
+--备份数据 CREATE TABLE dept_bak SELECT * FROM dept WHERE dname = '部门名称'; --备份数据包含主键索引等 CREATE TABLE &lt;新表名> LIKE &lt;旧表名>; INSERT INTO &lt;新表名> SELECT * FROM &lt;旧表名>; --删除重复数据 DELETE FROM dept WHERE dname IN ( SELECT * FROM ( SELECT dname FROM dept GROUP BY dname HAVING count( dname ) > 1 ) a ) AND deptno NOT IN ( SELECT * FROM ( SELECT min( deptno ) AS deptno FROM dept GROUP BY dname HAVING count( dname ) > 1 ) b )</content></entry><entry><title>场景设计(一)</title><url>https://codingroam.github.io/post/%E5%9C%BA%E6%99%AF%E8%AE%BE%E8%AE%A1%E4%B8%80/</url><categories><category>Redis</category><category>场景设计</category></categories><tags><tag>Redis</tag><tag>场景设计</tag></tags><content type="html"> 场景设计思路
 1.如何在40亿个整数中寻找一个数字？ java一个整形占四个字节，4*40=160亿个字节约等于16GB,如果按照传统思路将40亿个整数加载到内存就需要16G，所以节约内存要使用Bitmap。
 bitmap每位占用1bit，值是0或者1，2的32次方约等于42亿，所以可以用一个2的32次方的bitmap来表示0~42亿个数，0表示不存在该数，1表示存在。找寻数字是否存在40亿个数中只需找到下标位置，看看bitmap存的是0还是1即可。
 2的32次方bit约等于500兆内存。bitmap用一个bit位表示一个整数，比四个字节表示一个整数缩小了32倍，节省32倍的内存。

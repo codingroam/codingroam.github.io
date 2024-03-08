@@ -1,0 +1,171 @@
+<!doctype html><html lang=zh-cn dir=zh><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=content-security-policy content="upgrade-insecure-requests"><title>Spring线程池传递线程变量 - 想学啊你</title><meta name=keywords content="博客"><meta name=author content="roam"><meta property="og:title" content="Spring线程池传递线程变量"><meta property="og:site_name" content="想学啊你"><meta property="og:image" content="https://codingroam.github.io/img/author.jpg"><meta name=title content="Spring线程池传递线程变量 - 想学啊你"><meta name=description content="轻轻的你来了"><link rel="shortcut icon" href=https://codingroam.github.io/img/favicon.ico><link rel=apple-touch-icon href=https://codingroam.github.io/img/apple-touch-icon.png><link rel=apple-touch-icon-precomposed href=https://codingroam.github.io/img/apple-touch-icon.png><link href=//unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css rel=stylesheet type=text/css><link href=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.css rel=stylesheet><link href=https://codingroam.github.io/css/main.css rel=stylesheet type=text/css><link href=https://codingroam.github.io/css/syntax.css rel=stylesheet type=text/css></head><body itemscope itemtype=http://schema.org/WebPage lang=zh-Hans><div class="container one-collumn sidebar-position-left page-home"><div class=headband></div><header id=header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle role=button style=opacity:1;top:0><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><div class=custom-logo-site-title><a href=/ class=brand rel=start><span class=logo-line-before><i></i></span>
+<span class=site-title>想学啊你</span>
+<span class=logo-line-after><i></i></span></a></div><p class=site-subtitle>三四楼那么高了</p></div><div class=site-nav-right><div class="toggle popup-trigger" style=opacity:1;top:0><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul id=menu class=menu><li class=menu-item><a href=/ rel=section><i class="menu-item-icon fa fa-fw fa-home"></i><br>首页</a></li><li class="menu-item menu-item-active"><a href=/post rel=section><i class="menu-item-icon fa fa-fw fa-archive"></i><br>归档</a></li><li class=menu-item><a href=/tags rel=section><i class="menu-item-icon fa fa-fw fa-tags"></i><br>标签</a></li><li class=menu-item><a href=/categories rel=section><i class="menu-item-icon fa fa-fw fa-book"></i><br>分类</a></li><li class="menu-item menu-item-search"><a href=javascript:; class=popup-trigger><i class="menu-item-icon fa fa-search fa-fw"></i><br>搜索</a></li></ul><div class=site-search><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class=search-icon><i class="fa fa-search"></i></span>
+<span class=popup-btn-close><i class="fa fa-times-circle"></i></span><div class=local-search-input-wrapper><input autocomplete=off placeholder=搜索关键字... spellcheck=false type=text id=local-search-input autocapitalize=none autocorrect=off></div></div><div id=local-search-result></div></div></div></nav></div></header><main id=main class=main><div class=main-inner><div class=content-wrap><div id=content class=content><section id=posts class=posts-expand><article class="post post-type-normal" itemscope itemtype=http://schema.org/Article><header class=post-header><h1 class=post-title itemprop="name headline"><a class=post-title-link href=https://codingroam.github.io/post/spring%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BC%A0%E9%80%92%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F/ itemprop=url>Spring线程池传递线程变量</a></h1><div class=post-meta><span class=post-pushdate><i class="fa fa-calendar-o fa-fw"></i>
+<span class=post-meta-item-text>时间：</span>
+<time itemprop=dateCreated datetime=2016-03-22T13:04:35+08:00 content="2024-03-08">2024-03-08</time></span>
+<span class=post-category><i class="fa fa-folder-o fa-fw"></i>
+<span class=post-meta-item-text>分类：</span>
+<span itemprop=about itemscope itemtype=https://schema.org/Thing><a class=post-category-a href=/categories/spring itemprop=url rel=index><span itemprop=name>Spring</span></a>
+&nbsp;</span></span>
+<span class=post-wordcount><i class="fa fa-file-word-o fa-fw"></i>
+<span class=post-meta-item-text>字数：</span>
+<span class=leancloud-world-count>1814 字</span></span>
+<span class=post-readtime><i class="fa fa-eye fa-fw"></i>
+<span class=post-meta-item-text>阅读：</span>
+<span class=leancloud-view-count>4分钟</span></span>
+<span id=/post/spring%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BC%A0%E9%80%92%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F/ class="leancloud_visitors post-visitor" data-flag-title=Spring线程池传递线程变量><i class="fa fa-binoculars fa-fw"></i>
+<span class=post-meta-item-text>阅读次数：</span>
+<span class=leancloud-visitors-count></span></span></div></header><div class=post-body itemprop=articleBody><p>Spring线程池传递线程变量</p><h1 id=spring线程池传递线程变量>Spring线程池传递线程变量</h1><p>Spring线程池传递线程变量</p><p>在 Spring 框架中，<code>TaskDecorator</code> 是一个接口，它可以用来自定义由 <code>ThreadPoolTaskExecutor</code> 或其他任务执行器管理的任务的装饰行为。这通常用于在执行任务之前和之后添加某些上下文相关的行为，比如设置线程上下文或者清理资源。</p><p>例如，在执行<a href="https://so.csdn.net/so/search?q=%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C&amp;spm=1001.2101.3001.7020" target=_blank rel=noopener>异步操作</a>
+时，你可能需要将主线程的一些上下文信息（比如用户身份验证令牌或请求上下文信息）传递给执行异步操作的线程。<code>TaskDecorator</code> 就可以在这种场景下发挥作用。</p><p>以下是如何使用 <code>TaskDecorator</code> 的一个简单示例：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>import org.springframework.core.task.TaskDecorator;
+</span></span><span style=display:flex><span>import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>// ...
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+</span></span><span style=display:flex><span>taskExecutor.setTaskDecorator(new ContextCopyingDecorator());
+</span></span><span style=display:flex><span>taskExecutor.initialize();
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>// ...
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>public class ContextCopyingDecorator implements TaskDecorator {
+</span></span><span style=display:flex><span>    @Override
+</span></span><span style=display:flex><span>    public Runnable decorate(Runnable runnable) {
+</span></span><span style=display:flex><span>        // 捕获当前线程的上下文
+</span></span><span style=display:flex><span>        Context context = ContextHolder.getContext();
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>        return () -&gt; {
+</span></span><span style=display:flex><span>            try {
+</span></span><span style=display:flex><span>                // 在任务执行之前，将上下文设置到执行任务的线程中
+</span></span><span style=display:flex><span>                ContextHolder.setContext(context);
+</span></span><span style=display:flex><span>                runnable.run();
+</span></span><span style=display:flex><span>            } finally {
+</span></span><span style=display:flex><span>                // 清理操作，避免线程池中的线程复用时出现上下文信息泄漏
+</span></span><span style=display:flex><span>                ContextHolder.clearContext();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        };
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>// ...
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>public class ContextHolder {
+</span></span><span style=display:flex><span>    private static final ThreadLocal&lt;Context&gt; userThreadLocal = new ThreadLocal&lt;&gt;();
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    public static void setContext(Context context) {
+</span></span><span style=display:flex><span>        userThreadLocal.set(context);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    public static Context getContext() {
+</span></span><span style=display:flex><span>        return userThreadLocal.get();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    public static void clearContext() {
+</span></span><span style=display:flex><span>        userThreadLocal.remove();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>// Context 类是一个假设的类，用来表示线程上下文信息
+</span></span><span style=display:flex><span>public class Context {
+</span></span><span style=display:flex><span>    // 上下文信息，比如用户ID等
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>在这个示例中，我们定义了一个自定义的 <code>TaskDecorator</code> 实现 <code>ContextCopyingDecorator</code>，它会捕获提交任务时当前线程的上下文，并在任务实际执行前将这个上下文设置到执行任务的线程中。这样就实现了上下文的传递。</p><p>需要注意的是，<code>TaskDecorator</code> 只是一个自定义装饰行为的接口，具体的上下文传递逻辑需要根据你的实际应用场景来设计。以上代码只是一个示例，真实的应用可能需要处理的上下文信息会更复杂。</p><h4 id=context-context--contextholdergetcontext-这个-context-里会包含线程里所有的信息吗><strong>Context context = ContextHolder.getContext(); 这个 context 里会包含线程里所有的信息吗</strong></h4><p>不会的。在 Java 中，<code>Context</code> 通常是一个自定义的类，它不会自动地包含线程中的所有信息。<code>Context</code> 类的内容完全取决于你自己定义了哪些信息需要存储和传递。通常，这个上下文对象只包含了为了完成某个特定任务而需要的信息。</p><p>举例来说，如果你正在开发一个 Web 应用程序，你可能会创建一个包含用户凭证、偏好设置或当前请求信息的<code>Context</code>对象。在这个情况下，<code>Context</code> 类可能看起来像这样：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>public class Context {
+</span></span><span style=display:flex><span>    private UserCredentials credentials;
+</span></span><span style=display:flex><span>    private UserPreferences preferences;
+</span></span><span style=display:flex><span>    private RequestData requestData;
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>    // 构造方法、getter和setter方法
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>当你在主线程中调用<code>ContextHolder.getContext()</code>时，你会得到一个之前已经设置到<code>ThreadLocal</code>中的<code>Context</code>实例，该实例应该在之前的某个时刻被初始化并存储了必要的信息。这个过程通常在请求开始时完成，比如在一个过滤器（Filter）或拦截器（Interceptor）中。</p><p><code>ThreadLocal</code>被用来存储和检索与当前线程关联的<code>Context</code>对象。<code>ThreadLocal</code>确保每个线程都有其自己的<code>Context</code>副本，从而避免了线程之间的<code>Context</code>信息共享。</p><p><strong>需要注意的是，<code>ThreadLocal</code>的使用需要小心，特别是在使用线程池的时候，因为线程会被重用。这意味着线程上下文需要在任务结束时清理，否则可能会导致内存泄漏或者上下文信息不正确地被后续的任务重用。这就是为什么在上一个例子中，在<code>decorate</code>方法的<code>finally</code>块中调用了<code>ContextHolder.clearContext()</code>。</strong></p><p><strong>ContextCopyingDecorator 这个类里的 decorate 是在什么时候执行？</strong></p><p>在 Spring 框架中，<code>TaskDecorator</code> 的 <code>decorate</code> 方法是在任务（即 <code>Runnable</code> 或 <code>Callable</code> 对象）被提交给线程池之前执行的。具体来说，当你使用 <code>ThreadPoolTaskExecutor</code> 或其他实现了 <code>TaskExecutor</code> 接口的组件来执行一个异步任务时，如果你设置了一个 <code>TaskDecorator</code>，那么 <code>decorate</code> 方法就会被调用。</p><p>这个过程通常发生在下面这些情况中：</p><ol><li>当你显式地提交一个任务到 <code>ThreadPoolTaskExecutor</code> 的时候。这通常是通过调用 <code>execute(Runnable task)</code> 或 <code>submit(Callable&lt;T> task)</code> 方法来完成的。</li><li>当你使用 <code>@Async</code> 注解在方法上，并且你的 Spring 配置中设置了使用 <code>ThreadPoolTaskExecutor</code> 作为异步方法的执行器时。</li></ol><p><code>decorate</code> 方法的目的是让你可以在实际的任务执行之前，对任务进行一些额外的处理。这通常涉及到将当前线程的某些上下文（比如安全凭证、事务上下文等）复制到将要执行任务的线程中。</p><p>这里是一个简化的示例流程：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+</span></span><span style=display:flex><span>executor.setTaskDecorator(new ContextCopyingDecorator());
+</span></span><span style=display:flex><span>executor.initialize();
+</span></span><span style=display:flex><span> 
+</span></span><span style=display:flex><span>executor.execute(() -&gt; {
+</span></span><span style=display:flex><span>    // 这是你的任务代码
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>当你调用 <code>execute</code> 方法时，Spring 会首先调用 <code>ContextCopyingDecorator</code> 的 <code>decorate</code> 方法，然后再执行你的任务代码。这意味着 <code>decorate</code> 方法中的逻辑会在你的任务代码之前执行，允许你设置或者修改线程的状态，以便这些状态可以在任务执行时被使用。</p><p>Spring源码如下：</p><div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span>org<span style=color:#666>.</span><span style=color:#b44>springframework</span><span style=color:#666>.</span><span style=color:#b44>scheduling</span><span style=color:#666>.</span><span style=color:#b44>concurrent</span><span style=color:#666>.</span><span style=color:#b44>ThreadPoolTaskExecutor</span>	
+</span></span><span style=display:flex><span>	
+</span></span><span style=display:flex><span>	
+</span></span><span style=display:flex><span>	<span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>	<span style=color:#a2f;font-weight:700>protected</span> ExecutorService <span style=color:#00a000>initializeExecutor</span><span style=color:#666>(</span>
+</span></span><span style=display:flex><span>			ThreadFactory threadFactory<span style=color:#666>,</span> RejectedExecutionHandler rejectedExecutionHandler<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		BlockingQueue<span style=color:#666>&lt;</span>Runnable<span style=color:#666>&gt;</span> queue <span style=color:#666>=</span> createQueue<span style=color:#666>(</span><span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>queueCapacity</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		ThreadPoolExecutor executor<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>		<span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span><span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>taskDecorator</span> <span style=color:#666>!=</span> <span style=color:#a2f;font-weight:700>null</span><span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>			executor <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> ThreadPoolExecutor<span style=color:#666>(</span>
+</span></span><span style=display:flex><span>					<span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>corePoolSize</span><span style=color:#666>,</span> <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>maxPoolSize</span><span style=color:#666>,</span> <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>keepAliveSeconds</span><span style=color:#666>,</span> TimeUnit<span style=color:#666>.</span><span style=color:#b44>SECONDS</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>					queue<span style=color:#666>,</span> threadFactory<span style=color:#666>,</span> rejectedExecutionHandler<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>				<span style=color:#a2f>@Override</span>
+</span></span><span style=display:flex><span>				<span style=color:#a2f;font-weight:700>public</span> <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>execute</span><span style=color:#666>(</span>Runnable command<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>					Runnable decorated <span style=color:#666>=</span> taskDecorator<span style=color:#666>.</span><span style=color:#b44>decorate</span><span style=color:#666>(</span>command<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>					<span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span>decorated <span style=color:#666>!=</span> command<span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>						decoratedTaskMap<span style=color:#666>.</span><span style=color:#b44>put</span><span style=color:#666>(</span>decorated<span style=color:#666>,</span> command<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>					<span style=color:#666>}</span>
+</span></span><span style=display:flex><span>					<span style=color:#a2f;font-weight:700>super</span><span style=color:#666>.</span><span style=color:#b44>execute</span><span style=color:#666>(</span>decorated<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>				<span style=color:#666>}</span>
+</span></span><span style=display:flex><span>			<span style=color:#666>};</span>
+</span></span><span style=display:flex><span>		<span style=color:#666>}</span>
+</span></span><span style=display:flex><span>		<span style=color:#a2f;font-weight:700>else</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>			executor <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>new</span> ThreadPoolExecutor<span style=color:#666>(</span>
+</span></span><span style=display:flex><span>					<span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>corePoolSize</span><span style=color:#666>,</span> <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>maxPoolSize</span><span style=color:#666>,</span> <span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>keepAliveSeconds</span><span style=color:#666>,</span> TimeUnit<span style=color:#666>.</span><span style=color:#b44>SECONDS</span><span style=color:#666>,</span>
+</span></span><span style=display:flex><span>					queue<span style=color:#666>,</span> threadFactory<span style=color:#666>,</span> rejectedExecutionHandler<span style=color:#666>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span><span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>allowCoreThreadTimeOut</span><span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>			executor<span style=color:#666>.</span><span style=color:#b44>allowCoreThreadTimeOut</span><span style=color:#666>(</span><span style=color:#a2f;font-weight:700>true</span><span style=color:#666>);</span>
+</span></span><span style=display:flex><span>		<span style=color:#666>}</span>
+</span></span><span style=display:flex><span>		<span style=color:#a2f;font-weight:700>if</span> <span style=color:#666>(</span><span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>prestartAllCoreThreads</span><span style=color:#666>)</span> <span style=color:#666>{</span>
+</span></span><span style=display:flex><span>			executor<span style=color:#666>.</span><span style=color:#b44>prestartAllCoreThreads</span><span style=color:#666>();</span>
+</span></span><span style=display:flex><span>		<span style=color:#666>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a2f;font-weight:700>this</span><span style=color:#666>.</span><span style=color:#b44>threadPoolExecutor</span> <span style=color:#666>=</span> executor<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>		<span style=color:#a2f;font-weight:700>return</span> executor<span style=color:#666>;</span>
+</span></span><span style=display:flex><span>	<span style=color:#666>}</span>
+</span></span></code></pre></div></div><footer class=post-footer><div class=post-tags><a href=/tags/spring rel=tag title=Spring>#Spring#</a>
+<a href=/tags/%e7%ba%bf%e7%a8%8b%e6%b1%a0 rel=tag title=线程池>#线程池#</a>
+<a href=/tags/threadlocal rel=tag title=ThreadLocal>#ThreadLocal#</a></div><div class=addthis_inline_share_toolbox></div><div class=post-nav><div class=article-copyright><div class=article-copyright-img><img src=/img/qq_qrcode.png width=129px height=129px><div style=text-align:center>QQ扫一扫交流</div></div><div class=article-copyright-info><p><span>标题：</span>Spring线程池传递线程变量</p><p><span>链接：</span>https://codingroam.github.io/post/spring%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BC%A0%E9%80%92%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F/</p><p><span>作者：</span>roam</p><p><span>声明： </span>本博客文章除特别声明外，均采用 <a href=https://creativecommons.org/licenses/by-nc-sa/3.0/ target=_blank style=text-decoration:underline>CC BY-NC-SA 3.0</a>许可协议，转载请注明出处！</p></div></div><div class=clear></div></div><div class=reward-qr-info><div>创作实属不易，如有帮助，那就打赏博主些许茶钱吧 ^_^</div><button id=rewardButton disable=enable onclick='var qr=document.getElementById("QR");qr.style.display==="none"?qr.style.display="block":qr.style.display="none"'>
+<span>赏</span></button><div id=QR style=display:none><div id=wechat style=display:inline-block><img id=wechat_qr src=/img/wechat-pay.png alt="WeChat Pay"><p>微信打赏</p></div><div id=alipay style=display:inline-block><img id=alipay_qr src=/img/ali-pay.png alt=Alipay><p>支付宝打赏</p></div></div></div><div class=post-nav><div class="post-nav-next post-nav-item"></div><div class="post-nav-prev post-nav-item"><a href=https://codingroam.github.io/post/%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E8%AF%A6%E8%A7%A3/ rel=prev title=分库分表详解>分库分表详解
+<i class="fa fa-chevron-right"></i></a></div></div><div id=wcomments></div></footer></article></section></div></div><div class=sidebar-toggle><div class=sidebar-toggle-line-wrap><span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+<span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id=sidebar class=sidebar><div class=sidebar-inner><section class="site-overview sidebar-panel sidebar-panel-active"><div class="site-author motion-element" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image src=/img/avatar.png alt=roam><p class=site-author-name itemprop=name>roam</p><p class="site-description motion-element" itemprop=description>以为打得赢我啊你</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"><a href=/post/><span class=site-state-item-count>80</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>27</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>56</span>
+<span class=site-state-item-name>标签</span></a></div></nav><div class="links-of-author motion-element"><span class=links-of-author-item><a href=https://github.com/wk123456/ target=_blank title=GitHub><i class="fa fa-fw fa-github"></i>
+GitHub</a></span>
+<span class=links-of-author-item><a href=https://www.zhihu.com/ target=_blank title=知乎><i class="fa fa-fw fa-globe"></i>
+知乎</a></span></div><div class="links-of-blogroll motion-element links-of-blogroll-inline"><div class=links-of-blogroll-title><i class="fa fa-fw fa-globe"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://nutzam.com/ title=Nutz target=_blank>Nutz</a></li><li class=links-of-blogroll-item><a href=https://jfinal.com/ title=JFinal target=_blank>JFinal</a></li><li class=links-of-blogroll-item><a href=http://wendal.net/ title=Wendal target=_blank>Wendal</a></li><li class=links-of-blogroll-item><a href=https://www.liaoxuefeng.com/ title=廖雪峰 target=_blank>廖雪峰</a></li></ul></div><div class="tagcloud-of-blogroll motion-element tagcloud-of-blogroll-inline"><div class=tagcloud-of-blogroll-title><i class="fa fa-fw fa-tags"></i>
+标签云</div><ul class=tagcloud-of-blogroll-list><li class=tagcloud-of-blogroll-item><a href=/tags/learning>Learning
+<sup>27</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/mysql>Mysql
+<sup>12</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/java>Java
+<sup>11</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6>中间件
+<sup>10</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/golang>Golang
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/golang%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0>Golang编程学习
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/linux>Linux
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/redis>Redis
+<sup>8</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/problem-solving>Problem solving
+<sup>7</sup></a></li><li class=tagcloud-of-blogroll-item><a href=/tags/docker>Docker
+<sup>6</sup></a></li></ul></div></section></div></aside></div></main><footer id=footer class=footer><div class=footer-inner><div class=copyright><span class=copyright-year>&copy; 2010 - 2024</span>
+<span class=with-love><i class="fa fa-heart"></i></span>
+<span class=copyright-author>想学啊你</span></div><div class=powered-info><span class=powered-by>Powered by - <a class=powered-link href=//gohugo.io target=_blank title=hugo>Hugo v0.115.4</a></span>
+<span class=separator-line>/</span>
+<span class=theme-info>Theme by - <a class=powered-link href=//github.com/elkan1788/hugo-theme-next target=_blank>NexT</a></span></div><div class=vistor-info><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<span class=site-uv><i class="fa fa-user"></i>
+<span class=busuanzi-value id=busuanzi_value_site_uv></span></span>
+<span class=separator-line>/</span>
+<span class=site-pv><i class="fa fa-eye"></i>
+<span class=busuanzi-value id=busuanzi_value_site_pv></span></span></div><div class=license-info><span class=storage-info>Storage by
+<a href=https://gitee.com/ style=font-weight:700 target=_blank>Gitee 仓库</a></span>
+<span class=separator-line>/</span>
+<span class=license-num><a href=http://beian.miit.gov.cn target=_blank>粤 ICP 备 18047355 号</a></span></div></div></footer><div class=back-to-top><i class="fa fa-arrow-up"></i>
+<span id=scrollpercent><span>0</span>%</span></div></div><script type=text/javascript src=//unpkg.com/jquery@2.1.4/dist/jquery.min.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/search.js></script>
+<script type=text/javascript src=https://codingroam.github.io/js/affix.js></script>
+<script type=text/javascript>function detectIE(){var e=window.navigator.userAgent,t=e.indexOf("MSIE "),n=e.indexOf("Trident/"),s=e.indexOf("Edge/");return t>0||n>0||s>0?-1:1}function getCntViewHeight(){var t=$("#content").height(),e=$(window).height(),n=t>e?t-e:$(document).height()-e;return n}function getScrollbarWidth(){var e=$("<div />").addClass("scrollbar-measure").prependTo("body"),t=e[0],n=t.offsetWidth-t.clientWidth;return e.remove(),n}function registerBackTop(){var t=50,e=$(".back-to-top");$(window).on("scroll",function(){e.toggleClass("back-to-top-on",window.pageYOffset>t);var s=$(window).scrollTop(),o=getCntViewHeight(),i=s/o,n=Math.round(i*100),a=n>100?100:n;$("#scrollpercent>span").html(a)}),e.on("click",function(){$("html,body").animate({scrollTop:0,screenLeft:0},800)})}function initScrollSpy(){var e=".post-toc",s=$(e),t=".active-current";s.on("activate.bs.scrollspy",function(){var t=$(e+" .active").last();n(),t.addClass("active-current")}).on("clear.bs.scrollspy",n),$("body").scrollspy({target:e});function n(){$(e+" "+t).removeClass(t.substring(1))}}function initAffix(){var e=$(".header-inner").height(),t=parseInt($(".footer").outerHeight(!0),10),n=e+10;$(".sidebar-inner").affix({offset:{top:n,bottom:t}})}function initTOCDimension(){$(window).on("resize",function(){e&&clearTimeout(e),e=setTimeout(function(){var e=document.body.clientHeight-100;updateTOCHeight(e)},0)}),updateTOCHeight(document.body.clientHeight-100);var e,t=getScrollbarWidth();$(".post-toc").css("width","calc(100% + "+t+"px)")}function updateTOCHeight(e){e=e||"auto",$(".post-toc").css("max-height",e)}$(function(){var e,t,n,s,o=$(".header-inner").height()+10;$("#sidebar").css({"margin-top":o}).show(),t=parseInt($("#sidebar").css("margin-top")),n=parseInt($(".sidebar-inner").css("height")),e=t+n,s=$(".content-wrap").height(),s<e&&$(".content-wrap").css("min-height",e),$(".site-nav-toggle").on("click",function(){var e=$(".site-nav"),o=$(".toggle"),t="site-nav-on",i="toggle-close",n=e.hasClass(t),a=n?"slideUp":"slideDown",s=n?"removeClass":"addClass";e.stop()[a]("normal",function(){e[s](t),o[s](i)})}),registerBackTop(),initAffix(),initTOCDimension(),$(".sidebar-nav-toc").click(function(){$(this).addClass("sidebar-nav-active"),$(this).next().removeClass("sidebar-nav-active"),$("."+$(this).next().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)}),$(".sidebar-nav-overview").click(function(){$(this).addClass("sidebar-nav-active"),$(this).prev().removeClass("sidebar-nav-active"),$("."+$(this).prev().attr("data-target")).toggle(500),$("."+$(this).attr("data-target")).toggle(500)})})</script><script src=//unpkg.com/imageviewer@1.1.0/dist/viewer.min.js></script>
+<script type=text/javascript>$(function(){$(".post-body").viewer()})</script><script type=text/javascript>const locale={placeholder:"欢迎留下您的宝贵建议，请填写您的昵称和邮箱便于后续交流. ^_^"};$(function(){detectIE()>0?$.getScript(document.location.protocol+"//unpkg.com/@waline/client@1.6.0/dist/Waline.min.js",function(){new Waline({el:"#wcomments",visitor:!0,emoji:[],wordLimit:"200",uploadImage:!1,locale,requiredMeta:["nick","mail"],serverURL:"Your WalineSerURL",lang:"zh-cn"})}):$("#wcomments").html("抱歉，Waline插件不支持IE或Edge，建议使用Chrome浏览器。")})</script><script type=text/javascript src="//s7.addthis.com/js/300/addthis_widget.js#pubid=Your%20AddthisId"></script>
+<script>(function(){var t,e=document.createElement("script"),n=window.location.protocol.split(":")[0];n==="https"?e.src="https://zz.bdstatic.com/linksubmit/push.js":e.src="http://push.zhanzhang.baidu.com/push.js",t=document.getElementsByTagName("script")[0],t.parentNode.insertBefore(e,t)})()</script></body></html>

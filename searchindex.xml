@@ -1,4 +1,134 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>Spring线程池传递线程变量</title><url>https://codingroam.github.io/post/spring%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BC%A0%E9%80%92%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F/</url><categories><category>Spring</category></categories><tags><tag>Spring</tag><tag>线程池</tag><tag>ThreadLocal</tag></tags><content type="html"> Spring线程池传递线程变量
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>electron+vite+vue3 快速入门教程</title><url>https://codingroam.github.io/post/electron+vite+vue3-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/</url><categories><category>electron</category><category>vue</category></categories><tags><tag>electron</tag><tag>electron</tag><tag>javascript</tag><tag>vue</tag><tag>前端框架</tag></tags><content type="html"> electron+vite+vue3 快速入门教程
+文章目录 前言
+一、electron是什么？
+二、electron 进程模型
+​ 1.主进程
+​ 2.渲染进程
+​ 3.预加载脚本
+​ 4.进程通信
+​ 4.1 send+on（单向）
+​ 4.2 invoke+handle (双向)
+​ 4.3 主进程向渲染进程发送事件
+三、窗口创建与应用事件
+四、技术栈和构建工具
+五、electron-vite安装
+​ 1.环境要求
+​ 2.安装
+​ 3.快速安装
+​ 4、目录结构
+​ 5、公共资源和引用 主进程引用公共资源
+​ 6、vue-router、pinia、scss、axios安装 vue-router安装 pinia安装 scss安装 axios安装六、打包
+​ 1.应用名称修改
+​ 2.应用图标更换
+​ 3.打包
+​ 4.应用签名
+七. Electron API
+八. 总结
+前言 本文将介绍electron基本使用和构建electron+vite+vue3脚手架开发项目,带你快速入门。
+一、electron是什么？ Electron 是一个使用 JavaScript、HTML 和 CSS 构建桌面应用的框架。 通过将 Chromium 和 Node.js 嵌入到其二进制文件中，Electron 允许你维护一个 JavaScript 代码库并创建可在 Windows、macOS 和 Linux 上运行的跨平台应用 — 无需原生开发经验。
+二、electron 进程模型 1.主进程 每个 Electron 应用都有一个主进程，充当应用的入口点。 主进程在 Node.js 环境中运行，这意味着它能够使用 所有 Node.js API。主进程管理应用窗口，处理窗口事件,与操作系统进行交互控制原生桌面功能，例如菜单、对话框、托盘图标、发送桌面通知，但不进行页面渲染。简单讲主进程主要做桌面原生功能开发，可以调用node或者electron api进行开发。
+2.渲染进程 Electron 为每个应用窗口生成一个单独的渲染器进程，负责渲染窗口页面内容，渲染进程页面开发几乎跟web项目开发一样。在渲染进程无法使用Node.js API。简单讲渲染进程就是主要做web页面开发，无法使用node或者electron api。
+3.预加载脚本 预加载脚本就是渲染进程和主进程通信桥梁，2端依靠预加载脚本进行通信。预加载脚本在网页加载到渲染器之前注入，类似于 Chrome 扩展的 内容脚本。使用场景例如在渲染进程web页面上需要调用原生桌面功能就得通过预加载脚本通知主进程进行功能实现。
+4.进程通信 4.1 send+on（单向） 渲染进程向主进程发送事件
+例如实现下面场景： 渲染进程向主进程发送事件，调用原生功能发起桌面通知
+预加载脚本通过 contextBridge API 定义 全局（window）对象属性electronApi供渲染进程调用（window.electronApi.notice()）
+preload.js(预加载脚本)
+const { contextBridge,ipcRenderer } = require('electron') contextBridge.exposeInMainWorld('electronApi', { //notification事件名称在主进程注册监听,content:传递值 notice:content=>ipcRenderer.send("notification",content) }) 渲染进程调用 index.html
+//发送事件给主进程 window.electronApi.notice("你好") 主进程监听事件 main.js
+const { ipcMain,Notification } = require('electron') ipcMain.on('notification', (event,content)=>{ //收到事件发送桌面通知，title为传递过来的值 new Notification({ title:"来着渲染层消息",body:content}).show() }) 运行结果：
+4.2 invoke+handle (双向) 除了用ipcRenderer.send +ipcMain.on进行通信外还可用ipcRenderer.invoke+ipcMain.handle，区别在与send+on是单向消息无回调，invoke+handle是双向通信在主进程处理完一些异步操作后可以给渲染层返回回调，两者用法基本类似
+例如实现下面场景： 渲染进程通知主进程打开原生选择文件功能并返回文件路径
+preload.js（预加载脚本）
+const { contextBridge,ipcRenderer } = require('electron') contextBridge.exposeInMainWorld('electronApi', { //dialogOpenFile事件名称在主进程注册监听 openFile:()=>ipcRenderer.invoke("dialogOpenFile") }) 渲染进程调用 index.html
+//发送事件给主进程进行文件选择，返回选择后文件路径 const filePath=await window.electronApi.openFile() console.log(filePath,"文件路径") 主进程监听事件 main.js
+const { ipcMain,dialog} = require('electron') ipcMain.handle('dialogOpenFile', ()=>{ const { canceled, filePaths } = await dialog.showOpenDialog() if (!canceled) { //返回文件路径 return filePaths[0] } }) 4.3 主进程向渲染进程发送事件 当从主进程向渲染器进程发送消息时，需要指定哪个渲染器正在接收该消息。 消息需要通过渲染器进程的 WebContents 实例发送到渲染器进程。 此 WebContents 实例包含一个 send 方法，其使用方式与 ipcRenderer.send 相同可看成逆过程。
+main.js
+import { BrowserWindow } from 'electron' const mainWindow= new BrowserWindow()//创建一个窗口 mainWindow.webContents.send("set-title","你好") preload.js
+const { contextBridge, ipcRenderer } = require('electron') contextBridge.exposeInMainWorld('electronApi', { setTitle: (callback) => ipcRenderer.on('set-title', (event, value) => callback(value)), }) index.html
+window.electronAPI.setTitle((title) => { console.log(title)//你好 }) 三、窗口创建与应用事件 应用窗口是web页面载体，类似浏览器标签一个窗口一个标签页，需要打开多个标签就要创建多个窗口，像vue脚手架属于单应用项目就只需要一个窗口，应用事件指的是一些生命周期或者窗口事件，比如应用退出事件，窗口关闭事件等都有相应的回调。
+创建一个窗口示例：
+const { BrowserWindow } = require('electron') const path = require('node:path') //创建一个窗口 const createWindow = () => { const win = new BrowserWindow({ width: 800, height: 600, autoHideMenuBar: true,//是否隐藏菜单栏 webPreferences:{ //网页功能设置 preload: path.join(__dirname, 'preload.js')//设置预加载脚本 }, //.....更多配置 }) //加载窗口html文件 win.loadFile('index.html') } 通过new BrowserWindow(options)创建一个新窗口 通过loadFile(url)设置窗口对应html文件进行页面渲染，其中url可以是本地html文件也可以是网址连接 通过webPreferences-preload属性设置预加载脚本路径，使窗口初始化时候运行预加载脚本 在 Electron 中，浏览器窗口只能在 app 模块的 ready 事件被触发后创建。 你可以使用 app.whenReady() API 等待此事件
+完整代码：
+const { app, BrowserWindow } = require('electron') //只能在ready事件触发后创建窗口 app.whenReady().then(() => { createWindow() }) //创建窗口 const createWindow = () => { const win = new BrowserWindow({ width: 800, height: 600 }) win.loadFile('index.html') } 更多窗口配置可查看 窗口配置属性
+应用/窗口事件可以通过app.on(‘eventName’)注册监听,app是electron内置模块可通过import { app } from &rsquo;electron’引入
+例如：
+//所有窗口关闭发出 app.on('window-all-closed', () => { }) //当 Electron 完成初始化时发出一次 app.on('ready', () => { }) //当应用被激活时发出 app.on('activate', () => { }) //在应用开始关闭其窗口之前发出 app.on('before-quit', () => { }) 还有非常多的事件，具体可查看 app模块
+四、技术栈和构建工具 上述介绍完electron核心概念和基础用法后，下面将介绍electron结合web技术通过脚手架来开发项目
+electron可以和任意web前端技术搭配使用，react或者vue2、vue3或者原生等。构建工具可以选择webpack或者vite。可以手动自由组合从零搭建或者使用一些网上分享的开发模板，传统搭建方式都比较繁琐。这里推荐一个新构建工具electron-vite，它简化了配置过程，支持主进程、渲染进程代码快速热更新，能自主选择前端框架来搭建脚手架项目，提供了更快、更简单的开发体验。
+五、electron-vite安装 1.环境要求 需要安装node 18+版本
+2.安装 npm切换新淘宝源防止下载过程卡住
+npm config set registry https://registry.npmmirror.com/ 初始化项目
+npm create @quick-start/electron 出现如下一些配置选项按需选择：
+Project name：项目名称自定义输入 Select a framework:选择框架，内置vanilla,vue,react,svelte,solid可选择，演示这里我们选择vue Add TypeScript：是否添加TypeScript，演示这里我们选择no Add Electron updater plugin：是否添加Electron更新插件，yes Enable Electron download mirror proxy：镜像下载代理，国内网络建议开启，yes 进入项目目录
+cd electron-app 安装依赖
+npm install 修改支持主进程热更新
+默认只开启了渲染进程热更新，需要在运行命令后添加参数才能开启主进程热更新， 打开package.json 文件，scripts-dev 命令后面添加 ‘&ndash;watch’
+启动项目
+npm run dev 桌面出现如下应用窗口，项目启动成功！
+ps:vue内置框架默认为vue3
+3.快速安装 你还可以通过附加的命令行选项直接指定项目名称和你想要使用的模板。例如，要构建一个 Electron + Vue 项目，运行:
+# npm 6.x npm create @quick-start/electron eletron-app --template vue # npm 7+, extra double-dash is needed: npm create @quick-start/electron electron-app -- --template vue 目前支持的模板预设如下：
+4、目录结构 ├── build // 编译过程输出文件目录 ├── dist // 打包后输出目录 ├── node_modules // 依赖模块 ├── out //编译过程输出文件目录 ├── resources // 公共资源文件，主进程使用 │ └── icon.png //默认图标 ├──src │ ├── main // 主进程开发目录 │ │ └── index.js //主进程入口文件 │ ├── preload // 预加载脚本开发目录 │ │ └── index.js // 预加载默认脚本 │ └── renderer // 渲染进程开发目录，类似纯web项目根目录 │ ├── src │ │ ├── assets //资源文件目录 │ │ ├── components //组件目录 │ │ ├── App.vue // 入口页面 │ │ └── main.js // 入口文件 │ └── index.js.html // 默认html文件 ├── .editorconfig ├── .eslintignore //eslint代码检查忽略配置文件 ├── .eslintrc.cjs //eslint代码检查配置文件 ├── .gitignore //git忽略配置文件 ├── .npmrc // npm源配置文件 ├── .prettierignore //prettier代码格式化忽略配置文件 ├── .prettierrc.yaml //prettier代码格式化配置文件 ├── dev-app-update.yml ├── electron-builder.yml //打包配置文件 ├──electron.vite.config.mjs //electron-vite配置文件 ├── package-lock.json ├── package.json └──README.md //项目说明 我们需要重点关注的是src/main ,src/renderer两个目录，基本都在这2个目录内开发代码，main为主进程开发目录放置主进程相关文件，renderer为渲染进程开发目录，放置渲染进程相关文件，renderer目录其实可以当成纯web脚手架生成项目开发，使用除了多了跟主进程通信功能外其他和web脚手架项目一模一样，包括目录结构，第三方UI库安装（elmentui-plus等）、路由vue-router、vuex、pina等。
+src/preload 为预加载脚本开发目录，如无特殊需求我们可以不用管，打开src/preload/index.js 查看源码：
+import { contextBridge } from 'electron' import { electronAPI } from '@electron-toolkit/preload' // Custom APIs for renderer const api = { } // Use `contextBridge` APIs to expose Electron APIs to // renderer only if context isolation is enabled, otherwise // just add to the DOM global. if (process.contextIsolated) { try { contextBridge.exposeInMainWorld('electron', electronAPI) contextBridge.exposeInMainWorld('api', api) } catch (error) { console.error(error) } } else { window.electron = electronAPI window.api = api } 可以看这句 contextBridge.exposeInMainWorld(‘electron’, electronAPI) 默认已经向渲染进程全局注入了“electron”属性，在渲染进程打印下该属性
+console.log(window.electron,'electronAPI' ) 发现注入了3个对象属性ipcRenderer,process,webFrame，有了ipcRenderer意味着我们可以直接在渲染进程发送事件给主进程
+App.vue
+//给主进程发送事件 window.electron.ipcRenderer.send("notice","hello ,来着app.vue页面消息") main/index.js
+import { ipcMain } from 'electron' ipcMain.on('notice',(event,msg)=>{ console.log(msg)//hello ,来着app.vue页面消息 }) 综上所述，我们可以不用编写预加载脚本，直接在web页面通过暴露的electron.ipcRenderer进行通信
+5、公共资源和引用 公共目录默认为 根目录/resources，专用于主进程和预加载脚本。例如图标、可执行程序、wasm 文件 等资源，可以将它们放在这个目录中。
+默认情况渲染进程公共资源单独管理，在src/renderer新建public文件夹单独存放使用。这跟web脚手架项目公共文件结构和使用一致。
+主进程引用公共资源 在主进程中，可以使用 ?asset 后缀将资源作为文件路径导入
+import { Tray, nativeImage } from 'electron' import appIcon from '../../build/icon.ico?asset' let tray = new Tray(nativeImage.createFromPath(appIcon)) 在此示例中，appIcon 将解析为：
+const path = require("path"); const appIcon = path.join(__dirname, "./chunks/icon-4363016c.ico"); 在主进程中文件路径可以用node.js path模块来拼接
+__dirname：表示当前文件所属目录的绝对路径 path.join：将所有参数拼接成一个完整的路径字符串 path.resolve：将一些的 路径/路径段 解析为绝对路径，类似cmd的cd命令功能,某些情况下跟path.join效果一样，不加参数表示项目根目录绝对路径 process.cwd()：node.js进程的当前工作目录，也即项目根目录等价path.resolve() 举例使用： 假设resources公共资源目录有个test.txt文件 在主进程/src/main/index.js读取它
+const path=require('path') const filePath=path.join(process.resolve(),'/resources/test.txt')//文件路径 或
+const filePath=path.join(process.cwd(),'/resources/test.txt')//文件路径 或
+const filePath=path.join(__dirname,'../../resources/test.txt')//文件路径 或
+const filePath=path.resolve(__dirname,'../../resources/test.txt')//文件路径 6、vue-router、pinia、scss、axios安装 从目录结构看vite-electron只是生成一个最基础的vue项目，vue全家桶都没安装，为了方便开发我们需要手动安装下，如果对这部份安装很熟可以跳过。
+vue-router安装 npm install vue-router -S renderer/src目录下新建router文件夹，router文件夹内新建一个index.js文件写入：
+import { createRouter, createWebHashHistory } from 'vue-router' const router = createRouter({ history: createWebHashHistory(), routes: [ { path: '/', redirect: '/home' }, { path: '/home', component: () => import('../views/home/index.vue') } ], }) export default router renderer/src/main.js 引入
+import router from './router' const app= createApp(App); app.use(router); app.mount('#app') renderer/src目录下新建views文件夹，views文件夹内新建home文件夹，home文件夹内新建一个index.vue文件写入：
+&lt;template> home &lt;/template> &lt;script setup> &lt;/script scoped> &lt;style> &lt;/style> App.vue删掉原来代码写入
+&lt;template> &lt;router-view>&lt;/router-view> &lt;/template> &lt;script setup> &lt;/script> &lt;style> &lt;/style> pinia安装 npm install pinia -S renderer/src目录下新建stores文件夹，stores文件夹内新建一个index.js文件写入：
+import { defineStore } from 'pinia' export const useIndexStore = defineStore('index', { state:()=> { return { } }, getters: { }, actions: { }, //persist: true,//是否开启持久化存储 }) main.js引入
+import { createPinia } from 'pinia' const pinia =createPinia(); app.use(pinia); scss安装 vite-electron默认已安装了less，如果习惯用less可以不安装scss
+npm install sass -S axios安装 npm install axios -S renderer/src目录下新建utils文件夹，utils文件夹内新建一个request.js文件写入：
+import axios from 'axios'; const baseURL = '/' const http= axios.create({ baseURL, timeout: 100000 }) // 请求拦截 http.interceptors.request.use(config=>{ return config },error=>{ console.log(error); }) // 响应拦截 http.interceptors.response.use((res)=>{ return res.data }) export default http ps：拦截逻辑根据实际情况修改写入，可以在renderer/src新建api文件夹统一维护接口
+六、打包 1.应用名称修改 ： 修改electron-builder.yml 文件内字段productName 2.应用图标更换 打包的应用图标默认路径在build文件夹下icon.ico，必须是ico格式不能是png等其他格式，如果你的图片格式是ico可以直接替换，打包生效，如果是其他格式需要转换
+安装electron-icon-builder插件 electron-icon-builde能 把图片转换为ico格式
+npm install electron-icon-builder -D 修改package.json，scripts新增命令行
+"electron:generate-icons": "electron-icon-builder --input=./resources/icon.png --output=build --flatten" 把新图片icon.png放置resources文件夹
+执行
+npm run electron:generate-icons 可以看到在build目录下生成了一个icons文件夹里面有ico格式图片
+可以直接复制icon.ico图片到build目录下替换，每次都要复制很麻烦我们修改下打包默认的图标路径： 打开electron-builder.yml 在nsis下添加
+installerIcon: 'build/icons/icon.ico' installerIcon属性定义了打包图标的位置，重新打包生效。 3.打包 打包过程会去github上下载打包工具，国内网络大概率会卡住导致打包失败，需要手动下载放入指定位置才能顺利打包，具体看下面说明
+执行打包命令：
+window：
+npm run build:win mac:
+npm run build:mac linux:
+npm run build:linux 接下来以打包window演示说明报错解决方法：
+1.winCodeSign报错 把截图上url后面的下载地址复制到浏览器下载，如果浏览器仍然下载不了， 用下面国内源地址下载：
+https://cdn.npm.taobao.org/dist/electron-builder-binaries/winCodeSign-2.6.0/winCodeSign-2.6.0.7z
+注意下载版本号和报错提示的版本号要一样，不一样的自己修改下载连接：
+https://cdn.npm.taobao.org/dist/electron-builder-binaries/
++ 版本号 + 文件名
+下载后解压到：
+C:\Users\Administrator\AppData\Local\electron-builder\Cache\winCodeSign
+ps：AppData是个隐藏文件，文件选项设置需要打开显示隐藏文件功能才能找到目录
+2.nsis报错
+同样复制下载地址或者用国内源到浏览器下载 国内源：
+https://cdn.npm.taobao.org/dist/electron-builder-binaries/nsis-3.0.4.1/nsis-3.0.4.1.7z
+如果版本号不同一样方法修改，下载解压到：
+C:\Users\Administrator\AppData\Local\electron-builder\Cache\nsis
+3.nsis-resources报错 同样复制下载地址或者用国内源到浏览器下载 国内源：
+https://cdn.npm.taobao.org/dist/electron-builder-binaries/nsis-resources-3.4.1/nsis-resources-3.4.1.7z
+下载解压到
+C:\Users\Administrator\AppData\Local\electron-builder\Cache\nsis
+最终打包完成后会在dist文件夹下生成exe安装包
+4.应用签名 通过上面打包出来安装包安装会发现被安全软件报有风险，想绕过风险检测应用必须签名，签名只影响安全检查不影响功能使用 ，签名教程请移步官网查看：https://www.electronjs.org/zh/docs/latest/tutorial/code-signing
+七. Electron API 原生桌面功能需要调用 Electron API，更多 Electron API请查阅官网：https://electron.nodejs.cn/docs/latest/api/app
+八. 总结 electron框架对web开发人员来说非常友好，无须了解原生开发技能，就能通过web技术进行桌面应用开发，大大减少学习成本，一套代码能快速构建生成多端应用，也大幅减少了开发成本。
+简言之，electron开发可以看成是桌面功能开发+纯web页面开发，桌面功能开发在主进程调用Electron API，而web页面开发就是html，css，js技术栈。</content></entry><entry><title>Spring线程池传递线程变量</title><url>https://codingroam.github.io/post/spring%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BC%A0%E9%80%92%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F/</url><categories><category>Spring</category></categories><tags><tag>Spring</tag><tag>线程池</tag><tag>ThreadLocal</tag></tags><content type="html"> Spring线程池传递线程变量
 Spring线程池传递线程变量 Spring线程池传递线程变量
 在 Spring 框架中，TaskDecorator 是一个接口，它可以用来自定义由 ThreadPoolTaskExecutor 或其他任务执行器管理的任务的装饰行为。这通常用于在执行任务之前和之后添加某些上下文相关的行为，比如设置线程上下文或者清理资源。
 例如，在执行异步操作

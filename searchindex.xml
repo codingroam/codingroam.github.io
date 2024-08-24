@@ -1,29 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><search><entry><title>electron+vite+vue3 快速入门教程</title><url>https://codingroam.github.io/post/electron+vite+vue3-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B/</url><categories><category>electron</category><category>vue</category></categories><tags><tag>electron</tag><tag>electron</tag><tag>javascript</tag><tag>vue</tag><tag>前端框架</tag></tags><content type="html"> electron+vite+vue3 快速入门教程
-文章目录 前言
-一、electron是什么？
-二、electron 进程模型
-​ 1.主进程
-​ 2.渲染进程
-​ 3.预加载脚本
-​ 4.进程通信
-​ 4.1 send+on（单向）
-​ 4.2 invoke+handle (双向)
-​ 4.3 主进程向渲染进程发送事件
-三、窗口创建与应用事件
-四、技术栈和构建工具
-五、electron-vite安装
-​ 1.环境要求
-​ 2.安装
-​ 3.快速安装
-​ 4、目录结构
-​ 5、公共资源和引用 主进程引用公共资源
-​ 6、vue-router、pinia、scss、axios安装 vue-router安装 pinia安装 scss安装 axios安装六、打包
-​ 1.应用名称修改
-​ 2.应用图标更换
-​ 3.打包
-​ 4.应用签名
-七. Electron API
-八. 总结
 前言 本文将介绍electron基本使用和构建electron+vite+vue3脚手架开发项目,带你快速入门。
 一、electron是什么？ Electron 是一个使用 JavaScript、HTML 和 CSS 构建桌面应用的框架。 通过将 Chromium 和 Node.js 嵌入到其二进制文件中，Electron 允许你维护一个 JavaScript 代码库并创建可在 Windows、macOS 和 Linux 上运行的跨平台应用 — 无需原生开发经验。
 二、electron 进程模型 1.主进程 每个 Electron 应用都有一个主进程，充当应用的入口点。 主进程在 Node.js 环境中运行，这意味着它能够使用 所有 Node.js API。主进程管理应用窗口，处理窗口事件,与操作系统进行交互控制原生桌面功能，例如菜单、对话框、托盘图标、发送桌面通知，但不进行页面渲染。简单讲主进程主要做桌面原生功能开发，可以调用node或者electron api进行开发。
